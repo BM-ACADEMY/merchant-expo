@@ -19,7 +19,7 @@ import {
 import bird from "../../assets/images/bird.png";
 import easyCol from "../../assets/images/EasyColllll.png";
 import { Link } from "react-router-dom";
-import { useSidebar } from "../hooks/useSidebar"; // Correct path to SidebarContext
+import { useSidebar } from "../hooks/useSidebar";
 
 const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
@@ -188,37 +188,7 @@ const Sidebar = () => {
                     </ul>
                   </div>
                 </li>
-                {/* <li>
-                  <Link
-                    to="/payments"
-                    className="flex items-center p-3 hover:text-sideCol hover:bg-purpleBg rounded-lg transition-all duration-300"
                
-                  >
-                    <Coins size={20} color="#20638b" weight="duotone" />
-                    <span
-                      className={`ml-3 ${!isSidebarOpen ? "hidden" : "flex-1"}`}
-                    >
-                      Payment
-                    </span>
-                    <CaretDown
-                      className={`${!isSidebarOpen ? "hidden" : ""}`}
-                      onClick={() => handleItemClick("payment")}
-                      size={18}
-                      color="#20638b"
-                      weight="bold"
-                    />
-                  </Link>
-                  {activeItem === "payment" && isSidebarOpen && (
-                    <ul className="ml-3 pl-6 ml-4">
-                      <li className="flex items-center p-3 hover:text-sideCol hover:bg-purpleBg rounded-lg transition-all duration-300">
-                        Income
-                      </li>
-                      <li className="flex items-center p-3 hover:text-sideCol hover:bg-purpleBg rounded-lg transition-all duration-300">
-                        Analytics
-                      </li>
-                    </ul>
-                  )}
-                </li> */}
                 <li className="py-1">
                   <Link
                     to="/invoices"
