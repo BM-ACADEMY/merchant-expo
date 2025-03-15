@@ -5,9 +5,11 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 require("dotenv").config(); // For managing environment variables
 
+const userRoutes = require("./routes/userRoutes"); // Import user routes
+
 const app = express();
 
-
+// Middlewares
 app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(morgan("dev")); // Log requests
 app.use(bodyParser.json()); // Parse JSON request bodies
@@ -15,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // Parse form data
 
 // Database connection (replace `<your_mongo_url>` with your actual MongoDB URL)
 mongoose
-  .connect(process.env.MONGO_URI || "mongodb://localhost:27017/mydatabase", {
+  .connect(process.env.MONGO_URI || "", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -27,10 +29,14 @@ app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
+// Add the user-related routes
+app.use("/api/users", userRoutes);
+
+// Test endpoint for quick testing
 app.post("/test", (req, res) => {
   console.log("Received data:", req.body);
   res.json({ message: "Data received successfully", data: req.body });
-})
+});
 
 // Server listening
 const PORT = process.env.PORT || 5000;
