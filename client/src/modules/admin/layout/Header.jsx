@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSidebar } from "../hooks/useSidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell, faArrowAltCircleDown } from "@fortawesome/free-regular-svg-icons";
-import userMan from "../../assets/images/man.png";
+import userMan from "../../../assets/images/man.png";
 import "../css/Animation.css";
 
 const Header = () => {

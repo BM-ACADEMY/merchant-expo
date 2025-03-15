@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSidebar } from '../../hooks/useSidebar'
+import React from 'react';
+import { useSidebar } from '../../hooks/useSidebar';
 const dashboard = () => {
     const {isSidebarOpen, toggleSidebar} = useSidebar()
   return (
@@ -7,7 +7,7 @@ const dashboard = () => {
         <div className={`${isSidebarOpen ? 'p-6 lg:ml-56' : 'p-4 lg:ml-16'}`} >
             <div>
 
-            welcome
+            welcome to dashboard
             </div>
     </div>
     </>
