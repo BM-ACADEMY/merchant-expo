@@ -1,5 +1,5 @@
-import React from 'react'
-import { useSidebar } from '../../hooks/useSidebar'
+import React from 'react';
+import { useSidebar } from '../../hooks/useSidebar';
 const dashboard = () => {
     const {isSidebarOpen, toggleSidebar} = useSidebar()
   return (
