@@ -3,40 +3,48 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-require("dotenv").config(); // Load environment variables
+require("dotenv").config(); 
+const connectDB=require('./config/connectDB');
 
-const connectDB = require("./config/database"); // Import DB connection
-const userRoutes = require("./routes/userRoute"); // User routes
-const merchantRoutes = require("./routes/merchantRoute"); // Merchant routes
+{/* Routes config here*/}
+const userRoutes = require("./routes/userRoute");
+const serviceProviderRoute=require("./routes/serviceProviderRoute");
+const imageRoute=require('./routes/ImageRoute');
+const grocerySeller=require('./routes/grocerySellerRoute');
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(morgan("dev"));
-app.use(bodyParser.json());
+// Middlewares
+app.use(cors()); // Enable Cross-Origin Resource Sharing
+app.use(morgan("dev")); // Log requests
+app.use(bodyParser.json()); // Parse JSON request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Connect to MongoDB Atlas
-connectDB();
-
-// Routes
-app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/merchants", merchantRoutes); // Merchant CRUD routes
-
-// Basic route
+// Basic test route
 app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
-// Global error handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
+// Add the user-related routes
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/service-provider", serviceProviderRoute);
+app.use("/api/v1/upload", imageRoute);
+app.use("/api/v1/grocery-seller",grocerySeller);
+
+
+
+// Test endpoint for quick testing
+app.post("/test", (req, res) => {
+  console.log("Received data:", req.body);
+  res.json({ message: "Data received successfully", data: req.body });
 });
 
 // Server listening
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+connectDB().then(() => {
+  app.listen(PORT, () => {
+      console.log("✅ Server is running on port", PORT)
+  })
+}).catch(err => {
+  console.error("❌ Database connection failed", err)
+})
