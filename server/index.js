@@ -5,7 +5,7 @@ const morgan = require("morgan");
 const bodyParser = require("body-parser");
 require("dotenv").config(); // For managing environment variables
 
-const userRoutes = require("./routes/userRoutes"); // Import user routes
+const userRoutes = require("../server/routes/userRoute"); // Import user routes
 
 const app = express();
 
@@ -15,7 +15,6 @@ app.use(morgan("dev")); // Log requests
 app.use(bodyParser.json()); // Parse JSON request bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form data
 
-// Database connection (replace `<your_mongo_url>` with your actual MongoDB URL)
 mongoose
   .connect(process.env.MONGO_URI || "", {
     useNewUrlParser: true,
@@ -30,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 // Add the user-related routes
-app.use("/api/users", userRoutes);
+app.use("/api/v1/users", userRoutes);
 
 // Test endpoint for quick testing
 app.post("/test", (req, res) => {
@@ -39,7 +38,7 @@ app.post("/test", (req, res) => {
 });
 
 // Server listening
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -6,7 +6,6 @@ const dashboard = () => {
     <>
         <div className={`${isSidebarOpen ? 'p-6 lg:ml-56' : 'p-4 lg:ml-16'}`} >
             <div>
-
             welcome to dashboard
             </div>
     </div>
@@ -14,5 +13,4 @@ const dashboard = () => {
 
   )
 }
-
 export default dashboard;
