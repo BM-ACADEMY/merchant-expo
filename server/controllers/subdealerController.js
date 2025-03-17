@@ -1,4 +1,4 @@
-const SubDealer = require("../models/Subdealer");
+const SubDealer = require("../models/subdealerModel");
 const bcrypt = require("bcryptjs");
 
 // @desc   Get all sub-dealers

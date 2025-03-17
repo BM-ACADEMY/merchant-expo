@@ -1,4 +1,4 @@
-const Merchant = require('../models/MerchantModel');
+const Merchant = require('../models/merchantModel');
 
 exports.createMerchant = async (req, res) => {
     try {
