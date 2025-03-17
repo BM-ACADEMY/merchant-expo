@@ -3,38 +3,36 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
-require("dotenv").config(); // For managing environment variables
+require("dotenv").config(); // Load environment variables
 
-const userRoutes = require("../server/routes/userRoute"); // Import user routes
+const connectDB = require("./config/database"); // Import DB connection
+const userRoutes = require("./routes/userRoute"); // User routes
+const merchantRoutes = require("./routes/merchantRoute"); // Merchant routes
 
 const app = express();
 
-// Middlewares
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(morgan("dev")); // Log requests
-app.use(bodyParser.json()); // Parse JSON request bodies
-app.use(bodyParser.urlencoded({ extended: true })); // Parse form data
+// Middleware
+app.use(cors());
+app.use(morgan("dev"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose
-  .connect(process.env.MONGO_URI || "", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+// Connect to MongoDB Atlas
+connectDB();
 
-// Basic test route
+// Routes
+app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/merchants", merchantRoutes); // Merchant CRUD routes
+
+// Basic route
 app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
-// Add the user-related routes
-app.use("/api/v1/users", userRoutes);
-
-// Test endpoint for quick testing
-app.post("/test", (req, res) => {
-  console.log("Received data:", req.body);
-  res.json({ message: "Data received successfully", data: req.body });
+// Global error handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 // Server listening
