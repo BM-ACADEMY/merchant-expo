@@ -1,166 +1,70 @@
-const User = require ("../models/UserModel");
-const jwt=require("jsonwebtoken");
+const User = require("../models/UserModel");
+
 // Create a new user
 exports.createUser = async (req, res) => {
   try {
-    const { name, referral_code, email, phone } = req.body;
+    const { name, referral_code, email, phone, role } = req.body;
 
-    // Check if email or phone already exists
-    const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
-    if (existingUser) {
-      return res.status(400).json({
-        statusCode: 400,
-        message: "User with this email or phone number already exists.",
-        data: null,
-      });
-    }
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ message: "Email already exists" });
 
-    // Generate referral code if not provided
-    let generatedReferralCode = referral_code;
-    if (!referral_code) {
-      const namePrefix = name.substring(0, 2).toUpperCase(); // First 2 letters capitalized
-      generatedReferralCode = `${namePrefix}${phone}`;
-    }
-
-    // Create user
-    const newUser = new User({
-      name,
-      referral_code: generatedReferralCode,
-      email,
-      phone,
-    });
-
+    const newUser = new User({ name, referral_code, email, phone, role });
     await newUser.save();
-
-    res.status(201).json({
-      statusCode: 201,
-      message: "User created successfully",
-      data: {
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        phone: newUser.phone,
-        referral_code: newUser.referral_code,
-        created_at: newUser.created_at,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      statusCode: 500,
-      message: "Internal server error",
-      data: null,
-      error: err.message,
-    });
+    
+    res.status(201).json({ message: "User created successfully", user: newUser });
+  } catch (error) {
+    res.status(500).json({ message: "Error creating user", error: error.message });
   }
 };
 
-//sign in user
-exports.signInUser = async (req, res) => {
+// Get all users
+exports.getUsers = async (req, res) => {
   try {
-    const { email, phone, number_otp } = req.body;
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching users", error: error.message });
+  }
+};
 
-    // Find user by email or phone
-    const user = await User.findOne({ $or: [{ email }, { phone }] });
-    if (!user) {
-      return res.status(400).json({
-        statusCode: 400,
-        message: "User not found. Please sign up.",
-        data: null,
-      });
-    }
+// Get a user by ID
+exports.getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Check if OTP is correct (assuming OTP is stored in DB temporarily)
-    // if (number_otp && user.number_otp !== number_otp) {
-    //   return res.status(400).json({
-    //     statusCode: 400,
-    //     message: "Invalid OTP. Please try again.",
-    //     data: null,
-    //   });
-    // }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user", error: error.message });
+  }
+};
 
-    // Ensure user is verified before generating a token
-    // if (!user.email_verified || !user.number_verified) {
-    //   return res.status(400).json({
-    //     statusCode: 400,
-    //     message: "Please verify your email and phone number first.",
-    //     data: null,
-    //   });
-    // }
-
-    // Generate JWT Token
-    const token = jwt.sign(
-      { userId: user._id, email: user.email, phone: user.phone },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+// Update user details
+exports.updateUser = async (req, res) => {
+  try {
+    const { name, referral_code, email, phone, role } = req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { name, referral_code, email, phone, role },
+      { new: true, runValidators: true }
     );
 
-    res.status(200).json({
-      statusCode: 200,
-      message: "Login successful",
-      data: {
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          referral_code: user.referral_code,
-        },
-        token,
-      },
-    });
-  } catch (err) {
-    res.status(500).json({
-      statusCode: 500,
-      message: "Internal server error",
-      data: null,
-      error: err.message,
-    });
+    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating user", error: error.message });
   }
 };
 
-
-// Verify phone number
-exports.verifyPhoneNumber = async (req, res) => {
+// Delete user
+exports.deleteUser = async (req, res) => {
   try {
-    const { phone, number_otp } = req.body;
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    if (!deletedUser) return res.status(404).json({ message: "User not found" });
 
-    const user = await User.findOne({ phone });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    if (user.number_otp !== number_otp) {
-      return res.status(400).json({ error: "Invalid OTP" });
-    }
-
-    user.number_verified = true;
-    user.number_otp = null; // Clear OTP after verification
-    await user.save();
-    res.status(200).json({ message: "Phone number verified successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error", details: err.message });
-  }
-};
-
-// Verify email
-exports.verifyEmail = async (req, res) => {
-  try {
-    const { email, email_otp } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    if (user.email_otp !== email_otp) {
-      return res.status(400).json({ error: "Invalid OTP" });
-    }
-
-    user.email_verified = true;
-    user.email_otp = null; // Clear OTP after verification
-    await user.save();
-    res.status(200).json({ message: "Email verified successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error", details: err.message });
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting user", error: error.message });
   }
 };

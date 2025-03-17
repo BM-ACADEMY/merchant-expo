@@ -1,18 +1,28 @@
 const express = require("express");
-const {
-createUser,
-  verifyPhoneNumber,
-  verifyEmail,
-  signInUser
+const { 
+    createUser, 
+    getUsers, 
+    getUserById, 
+    updateUser, 
+    deleteUser 
 } = require("../controllers/userController");
-const validateRequest = require("../middleware/userValidation");
+const authMiddleware = require("../middleware/userValidation");
 
 const router = express.Router();
 
-// Routes
-router.post("/register", validateRequest, createUser);
-router.post("/login", validateRequest, signInUser);
-router.post("/verify-phone", validateRequest, verifyPhoneNumber);
-router.post("/verify-email", validateRequest, verifyEmail);
+// Create a new user
+router.post('/create-users', authMiddleware, createUser);
+
+// Get all users
+router.get('/fetch-all-users', authMiddleware, getUsers);
+
+// Get a single user by ID
+router.get('/fetch-users-by-id/:id', authMiddleware, getUserById);
+
+// Update a user by ID
+router.put('/update-users-by-id/:id', authMiddleware, updateUser);
+
+// Delete a user by ID
+router.delete('/delete-users-by-id/:id', authMiddleware, deleteUser);
 
 module.exports = router;
