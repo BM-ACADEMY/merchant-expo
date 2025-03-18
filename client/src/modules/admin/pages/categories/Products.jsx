@@ -1,10 +1,14 @@
-import React from 'react'
+import React from 'react';
+import { useSidebar } from '../../hooks/useSidebar';
 
 const Products = () => {
+   const {isSidebarOpen, toggleSidebar} = useSidebar()
   return (
-    <div>
+  <>
+    <div className={`${isSidebarOpen ? 'p-6 lg:ml-56' : 'p-4 lg:ml-16'}`}>
       welcome to products
     </div>
+  </>
   )
 }
 
