@@ -7,7 +7,7 @@ const {
     deleteUser 
 } = require("../controllers/userController");
 
-
+const authMiddleware = require("../middleware/userValidation");
 const router = express.Router();
 
 // Create a new user

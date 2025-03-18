@@ -6,7 +6,7 @@ const {
   updateSubDealer,
   deleteSubDealer,
 } = require("../controllers/subdealerController");
-
+const { authenticate } = require("../middleware/subdealerValidation");
 
 const router = express.Router();
 

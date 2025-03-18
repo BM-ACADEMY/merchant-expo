@@ -6,7 +6,6 @@ const merchantSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     phone_number: { type: String, required: true },
     company_name: { type: String, required: true },
-    logo: { type: String },
     msme_certificate_number: { type: String, required: true, unique: true },
     certificate_image: { type: String },
     gst_number: { type: String, required: true, unique: true },
@@ -14,7 +13,9 @@ const merchantSchema = new mongoose.Schema(
     aadhar: { type: String, required: true, unique: true },
     verified_status: { type: Boolean, default: false },
     trustshield: { type: Boolean, default: false },
-    company_type: { type: String, enum: ["Retailer", "Manufacturer", "Sub-dealer"], required: true }
+    company_type: { type: String, enum: ["Retailer", "Manufacturer", "Sub-dealer"], required: true },
+    company_logo: { type: String }, // Single image URL
+    company_images: { type: [String] } // Array of image URLs
   },
   { timestamps: true }
 );
