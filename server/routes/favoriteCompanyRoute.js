@@ -4,7 +4,7 @@ const {
   getFavoriteCompanies,
   removeFavoriteCompany,
 } = require("../controllers/favoriteCompanyController");
-const { protect } = require("../middleware/authMiddleware");
+
 
 const router = express.Router();
 

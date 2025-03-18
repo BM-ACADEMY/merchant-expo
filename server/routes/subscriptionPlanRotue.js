@@ -6,7 +6,7 @@ const {
   updatePlan,
   deletePlan,
 } = require("../controllers/subscriptionPlanController");
-const { protect, admin } = require("../middleware/authMiddleware");
+
 
 const router = express.Router();
 
