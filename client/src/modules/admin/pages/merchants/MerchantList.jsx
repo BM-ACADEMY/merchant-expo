@@ -23,7 +23,7 @@ const MerchantList = () => {
           </tr>
         </thead>
         <tbody>
-          {merchants.map(merchant => (
+          { merchants.map(merchant => (
             <tr key={merchant._id} className="border">
               <td className="px-4 py-2">{merchant.user_id}</td>
               <td className="px-4 py-2">{merchant.company_name}</td>
