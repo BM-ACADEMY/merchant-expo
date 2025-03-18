@@ -1,4 +1,4 @@
-const GrocerySeller = require('../models/grocerySeller');
+const GrocerySeller = require('../models/grocerySellerModel');
 
 /**
  * Get all grocery sellers (with pagination)
