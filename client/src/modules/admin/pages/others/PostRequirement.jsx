@@ -1,10 +1,13 @@
 import React from 'react'
-
+import {useSidebar} from "../../hooks/useSidebar";
 const PostRequirement = () => {
+  const {isSidebarOpen, toggleSidebar} = useSidebar()
   return (
-    <div>
+    <>
+    <div className={`${isSidebarOpen ? 'p-6 lg:ml-56' : 'p-4 lg:ml-16'}`}>
       post requirement 
     </div>
+    </>
   )
 }
 
