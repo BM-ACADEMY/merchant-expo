@@ -6,7 +6,6 @@ const merchantSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     phone_number: { type: String, required: true },
     company_name: { type: String, required: true },
-    logo: { type: String },
     msme_certificate_number: { type: String, required: true, unique: true },
     certificate_image: { type: String },
     gst_number: { type: String, required: true, unique: true },
