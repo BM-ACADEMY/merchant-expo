@@ -4,7 +4,7 @@ const {
   getFavorites,
   removeFavorite,
 } = require("../controllers/favoriteController");
-const { protect } = require("../middleware/authMiddleware");
+
 
 const router = express.Router();
 
