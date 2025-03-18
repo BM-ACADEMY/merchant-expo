@@ -11,18 +11,18 @@ const { protect, admin } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Create a new subscription plan
-router.post("/", protect, admin, createPlan);
+router.post("/create-subscriptionplans", protect, admin, createPlan);
 
 // Get all subscription plans
-router.get("/", getAllPlans);
+router.get("/fetch-all-subscriptionplans", getAllPlans);
 
 // Get a single subscription plan by ID
-router.get("/:id", getPlanById);
+router.get("/fetch-subscriptionplans-by-id/:id", getPlanById);
 
 // Update a subscription plan
-router.put("/:id", protect, admin, updatePlan);
+router.put("/update-subscriptionplans-by-id/:id", protect, admin, updatePlan);
 
 // Delete a subscription plan
-router.delete("/:id", protect, admin, deletePlan);
+router.delete("/delete-subscriptions-plans-by-id/:id", protect, admin, deletePlan);
 
 module.exports = router;

@@ -9,12 +9,12 @@ const { protect } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Add a product to favorites
-router.post("/", protect, addFavorite);
+router.post("/add-favorite-products", protect, addFavorite);
 
 // Get favorite products of logged-in user
-router.get("/", protect, getFavorites);
+router.get("/fetch-favorite-products-by-user", protect, getFavorites);
 
 // Remove a product from favorites
-router.delete("/:id", protect, removeFavorite);
+router.delete("/delete-favorite-products-by-id/:id", protect, removeFavorite);
 
 module.exports = router;

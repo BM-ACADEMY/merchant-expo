@@ -5,25 +5,24 @@ const {
   getSubscriptionById,
   updateSubscription,
   deleteSubscription,
-} = require("../controllers/userSubscriptionController");
+} = require("../controllers/userSubscriptionPlanController");
 
-const { protect, admin } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
 // Create a new user subscription
-router.post("/", protect, createSubscription);
+router.post("/create-usersubscriptionplans", protect, createSubscription);
 
 // Get all user subscriptions (Admin only)
-router.get("/", protect, admin, getAllSubscriptions);
+router.get("/fetch-all-usersubscriptionplans", protect, admin, getAllSubscriptions);
 
 // Get a single user subscription by ID
-router.get("/:id", protect, getSubscriptionById);
+router.get("/fetch-usersubscriptionplans-by-id/:id", protect, getSubscriptionById);
 
 // Update a user subscription
-router.put("/:id", protect, admin, updateSubscription);
+router.put("/update-usersubscriptionplans-by-id/:id", protect, admin, updateSubscription);
 
 // Delete a user subscription
-router.delete("/:id", protect, admin, deleteSubscription);
+router.delete("/delete-usersubscriptionplans-by-id/:id", protect, admin, deleteSubscription);
 
 module.exports = router;

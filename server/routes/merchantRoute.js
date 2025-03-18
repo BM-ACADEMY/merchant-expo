@@ -3,7 +3,7 @@ const Merchant = require("../models/merchantModel"); // Merchant model
 const router = express.Router();
 
 // Create Merchant
-router.post("/", async (req, res) => {
+router.post("/create-merchants", async (req, res) => {
   try {
     const newMerchant = new Merchant(req.body);
     await newMerchant.save();
@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
 });
 
 // Get all Merchants
-router.get("/", async (req, res) => {
+router.get("/fetch-all-merchants", async (req, res) => {
   try {
     const merchants = await Merchant.find();
     res.json(merchants);
@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get a specific Merchant
-router.get("/:id", async (req, res) => {
+router.get("/fetch-merchants-by-id/:id", async (req, res) => {
   try {
     const merchant = await Merchant.findById(req.params.id);
     if (!merchant) return res.status(404).json({ message: "Merchant not found" });
@@ -35,7 +35,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Update Merchant
-router.put("/:id", async (req, res) => {
+router.put("/update-merchants-by-id/:id", async (req, res) => {
   try {
     const updatedMerchant = await Merchant.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json({ message: "Merchant updated successfully", merchant: updatedMerchant });
@@ -45,7 +45,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Delete Merchant
-router.delete("/:id", async (req, res) => {
+router.delete("/delete-merchants-by-id/:id", async (req, res) => {
   try {
     await Merchant.findByIdAndDelete(req.params.id);
     res.json({ message: "Merchant deleted successfully" });
