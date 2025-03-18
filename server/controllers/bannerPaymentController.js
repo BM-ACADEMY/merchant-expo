@@ -1,4 +1,4 @@
-const BannerPayment = require('../models/bannerPayment.model');
+const BannerPayment = require('../models/bannerPaymentModel');
 
 // Create a new payment record
 exports.createBannerPayment = async (req, res) => {

@@ -1,4 +1,4 @@
-const ViewPoints = require('../models/viewPoints.model');
+const ViewPoints = require('../models/viewPointsModel');
 
 // Create a new View Point entry
 exports.createViewPoint = async (req, res) => {

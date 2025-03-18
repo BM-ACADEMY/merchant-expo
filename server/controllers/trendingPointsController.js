@@ -1,4 +1,4 @@
-const TrendingPoints = require('../models/trendingPoints.model');
+const TrendingPoints = require('../models/viewPointsModel');
 
 // Create a new Trending Point entry
 exports.createTrendingPoint = async (req, res) => {

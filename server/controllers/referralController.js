@@ -1,4 +1,4 @@
-const Referral = require('../models/referral.model');
+const Referral = require('../models/referralModel');
 
 // Create Referral
 exports.createReferral = async (req, res) => {

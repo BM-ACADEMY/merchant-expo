@@ -1,4 +1,4 @@
-const SubscriptionPlanElement = require('../models/subscriptionPlanElement.model');
+const SubscriptionPlanElement = require('../models/serviceProviderModel');
 
 // Create a new subscription plan element
 exports.createElement = async (req, res) => {

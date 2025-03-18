@@ -1,4 +1,4 @@
-const Banner = require('../models/banner.model');
+const Banner = require('../models/bannerModel');
 
 // Create a new banner
 exports.createBanner = async (req, res) => {

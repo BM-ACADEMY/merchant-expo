@@ -1,4 +1,4 @@
-const RedeemPoints = require('../models/redeemPoints.model');
+const RedeemPoints = require('../models/redeemPointsModel');
 
 // Create a new Redeem Point entry
 exports.createRedeemPoint = async (req, res) => {

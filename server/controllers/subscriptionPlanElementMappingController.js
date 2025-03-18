@@ -1,4 +1,4 @@
-const SubscriptionPlanElementMapping = require('../models/subscriptionPlanElementMapping.model');
+const SubscriptionPlanElementMapping = require('../models/subscriptionPlanElementMappingModel');
 
 // Create a new mapping
 exports.createMapping = async (req, res) => {
