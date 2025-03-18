@@ -1,5 +1,5 @@
 const express = require("express");
-const Merchant = require("../models/MerchantModel"); // Merchant model
+const Merchant = require("../models/merchantModel"); // Merchant model
 const router = express.Router();
 
 // Create Merchant
