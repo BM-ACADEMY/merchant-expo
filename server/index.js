@@ -11,6 +11,10 @@ const userRoutes = require("./routes/userRoute");
 const serviceProviderRoute=require("./routes/serviceProviderRoute");
 const imageRoute=require('./routes/ImageRoute');
 const grocerySeller=require('./routes/grocerySellerRoute');
+const studentRoute=require('./routes/studentRoute');
+const merchantRoute=require('./routes/merchantRoute');
+const subdealerRoute=require('./routes/subdealerRoutes');
+
 
 const app = express();
 
@@ -27,10 +31,12 @@ app.get("/", (req, res) => {
 
 // Add the user-related routes
 app.use("/api/v1/users", userRoutes);
-app.use("/api/v1/service-provider", serviceProviderRoute);
-app.use("/api/v1/upload", imageRoute);
-app.use("/api/v1/grocery-seller",grocerySeller);
-
+app.use("/api/v1/service-providers", serviceProviderRoute);
+app.use("/api/v1/images", imageRoute);
+app.use("/api/v1/grocery-sellers",grocerySeller);
+app.use("/api/v1/students",studentRoute);
+app.use("/api/v1/merchants",merchantRoute);
+app.use("/api/v1/sub-dealer",subdealerRoute);
 
 
 // Test endpoint for quick testing

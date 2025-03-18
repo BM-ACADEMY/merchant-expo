@@ -14,7 +14,11 @@ router.post('/upload/:moduleType', upload.fields([
     { name: 'company_images', maxCount: 15 },
     { name: 'identity_card_image', maxCount: 1 },
     { name: 'profile_pic', maxCount: 1 },
-    { name: 'student_photo', maxCount: 1 }
+    { name: 'student_photo', maxCount: 1 },
+    { name: 'product_images', maxCount: 15 },
+    { name: 'category_image', maxCount: 1 },
+    { name: 'sub_category_image', maxCount: 1 },
+
 ]), uploadImagesController);
 
 // Update images
@@ -23,7 +27,10 @@ router.put('/update/:moduleType', upload.fields([
     { name: 'company_images', maxCount: 15 },
     { name: 'identity_card_image', maxCount: 1 },
     { name: 'profile_pic', maxCount: 1 },
-    { name: 'student_photo', maxCount: 1 }
+    { name: 'student_photo', maxCount: 1 },
+    { name: 'product_images', maxCount: 15 },
+    { name: 'category_image', maxCount: 1 },
+    { name: 'sub_category_image', maxCount: 1 },
 ]), updateImagesController);
 
 // Delete an image

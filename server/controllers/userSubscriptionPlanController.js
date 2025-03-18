@@ -1,5 +1,10 @@
+<<<<<<< HEAD
+const UserSubscription = require("../models/userSubscription");
+const SubscriptionPlan = require("../models/");
+=======
 const UserSubscription = require("../models/UserSubscription");
 const SubscriptionPlan = require("../models/SubscriptionPlan");
+>>>>>>> Snega
 
 // Create a new user subscription
 exports.createSubscription = async (req, res) => {

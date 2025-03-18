@@ -8,7 +8,11 @@ const imageFields = {
     'merchant': ['company_logo', 'company_images'],
     'student': ['identity_card_image', 'student_photo'],
     'grocery-seller': ['company_logo', 'company_images'],
-    'users': ['profile_pic']
+    'users': ['profile_pic'],
+    'products': ['product_images'],
+    'category': ['category_image'],
+    'sub-category':['sub_category_image'],
+
 };
 
 /**
