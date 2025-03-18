@@ -10,10 +10,10 @@ const { authenticate } = require("../middleware/subdealerValidation");
 
 const router = express.Router();
 
-router.get("/", authenticate, getAllSubDealers);
-router.get("/:id", authenticate, getSubDealerById);
-router.post("/", authenticate, createSubDealer);
-router.put("/:id", authenticate, updateSubDealer);
-router.delete("/:id", authenticate, deleteSubDealer);
+router.get("/fetch-all-subdealers", authenticate, getAllSubDealers);
+router.get("/fetch-subdealers-by-id/:id", authenticate, getSubDealerById);
+router.post("/create-subdealers", authenticate, createSubDealer);
+router.put("/update-subdealers-by-id/:id", authenticate, updateSubDealer);
+router.delete("/delete-subdealers-by-id/:id", authenticate, deleteSubDealer);
 
 module.exports = router;
