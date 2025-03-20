@@ -1,69 +1,162 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, User, ShoppingCart } from "lucide-react";
+import {
+  User,
+  BookOpen,
+  Megaphone,
+  Eye,
+  TrendingUp,
+  ShoppingCart,
+} from "lucide-react";
 import { Link } from "react-router-dom";
-import Logo from "@/assets/images/EasyColllll.png"; 
+
+const features = [
+  {
+    icon: <BookOpen className="w-10 h-10 text-gray-500" />,
+    title: "Mini Catalog",
+    description: "Create & Manage your",
+  },
+  {
+    icon: <Megaphone className="w-10 h-10 text-gray-500" />,
+    title: "Advertise",
+    description: "Advertise your Company & Products",
+  },
+  {
+    icon: <Eye className="w-10 h-10 text-gray-500" />,
+    title: "Exposure",
+    description: "Get Maximum",
+  },
+  {
+    icon: <TrendingUp className="w-10 h-10 text-gray-500" />,
+    title: "Ranking",
+    description: "Achieve Higher",
+  },
+  {
+    icon: <ShoppingCart className="w-10 h-10 text-gray-500" />,
+    title: "Quotes",
+    description: "Get Max. Buying",
+  },
+];
 
 const Help = () => {
   return (
-    <div>
- <div className="w-full min-h-screen bg-gray-100">
-      {/* Top Navbar */}
-      <nav className="flex justify-between items-center p-4 bg-white shadow-md">
-        <div>
-          <img src={Logo} alt="Logo" className="h-10" />
-        </div>
-        <div className="space-x-6">
-          <Link to="#" className="text-gray-700 hover:text-purple-600">Home</Link>
-          <Link to="#" className="text-gray-700 hover:text-purple-600">About</Link>
-          <Link to="#" className="text-gray-700 hover:text-purple-600">Contact</Link>
-        </div>
-      </nav>
-
-      {/* Search Box */}
-      <div className="flex justify-center py-6">
-        <div className="flex w-1/2 border border-gray-300 rounded-lg overflow-hidden">
-          <div className="relative flex-grow justify-center items-center">
-            <Search className="absolute left-3 top-3 text-gray-500" size={20} />
-            <Input className="w-full pl-10" placeholder="Search..." />
-          </div>
-          <Button className="px-6">Search</Button>
-        </div>
-      </div>
+    <div className="w-full min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      {/* Header Section */}
+      <motion.div
+        className=" h-52 flex justify-center items-center shadow-md bg-[#1C1B1F]"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <h3 className="text-2xl font-semibold text-white">
+          We're here to assist you.
+        </h3>
+      </motion.div>
 
       {/* FAQ Cards */}
       <div className="flex justify-center gap-6 py-10">
         {/* Buyer FAQ Card */}
-        <Card className="w-80 shadow-lg">
-          <CardHeader className="flex items-center gap-2">
-            <User className="text-purple-600" size={32} />
-            <CardTitle>Buyer FAQ</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600">Find answers to common buyer questions about purchases, payments, and shipping.</p>
-            <Link to="/buyerFaq">
-              <Button className="mt-4" variant="outline">Know More</Button>
-            </Link>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <Card className="w-80 shadow-lg bg-white hover:shadow-xl transition-all duration-300">
+            <CardHeader className="flex items-center gap-2">
+              <User className="text-[#f6d32f]   " size={32} />
+              <CardTitle>Buyer FAQ</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">
+                Search, choose, and shortlist the goods or services you want
+                with the help of these questions and answers.
+              </p>
+              <Link to="/buyerFaq">
+                <Button className="mt-4 cursor-pointer" variant="outline">
+                  Know More
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Seller FAQ Card */}
-        <Card className="w-80 shadow-lg">
-          <CardHeader className="flex items-center gap-2">
-            <ShoppingCart className="text-purple-600" size={32} />
-            <CardTitle>Seller FAQ</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600">Learn about listing products, managing orders, and payment processing.</p>
-            <Link to="/sellerPage">
-              <Button className="mt-4" variant="outline">Know More</Button>
-            </Link>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Card className="w-80 shadow-lg bg-white hover:shadow-xl transition-all duration-300">
+            <CardHeader className="flex items-center gap-2">
+              <ShoppingCart className="text-[#f6d32f]" size={32} />
+              <CardTitle>Seller FAQ</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600">
+                Questions and answers to help you find leads, advertise
+                products, and expand your company.
+              </p>
+              <Link to="/sellerPage">
+                <Button className="mt-4 cursor-pointer" variant="outline">
+                  Know More
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </motion.div>
       </div>
-    </div>
+
+      {/* Business Growth Section */}
+      <motion.div
+        className="flex flex-col items-center justify-center p-8 text-center bg-gradient-to-b from-white to-blue-50 shadow-xl rounded-xl mx-6 "
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+      >
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 tracking-wide">
+          How to Grow your Business as{" "}
+          <a href="#" className="text-[#e03733] hover:underline">
+            Premium Supplier?
+          </a>
+        </h2>
+
+        <motion.div
+          className="flex flex-wrap justify-center gap-16 mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 0.8 }}
+        >
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              className="flex flex-col items-center text-gray-700 transition-all duration-300 hover:scale-105 hover:rotate-1"
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <div className="p-4 bg-white shadow-md rounded-full">
+                {feature.icon}
+              </div>
+              <p className="text-sm mt-3">
+                {feature.description}{" "}
+                <strong className="text-black">{feature.title}</strong>
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring" }}>
+          <Link to="#">
+            <Button
+              variant="outline"
+              className="text-white border-[#e03733] bg-[#e03733] hover:bg-[#e03733] hover:text-white hover:shadow-lg cursor-pointer px-6 py-2 rounded-lg transition-all"
+            >
+              I am Interested
+            </Button>
+          </Link>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
