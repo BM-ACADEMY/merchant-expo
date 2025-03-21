@@ -19,6 +19,11 @@ import {
   DialogTrigger,
 } from "../../../../components/ui/dialog";
 import Help from "@/staticPages/help";
+import AboutUs from "@/staticPages/AboutUs";
+import ContactUs from "@/staticPages/ContactUs";
+import Disclaimer from "@/staticPages/Disclaimer";
+import Complaint from "@/staticPages/Complaint";
+
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -64,7 +69,8 @@ const Dashboard = () => {
     <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
       <h1>Welcome to Dashboard, Points: {points}</h1>
       <div>
-        <Help />
+   {/* <AboutUs /> */}
+   <Complaint />
       </div>
     </div>
   );
