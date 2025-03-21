@@ -4,11 +4,19 @@ import { fetchUsers } from "../../redux/slice/UserSlice";
 import { useSidebar } from "../../hooks/useSidebar";
 import { ActiveUserContext } from "../../context/ActiveUserProvider";
 import Help from "@/staticPages/help";
+<<<<<<< HEAD
 import FeedBack from "@/staticPages/FeedBack";
 import Testimonial from "@/staticPages/Testimonial";
 import PostRequirement from "@/staticPages/PostByRequirement";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+=======
+import AboutUs from "@/staticPages/AboutUs";
+import ContactUs from "@/staticPages/ContactUs";
+import Disclaimer from "@/staticPages/Disclaimer";
+import Complaint from "@/staticPages/Complaint";
+
+>>>>>>> 14062b540b7eb0b8270981bc65a14bc8ecb24c8d
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -74,6 +82,7 @@ const Dashboard = () => {
     <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
       <h1>Welcome to Dashboard, Points: {points}</h1>
       <div>
+<<<<<<< HEAD
         <Help />
         <div className="mt-10">
           <FeedBack />
@@ -99,6 +108,10 @@ const Dashboard = () => {
         ) : (
           <button onClick={() => login()}>Sign in with Google 🚀</button>
         )}
+=======
+   {/* <AboutUs /> */}
+   <Complaint />
+>>>>>>> 14062b540b7eb0b8270981bc65a14bc8ecb24c8d
       </div>
     </div>
   );
