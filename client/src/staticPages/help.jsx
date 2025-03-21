@@ -11,6 +11,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import '../styles/_theme.scss'
 
 const features = [
   {
@@ -65,7 +66,7 @@ const Help = () => {
         >
           <Card className="w-80 shadow-lg bg-white hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex items-center gap-2">
-              <User className="text-[#f6d32f]   " size={32} />
+              <User  style={{ color: "var(--tertiary-color)" }} size={32} />
               <CardTitle>Buyer FAQ</CardTitle>
             </CardHeader>
             <CardContent>
@@ -73,7 +74,7 @@ const Help = () => {
                 Search, choose, and shortlist the goods or services you want
                 with the help of these questions and answers.
               </p>
-              <Link to="/buyerFaq">
+              <Link to="/buyer-faq">
                 <Button className="mt-4 cursor-pointer" variant="outline">
                   Know More
                 </Button>
@@ -90,7 +91,7 @@ const Help = () => {
         >
           <Card className="w-80 shadow-lg bg-white hover:shadow-xl transition-all duration-300">
             <CardHeader className="flex items-center gap-2">
-              <ShoppingCart className="text-[#f6d32f]" size={32} />
+              <ShoppingCart style={{ color: "var(--tertiary-color)" }} size={32} />
               <CardTitle>Seller FAQ</CardTitle>
             </CardHeader>
             <CardContent>
@@ -98,7 +99,7 @@ const Help = () => {
                 Questions and answers to help you find leads, advertise
                 products, and expand your company.
               </p>
-              <Link to="/sellerPage">
+              <Link to="/seller-faq">
                 <Button className="mt-4 cursor-pointer" variant="outline">
                   Know More
                 </Button>
@@ -117,7 +118,7 @@ const Help = () => {
       >
         <h2 className="text-2xl font-bold mb-6 text-gray-800 tracking-wide">
           How to Grow your Business as{" "}
-          <a href="#" className="text-[#e03733] hover:underline">
+          <a href="#" style={{color:`var( --neutral-color)`}} className="hover:underline">
             Premium Supplier?
           </a>
         </h2>
@@ -146,11 +147,11 @@ const Help = () => {
           ))}
         </motion.div>
 
-        <motion.div whileHover={{ scale: 1.1 }} transition={{ type: "spring" }}>
+        <motion.div >
           <Link to="#">
             <Button
-              variant="outline"
-              className="text-white border-[#e03733] bg-[#e03733] hover:bg-[#e03733] hover:text-white hover:shadow-lg cursor-pointer px-6 py-2 rounded-lg transition-all"
+       
+             className="w-full bg-[#e03733]  hover:shadow-lg text-white py-2 rounded-md cursor-pointer"
             >
               I am Interested
             </Button>

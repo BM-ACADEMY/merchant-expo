@@ -3,19 +3,18 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+ 
   },
   referral_code: {
     type: String,
   },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    sparse: true,
+    unique:true
   },
   phone: {
     type: String,
-    required: true,
     unique: true,
   },
   number_otp: {
