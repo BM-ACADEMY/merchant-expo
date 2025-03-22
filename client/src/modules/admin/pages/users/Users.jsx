@@ -27,43 +27,7 @@ const Users = () => {
 
   return (
     <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
-      <Card className="max-w-md mx-auto shadow-lg">
-        <CardContent className="p-6">
-          <h2 className="text-xl font-semibold mb-4">User Form</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={userData.username}
-              onChange={handleChange}
-              className="w-full"
-              required
-            />
-            <Input
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={userData.email}
-              onChange={handleChange}
-              className="w-full"
-              required
-            />
-            <Input
-              type="tel"
-              name="phoneNumber"
-              placeholder="Phone Number"
-              value={userData.phoneNumber}
-              onChange={handleChange}
-              className="w-full"
-              required
-            />
-            <Button type="submit" className="w-full">
-              Submit
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+
     </div>
   );
 };

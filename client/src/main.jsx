@@ -5,7 +5,8 @@ import App from "./App.jsx";
 import { SidebarProvider } from "./modules/admin/context/SidebarContext";
 import { Provider } from "react-redux";
 import store from "./modules/admin/redux/store/Store";
-import { GoogleOAuthProvider } from "@react-oauth/google"
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
 
 createRoot(document.getElementById("root")).render(
  <GoogleOAuthProvider clientId='82108271148-mf16gsn60dnpp156vgvfra9f2bin44np.apps.googleusercontent.com' >

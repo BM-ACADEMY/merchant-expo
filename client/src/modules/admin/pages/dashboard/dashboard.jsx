@@ -15,6 +15,7 @@ import AboutUs from "@/staticPages/AboutUs";
 import ContactUs from "@/staticPages/ContactUs";
 import Disclaimer from "@/staticPages/Disclaimer";
 import Complaint from "@/staticPages/Complaint";
+import MerchantList from "../merchants/MerchantList";
 
 
 
@@ -82,20 +83,20 @@ const Dashboard = () => {
     <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
       <h1>Welcome to Dashboard, Points: {points}</h1>
       <div>
-
+{/* 
         <Help />
-        <div className="mt-10">
-          <FeedBack />
-        </div>
-        <div className="mt-10">
-          <Testimonial />
-        </div>
-        <div className="mt-10">
-          <PostRequirement />
-        </div>
+        <FeedBack />
+        <Testimonial />
+        <PostRequirement />
+        <AboutUs />
+        <Complaint />
+        <Disclaimer />
+        <ContactUs /> */}
+
+        <MerchantList />
       </div>
 
-      <div className="mt-10">
+      {/* <div className="mt-10">
         {profile ? (
           <div>
             <img src={profile.picture} alt="User Profile" />
@@ -109,10 +110,9 @@ const Dashboard = () => {
           <button onClick={() => login()}>Sign in with Google 🚀</button>
         )}
 
-   {/* <AboutUs /> */}
-   <Complaint />
 
-      </div>
+
+      </div> */}
     </div>
   );
 };
