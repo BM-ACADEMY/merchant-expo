@@ -5,28 +5,33 @@ const {
     getUserById, 
     updateUser, 
     deleteUser ,
-    sendOtp,
-    verifyOtp
+    loginUser,
+    verifyEmailOtp
 } = require("../controllers/userController");
 
-const authMiddleware = require("../middleware/userValidation");
+const{ authMiddleware } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // Create a new user
-router.post('/create-users', createUser);
+router.post('/register', createUser);
+
+//login 
+router.post('/login', loginUser);
 
 // Get all users
-router.get('/fetch-all-users', getUsers);
+router.get('/fetch-all-users',authMiddleware, getUsers);
 
 // Get a single user by ID
-router.get('/fetch-users-by-id/:id', getUserById);
+router.get('/fetch-users-by-id/:id',authMiddleware, getUserById);
 
 // Update a user by ID
-router.put('/update-users-by-id/:id', updateUser);
+router.put('/update-users-by-id/:id',authMiddleware, updateUser);
 
 // Delete a user by ID
-router.delete('/delete-users-by-id/:id', deleteUser);
+router.delete('/delete-users-by-id/:id',authMiddleware, deleteUser);
 
-router.post("/verify-otp", verifyOtp);
+router.post("/verify-otp", verifyEmailOtp);
+
+
 
 module.exports = router;
