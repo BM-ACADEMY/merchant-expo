@@ -128,7 +128,7 @@ const MerchantList = () => {
         <TableBody>
           {filteredMerchants.map((merchant) => (
             <TableRow key={merchant.id}>
-              <TableCell>{merchant.name || "N/A"}</TableCell>
+              <TableCell>{merchant.name || "N/A"}</TableCell>I'm having a model in my file how can I put in gi
               <TableCell>{merchant.email || "N/A"}</TableCell>
               <TableCell>{merchant.number || "N/A"}</TableCell>
               <TableCell>{merchant.plan || "N/A"}</TableCell>
