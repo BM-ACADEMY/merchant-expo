@@ -92,8 +92,10 @@ const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
 exports.createUser = async (req, res) => {
   try {
     const { name, email, phone, role, password, confirmPassword } = req.body;
+    console.log(req.body);
+    
 
-    if (password.trim() !== confirmPassword.trim()) {
+    if (password?.trim() !== confirmPassword?.trim()) {
       return res.status(400).json({ message: "Password does not match" });
     }
 
