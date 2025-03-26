@@ -3,13 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchUsers } from "../../redux/slice/UserSlice";
 import { useSidebar } from "../../hooks/useSidebar";
 import { ActiveUserContext } from "../../context/ActiveUserProvider";
-<<<<<<< HEAD
-=======
+
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
-
->>>>>>> edcc00e1d3f19308c7287283221b69d796e8b91c
 
 const Dashboard = () => {
   const dispatch = useDispatch();

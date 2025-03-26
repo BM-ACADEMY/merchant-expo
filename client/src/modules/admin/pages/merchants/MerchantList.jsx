@@ -4,137 +4,197 @@ import { useSidebar } from "../../hooks/useSidebar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableHead, TableHeader, TableRow, TableBody, TableCell } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Filter, PlusCircle } from "lucide-react";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, PlusCircle } from "lucide-react";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 
 const MerchantList = () => {
   const { isSidebarOpen } = useSidebar();
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState([]);
-  const [planFilter, setPlanFilter] = useState([]);
   const [merchants, setMerchants] = useState([]);
-  const [statuses, setStatuses] = useState([]);
-  const [plans, setPlans] = useState([]);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [newMerchant, setNewMerchant] = useState({
+    user_id: "",
+    email: "",
+    phone_number: "",
+    company_name: "",
+    identifier_type: "",
+    identifier_value: "",
+    company_type: "",
+    company_logo: null,
+    company_images: [],
+    identifier_image: null
+  });
 
-  // Fetch merchants, statuses, and plans from the database
   useEffect(() => {
     async function fetchData() {
       try {
-        const [merchantRes, statusRes, planRes] = await Promise.all([
-          axios.get("/api/merchants"),
-          axios.get("/api/status"),
-          axios.get("/api/plans")
-        ]);
-
-        // Ensure data is an array or set an empty array as fallback
+        const merchantRes = await axios.get("/api/merchants");
         setMerchants(Array.isArray(merchantRes.data) ? merchantRes.data : []);
-        setStatuses(Array.isArray(statusRes.data) ? statusRes.data : []);
-        setPlans(Array.isArray(planRes.data) ? planRes.data : []);
       } catch (error) {
-        console.error("Error fetching data:", error);
-        setMerchants([]); // Ensure merchants is always an array
+        console.error("Error fetching merchants:", error);
+        setMerchants([]);
       }
     }
     fetchData();
   }, []);
 
-  // Filter merchants based on search and selected filters
-  const filteredMerchants = merchants?.filter((merchant) => {
-    return (
-      merchant.name?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (statusFilter.length === 0 || statusFilter.includes(merchant.status)) &&
-      (planFilter.length === 0 || planFilter.includes(merchant.plan))
-    );
-  }) || [];
+  const handleAddMerchant = async () => {
+    try {
+      await axios.post("/api/merchants", newMerchant);
+      setMerchants([...merchants, newMerchant]);
+      setNewMerchant({
+        user_id: "",
+        email: "",
+        phone_number: "",
+        company_name: "",
+        identifier_type: "",
+        identifier_value: "",
+        company_type: "",
+        company_logo: null,
+        company_images: [],
+        identifier_image: null
+      });
+      setImagePreview(null);
+    } catch (error) {
+      console.error("Error adding merchant:", error);
+    }
+  };
+
+  const handleImageChange = (e, field) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewMerchant({ ...newMerchant, [field]: file });
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
 
   return (
-    <div className={`${isSidebarOpen ? 'p-6 lg:ml-56' : 'p-4 lg:ml-16'}`}>
-      {/* Search & Filters */}
+    <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
       <div className="flex flex-wrap items-center gap-4 mb-4">
         <Input
           type="text"
-          placeholder="Search merchants..."
-          className="w-1/3"
+          placeholder="Search Merchant..."
+          className="w-72"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-
-        {/* Status Filter */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="flex items-center">
-              <Filter className="w-4 h-4 mr-2" /> Status
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="ml-auto flex items-center bg-[#e03733] hover:shadow-lg text-white">
+              <PlusCircle className="w-4 h-4 mr-2" /> Add Merchant
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {statuses.map((status) => (
-              <DropdownMenuCheckboxItem
-                key={status}
-                checked={statusFilter.includes(status)}
-                onCheckedChange={(checked) => {
-                  setStatusFilter((prev) =>
-                    checked ? [...prev, status] : prev.filter((s) => s !== status)
-                  );
-                }}
-              >
-                {status}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </DialogTrigger>
+          <DialogContent className="max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Add Merchant</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col gap-2">
+              <Label>User ID</Label>
+              <Input
+                placeholder="User ID"
+                value={newMerchant.user_id}
+                onChange={(e) => setNewMerchant({ ...newMerchant, user_id: e.target.value })}
+              />
 
-        {/* Plan Filter */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="flex items-center">
-              <Filter className="w-4 h-4 mr-2" /> Plans
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {plans.map((plan) => (
-              <DropdownMenuCheckboxItem
-                key={plan}
-                checked={planFilter.includes(plan)}
-                onCheckedChange={(checked) => {
-                  setPlanFilter((prev) =>
-                    checked ? [...prev, plan] : prev.filter((p) => p !== plan)
-                  );
-                }}
-              >
-                {plan}
-              </DropdownMenuCheckboxItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <Label>Email</Label>
+              <Input
+                placeholder="Email"
+                value={newMerchant.email}
+                onChange={(e) => setNewMerchant({ ...newMerchant, email: e.target.value })}
+              />
 
-        {/* Add Merchant Button */}
-        <Button className="ml-auto flex items-center bg-blue-600 hover:bg-blue-700 text-white">
-          <PlusCircle className="w-4 h-4 mr-2" /> Add Merchant
-        </Button>
+              <Label>Phone Number</Label>
+              <Input
+                placeholder="Phone Number"
+                value={newMerchant.phone_number}
+                onChange={(e) => setNewMerchant({ ...newMerchant, phone_number: e.target.value })}
+              />
+
+              <Label>Company Name</Label>
+              <Input
+                placeholder="Company Name"
+                value={newMerchant.company_name}
+                onChange={(e) => setNewMerchant({ ...newMerchant, company_name: e.target.value })}
+              />
+
+              <Label>Identifier Type</Label>
+              <Select onValueChange={(value) => setNewMerchant({ ...newMerchant, identifier_type: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Identifier" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="msme_certificate_number">MSME Certificate Number</SelectItem>
+                  <SelectItem value="gst_number">GST Number</SelectItem>
+                  <SelectItem value="pan">PAN</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Label>{`Enter ${newMerchant.identifier_type.replace("_", " ")}`}</Label>
+              <Input
+                value={newMerchant.identifier_value}
+                onChange={(e) => setNewMerchant({ ...newMerchant, identifier_value: e.target.value })}
+              />
+
+              <Label>Company Type</Label>
+              <Select onValueChange={(value) => setNewMerchant({ ...newMerchant, company_type: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Company Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Retailer">Retailer</SelectItem>
+                  <SelectItem value="Manufacturer">Manufacturer</SelectItem>
+                  <SelectItem value="Sub-dealer">Sub-dealer</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Label>Company Logo</Label>
+              <Input type="file" onChange={(e) => handleImageChange(e, "company_logo")} />
+              {imagePreview && (
+                <img
+                  src={imagePreview}
+                  alt="Company Logo Preview"
+                  className="w-16 h-16 mt-2 cursor-pointer rounded-lg"
+                  onClick={() => window.open(imagePreview)}
+                />
+              )}
+
+              <Label>Company Images (Up to 5)</Label>
+              <Input
+                type="file"
+                multiple
+                onChange={(e) => setNewMerchant({ ...newMerchant, company_images: Array.from(e.target.files) })}
+              />
+
+              <Button className="mt-4" onClick={handleAddMerchant}>
+                Add Merchant
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
-
-      {/* Merchant Table */}
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
+            <TableHead>User ID</TableHead>
             <TableHead>Email</TableHead>
-            <TableHead>Number</TableHead>
-            <TableHead>Plan</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>Phone Number</TableHead>
+            <TableHead>Company Name</TableHead>
+            <TableHead>Company Type</TableHead>
             <TableHead className="text-right">More</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredMerchants.map((merchant) => (
-            <TableRow key={merchant.id}>
-              <TableCell>{merchant.name || "N/A"}</TableCell>I'm having a model in my file how can I put in gi
+          {merchants.map((merchant) => (
+            <TableRow key={merchant.user_id}>
+              <TableCell>{merchant.user_id || "N/A"}</TableCell>
               <TableCell>{merchant.email || "N/A"}</TableCell>
-              <TableCell>{merchant.number || "N/A"}</TableCell>
-              <TableCell>{merchant.plan || "N/A"}</TableCell>
-              <TableCell>{merchant.status || "N/A"}</TableCell>
+              <TableCell>{merchant.phone_number || "N/A"}</TableCell>
+              <TableCell>{merchant.company_name || "N/A"}</TableCell>
+              <TableCell>{merchant.company_type || "N/A"}</TableCell>
               <TableCell className="text-right">
-                {/* More Dropdown */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="icon">
@@ -142,9 +202,9 @@ const MerchantList = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => console.log("Viewing", merchant)}>View</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => console.log("Editing", merchant)}>Edit</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => console.log("Deleting", merchant)}>Delete</DropdownMenuItem>
+                    <DropdownMenuItem>View</DropdownMenuItem>
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Delete</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
