@@ -7,14 +7,14 @@ import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
 // Import missing components
-import Help from "../Help";
-import FeedBack from "../FeedBack";
-import Testimonial from "../Testimonial";
-import PostRequirement from "../PostRequirement";
-import Complaint from "../Complaint";
-import AboutUs from "../AboutUs";
-import Disclaimer from "../Disclaimer";
-import ContactUs from "../ContactUs";
+import Help from "@/staticPages/help";
+import FeedBack from "@/staticPages/FeedBack";
+import Testimonial from "@/staticPages/Testimonial";
+import PostRequirement from "@/staticPages/PostByRequirement";
+import Complaint from "@/staticPages/Complaint";
+import AboutUs from "@/staticPages/AboutUs";
+import Disclaimer from "@/staticPages/Disclaimer";
+import ContactUs from "@/staticPages/ContactUs";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
