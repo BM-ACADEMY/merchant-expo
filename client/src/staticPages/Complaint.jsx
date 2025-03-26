@@ -12,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const ComplaintForm = () => {
+const Complaint= () => {
   const [complaintType, setComplaintType] = useState("");
   const [formData, setFormData] = useState({
     name: "",
@@ -260,4 +260,4 @@ const ComplaintForm = () => {
   );
 };
 
-export default ComplaintForm;
+export default Complaint;
