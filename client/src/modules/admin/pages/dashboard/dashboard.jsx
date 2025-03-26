@@ -2,16 +2,10 @@ import { useEffect, useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useSidebar } from "../../hooks/useSidebar";
 import { ActiveUserContext } from "../../context/ActiveUserProvider";
-import Help from "@/staticPages/help";
-import FeedBack from "@/staticPages/FeedBack";
-import Testimonial from "@/staticPages/Testimonial";
-import PostRequirement from "@/staticPages/PostByRequirement";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import AboutUs from "@/staticPages/AboutUs";
-import ContactUs from "@/staticPages/ContactUs";
-import Disclaimer from "@/staticPages/Disclaimer";
-import Complaint from "@/staticPages/Complaint";
+
+
 
 const Dashboard = () => {
   const dispatch = useDispatch();
