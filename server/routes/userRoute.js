@@ -6,7 +6,8 @@ const {
     updateUser, 
     deleteUser ,
     loginUser,
-    verifyEmailOtp
+    verifyEmailOtp,
+    resendOtp 
 } = require("../controllers/userController");
 
 const{ authMiddleware } = require("../middleware/authMiddleware");
@@ -32,6 +33,7 @@ router.delete('/delete-users-by-id/:id',authMiddleware, deleteUser);
 
 router.post("/verify-otp", verifyEmailOtp);
 
+router.post("/resend-otp", resendOtp );
 
 
 module.exports = router;

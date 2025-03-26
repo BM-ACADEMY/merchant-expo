@@ -1,6 +1,5 @@
 import { useEffect, useContext, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchUsers } from "../../redux/slice/UserSlice";
 import { useSidebar } from "../../hooks/useSidebar";
 import { ActiveUserContext } from "../../context/ActiveUserProvider";
 import Help from "@/staticPages/help";
@@ -17,9 +16,7 @@ import Complaint from "@/staticPages/Complaint";
 const Dashboard = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+  useEffect(() => {}, [dispatch]);
 
   const { isSidebarOpen } = useSidebar();
   const { points } = useContext(ActiveUserContext);
@@ -78,7 +75,6 @@ const Dashboard = () => {
     <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
       <h1>Welcome to Dashboard, Points: {points}</h1>
       <div>
-
         <Help />
         <div className="mt-10">
           <FeedBack />
@@ -105,9 +101,18 @@ const Dashboard = () => {
           <button onClick={() => login()}>Sign in with Google 🚀</button>
         )}
 
-   {/* <AboutUs /> */}
-   <Complaint />
-
+        {/* <AboutUs /> */}
+        <Complaint />
+        <div className="mt-10">
+          <AboutUs/>
+        </div>
+        <div className="mt-10">
+          <Disclaimer/>
+        </div>
+        <div className="mt-10">
+          <ContactUs/>
+        </div>
+        
       </div>
     </div>
   );
