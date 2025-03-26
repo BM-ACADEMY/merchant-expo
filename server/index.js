@@ -23,7 +23,7 @@ app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(morgan("dev")); // Log requests
 app.use(bodyParser.json()); // Parse JSON request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.json());
 // Basic test route
 app.get("/", (req, res) => {
   res.send("Server is running!");

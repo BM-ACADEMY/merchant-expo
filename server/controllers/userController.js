@@ -1,11 +1,10 @@
 const User = require("../models/userModel");
-const axios = require("axios");
-const Role=require('../models/roleModel');
+const Role = require("../models/roleModel");
 const { sendOtpEmail } = require("../utils/sendEmail");
-const crypto=require('crypto');
+const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
-const jwt=require('jsonwebtoken');
-
+const jwt = require("jsonwebtoken");
+const axios = require("axios"); // ✅ Moved to the bottom since it's not required immediately
 
 const generateOtp = () => Math.floor(100000 + Math.random() * 900000);
 
@@ -93,6 +92,9 @@ exports.createUser = async (req, res) => {
   try {
     const { name, email, phone, role, password, confirmPassword } = req.body;
     console.log(req.body);
+
+    console.log(req.body,'sdsdsds');
+
     
 
     if (password?.trim() !== confirmPassword?.trim()) {
@@ -150,11 +152,41 @@ exports.createUser = async (req, res) => {
     await sendOtpEmail(email, otp);
 
     res.status(201).json({
+      success: true,
+      error:false,
       message: "User registered. OTP sent for verification.",
-      userId: newUser._id,
+      data: newUser._id,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error creating user", error: error.message });
+    res.status(500).json({ success: false,
+      error:true,message: "Error creating user", error: error.message });
+  }
+};
+exports.resendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.email_verified) {
+      return res.status(400).json({ message: "Email already verified" });
+    }
+
+    const otp = Math.floor(1000 + Math.random() * 9000).toString();
+    const encryptedOtp = crypto.createHash("sha256").update(otp).digest("hex");
+
+    user.email_otp = encryptedOtp;
+    await user.save();
+
+    await sendOtpEmail(email, otp);
+
+    res.status(200).json({ success: true, message: "OTP resent successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error resending OTP", error: error.message });
   }
 };
 
@@ -199,9 +231,9 @@ exports.loginUser = async (req, res) => {
       { expiresIn: "7d" }
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({ success:true,error:false, message: "Login successful", data:token });
   } catch (error) {
-    res.status(500).json({ message: "Error logging in", error: error.message });
+    res.status(500).json({ success:false,error:true,message: "Error logging in", error: error.message });
   }
 };
 exports.sendOtp = async (req, res) => {
@@ -242,6 +274,7 @@ exports.sendOtp = async (req, res) => {
 exports.verifyEmailOtp = async (req, res) => {
   try {
     const { email, email_otp } = req.body;
+console.log();
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -292,7 +325,7 @@ exports.verifyOtp = async (req, res) => {
       user,
     });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false,error:true, error: error.message });
   }
 };
 // Get all users
@@ -323,16 +356,24 @@ exports.getUsers = async (req, res) => {
 // Get a user by ID
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const user = await User.findById(req.params.id).populate("role"); // Populate the role field
 
-    res.status(200).json(user);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { password, ...userWithoutPassword } = user.toObject(); // Remove password field
+
+    res.status(200).json({
+      success: true,
+      message: "User fetched successfully",
+      user: userWithoutPassword,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error fetching user", error: error.message });
+    res.status(500).json({ message: "Error fetching user", error: error.message });
   }
 };
+
 // Update user details
 exports.updateUser = async (req, res) => {
   try {

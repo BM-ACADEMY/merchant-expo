@@ -291,7 +291,7 @@ import * as Icons from "phosphor-react";
 import menuItems from "../utils/Menuitem";
 import { useSidebar } from "../hooks/useSidebar";
 import bird from "../../../assets/images/bird.png";
-import easyCol from "../../../assets/images/EasyColllll.png";
+import easyCol from "@/assets/images/merchant-expo-logo.png";
 
 const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
@@ -313,18 +313,18 @@ const Sidebar = () => {
 
       return (
         <li key={item.title} className={`py-1 ${level > 0 ? "pl-4" : ""}`}>
-          <div className="flex items-center p-3 cursor-pointer hover:bg-gray-300 rounded-lg transition-all duration-300">
+          <div className="flex items-center p-3 cursor-pointer text-white hover:bg-[#5a5a5a] rounded-lg transition-all duration-300">
             {/* If item has a link, wrap it in Link */}
             {item.link ? (
-              <Link to={item.link} className="flex items-center w-full">
-                <IconComponent size={20} color="#20638b" weight="duotone" />
+              <Link to={item.link} className="flex items-center w-full ">
+                <IconComponent size={20}  color="#f6d32f" weight="duotone" />
                 <span className={`ml-3 ${!isSidebarOpen ? "hidden" : ""}`}>
                   {item.title}
                 </span>
               </Link>
             ) : (
               <div onClick={() => hasChildren && handleToggle(item.title)} className="flex items-center w-full">
-                <IconComponent size={20} color="#20638b" weight="duotone" />
+                <IconComponent size={20} color="#f6d32f" weight="duotone" />
                 <span className={`ml-3 ${!isSidebarOpen ? "hidden" : ""}`}>
                   {item.title}
                 </span>
@@ -334,7 +334,7 @@ const Sidebar = () => {
                       openMenus[item.title] ? "rotate-180" : "rotate-0"
                     }`}
                     size={18}
-                    color="#20638b"
+                    color="#f6d32f"
                     weight="bold"
                   />
                 )}
@@ -356,15 +356,15 @@ const Sidebar = () => {
       {/* Sidebar Toggle Button */}
       <button className="fixed top-3 left-2 z-20 p-2 text-gray-800" onClick={toggleSidebar}>
         {isSidebarOpen ? (
-          <ArrowCircleLeft size={20} color="#20638b" weight="duotone" />
+          <ArrowCircleLeft size={20} color="#f6d32f" weight="duotone" />
         ) : (
-          <List size={20} color="#20638b" weight="duotone" />
+          <List size={20} color="#f6d32f" weight="duotone" />
         )}
       </button>
 
       {/* Sidebar Container */}
       <div
-        className={`fixed top-0 left-0 h-full bg-[rgba(255,255,255,0.1)] backdrop-blur-md shadow-2xl border transition-all duration-300 z-10 ${
+        className={`fixed top-0 left-0 h-full  backdrop-blur-md shadow-2xl border transition-all duration-300 z-10 bg-[#1C1B1F] ${
           isSidebarOpen ? "w-56" : "w-0 lg:w-16"
         } flex flex-col overflow-y-auto`}
       >
@@ -382,10 +382,10 @@ const Sidebar = () => {
         </nav>
 
         {/* Logout Button */}
-        <div className="flex-shrink-0 p-4 space-y-2 px-2 py-4 text-[14px] font-bold font-suse">
-          <Link to="/login" className="flex items-center p-3 hover:bg-gray-300 rounded-lg transition-all duration-300">
-            <SignOut size={20} color="#20638b" weight="duotone" />
-            <span className={`ml-3 ${!isSidebarOpen ? "hidden" : ""}`}>Logout</span>
+        <div className="flex-shrink-0 p-4 space-y-2 px-2 py-4 text-[14px] font-bold font-suse ">
+          <Link to="/" className="flex items-center p-3 hover:bg-[#5a5a5a] rounded-lg transition-all duration-300  ">
+            <SignOut size={20} color="#f6d32f" weight="duotone"  />
+            <span className={`ml-3 text-white ${!isSidebarOpen ? "hidden" : ""}`}>Logout</span>
           </Link>
         </div>
       </div>
