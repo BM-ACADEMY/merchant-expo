@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 
 const merchantSchema = new mongoose.Schema(
   {
-    user_id: { type: Number, required: true, unique: true },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      unique: true,
+      required: true,
+    },
     email: { type: String, required: true, unique: true },
     phone_number: { type: String, required: true },
     company_name: { type: String, required: true },
@@ -13,9 +18,13 @@ const merchantSchema = new mongoose.Schema(
     aadhar: { type: String, required: true, unique: true },
     verified_status: { type: Boolean, default: false },
     trustshield: { type: Boolean, default: false },
-    company_type: { type: String, enum: ["Retailer", "Manufacturer", "Sub_dealer"], required: true },
+    company_type: {
+      type: String,
+      enum: ["Retailer", "Manufacturer", "Sub_dealer"],
+      required: true,
+    },
     company_logo: { type: String },
-    company_images: { type: [String] }
+    company_images: { type: [String] },
   },
   { timestamps: true }
 );

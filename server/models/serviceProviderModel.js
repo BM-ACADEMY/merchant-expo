@@ -4,7 +4,6 @@ const ServiceProviderSchema = new mongoose.Schema({
     address_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Address', required: true },
     email: { type: String, unique: true, required: true },
     phone_number: { type: String, required: true },
-    password: { type: String, required: true },
     travels_name: { type: String, required: true },
     license_number: { type: String, unique: true, required: true },
     verified_status: { type: Boolean, default: false },

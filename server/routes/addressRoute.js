@@ -5,7 +5,7 @@ const addressController = require("../controllers/addressController");
 router.post("/create-address", addressController.createAddress);
 router.get("/fetch-all-address", addressController.getAddresses);
 router.get("/fetch-address-by-id/:id", addressController.getAddressById);
-router.put("/update-address/:id", addressController.updateAddress);
-router.delete("/delete-address/:id", addressController.deleteAddress);
+router.put("/update-address/:userId", addressController.updateAddress);
+router.delete("/delete-address/:userId", addressController.deleteAddress);
 
 module.exports = router;
