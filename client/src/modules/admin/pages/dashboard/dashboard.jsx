@@ -1,23 +1,26 @@
 import { useEffect, useContext, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { useSidebar } from "../../hooks/useSidebar";
 import { ActiveUserContext } from "../../context/ActiveUserProvider";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-
-
+import MerchantLayout from "@/modules/merchant/MerchantLayout";
+import Help from "@/staticPages/help";
+import FeedBack from "@/staticPages/FeedBack";
+import Testimonial from "@/staticPages/Testimonial";
+import PostRequirement from "@/staticPages/PostByRequirement";
+import Complaint from "@/staticPages/Complaint";
+import AboutUs from "@/staticPages/AboutUs";
+import Disclaimer from "@/staticPages/Disclaimer";
+import ContactUs from "@/staticPages/ContactUs";
+import MerchantList from "../merchants/MerchantList";
 
 const Dashboard = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {}, [dispatch]);
-
   const { isSidebarOpen } = useSidebar();
-  const { points } = useContext(ActiveUserContext);
-
-  const [accessToken, setAccessToken] = useState(null); // Store token separately
+  const { points } = useContext(ActiveUserContext) || {}; // Safeguard against undefined context
+  const [accessToken, setAccessToken] = useState(null); // Store token
   const [profile, setProfile] = useState(null); // Store user profile
 
+  // Google login setup
   const login = useGoogleLogin({
     onSuccess: async (codeResponse) => {
       console.log("Login Success:", codeResponse);
@@ -36,9 +39,10 @@ const Dashboard = () => {
         console.error("Error decoding token:", error);
       }
     },
-    onError: (error) => console.log("Login Failed:", error),
+    onError: (error) => console.error("Login Failed:", error),
   });
 
+  // Fetch user info when accessToken is set
   useEffect(() => {
     if (accessToken) {
       axios
@@ -67,8 +71,8 @@ const Dashboard = () => {
 
   return (
     <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
-      <h1>Welcome to Dashboard, Points: {points}</h1>
-      <div>
+      <h1>Welcome to Dashboard, Points: {points || 0}</h1>
+      {/* <div>
         <Help />
         <div className="mt-10">
           <FeedBack />
@@ -79,12 +83,12 @@ const Dashboard = () => {
         <div className="mt-10">
           <PostRequirement />
         </div>
-      </div>
+      </div> */}
 
       <div className="mt-10">
         {profile ? (
           <div>
-            <img src={profile.picture} alt="User Profile" />
+            {profile.picture && <img src={profile.picture} alt="User Profile" />}
             <h3>User Logged in</h3>
             <p>Name: {profile.name}</p>
             <p>Email Address: {profile.email}</p>
@@ -95,18 +99,19 @@ const Dashboard = () => {
           <button onClick={() => login()}>Sign in with Google 🚀</button>
         )}
 
-        {/* <AboutUs /> */}
-        <Complaint />
+        {/* <Complaint />
         <div className="mt-10">
-          <AboutUs/>
+          <AboutUs />
         </div>
         <div className="mt-10">
-          <Disclaimer/>
+          <Disclaimer />
         </div>
         <div className="mt-10">
-          <ContactUs/>
+          <ContactUs />
+        </div> */}
+        <div>
+        <MerchantList />
         </div>
-        
       </div>
     </div>
   );
