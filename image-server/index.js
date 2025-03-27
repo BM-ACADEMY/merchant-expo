@@ -8,10 +8,14 @@ const bodyParser = require("body-parser");
 const path = require('path');
 
 const PORT=process.env.PORT || 8080;
-//route paths
+
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+//route paths
+
 const merchantRoutes=require('./routes/merchantRoute');
 const userRoute=require('./routes/userRoute');
+const serviceProviderRoute=require('./routes/serviceProviderRoute');
 
 // Middlewares
 app.use(cors({
@@ -41,7 +45,7 @@ app.use(express.json());
 //route middlewares
 app.use('/api/v1/merchant-images', merchantRoutes);
 app.use('/api/v1/user-images', userRoute);
-
+app.use('/api/v1/service-provider-images', serviceProviderRoute);
 
 
 app.get('/', (req, res) => {

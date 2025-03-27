@@ -157,7 +157,7 @@ const uploadCompanyLogo = async (req, res) => {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
 
-    const fileName = `${company_name}_logo.webp`; // Standardized logo file name
+    const fileName = `${company_name}_logo.webp`; 
     const sanitizedFileName = fileName.replace(/\s+/g, "_");
     const logoPath = path.join(uploadPath, fileName);
 
@@ -165,7 +165,7 @@ const uploadCompanyLogo = async (req, res) => {
     const logoUrl = await processFile(
       req.file.buffer,
       req.file.mimetype,
-      "merchant",
+      "service_provider",
       "logo",
       sanitizedFileName
     );
@@ -207,7 +207,7 @@ const updateCompanyLogo = async (req, res) => {
     const logoUrl = await processFile(
       req.file.buffer,
       req.file.mimetype,
-      "merchant",
+      "service_provider",
       "logo",
       fileName
     );
@@ -232,7 +232,7 @@ const deleteCompanyLogo = (req, res) => {
 
     const logoPath = path.join(
       __dirname,
-      "../uploads/merchant/logo/",
+      "../uploads/service_provider/logo/",
       company_name + "_logo.webp"
     );
 
@@ -254,7 +254,7 @@ const getCompanyLogo = (req, res) => {
   const { company_name } = req.params;
   const logoPath = path.join(
     __dirname,
-    "../uploads/merchant/logo/",
+    "../uploads/service_provider/logo/",
     company_name + "_logo.webp"
   );
 

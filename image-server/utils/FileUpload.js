@@ -15,12 +15,19 @@ console.log(`Server URL: ${SERVER_URL}`);
 
 // ✅ Ensure dynamic folder creation
 const createEntityFolder = (entity_type, company_name) => {
-    const uploadDir = path.join(__dirname, "../uploads", entity_type, company_name);
+    // Replace spaces with underscores
+    const sanitizedEntityType = entity_type.replace(/\s+/g, "_");
+    const sanitizedCompanyName = company_name.replace(/\s+/g, "_");
+
+    const uploadDir = path.join(__dirname, "../uploads", sanitizedEntityType, sanitizedCompanyName);
+    
     if (!fs.existsSync(uploadDir)) {
         fs.mkdirSync(uploadDir, { recursive: true });
     }
+    
     return uploadDir;
 };
+
 
 // ✅ Allowed file types
 const allowedMimeTypes = {
