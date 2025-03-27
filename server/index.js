@@ -15,6 +15,8 @@ const studentRoute=require('./routes/studentRoute');
 const merchantRoute=require('./routes/merchantRoute');
 const subdealerRoute=require('./routes/subdealerRoutes');
 const roleRoute=require('./routes/roleRoute');
+const addressRoute=require('./routes/addressRoute');
+
 
 const app = express();
 
@@ -38,6 +40,7 @@ app.use("/api/v1/students",studentRoute);
 app.use("/api/v1/merchants",merchantRoute);
 app.use("/api/v1/sub-dealer",subdealerRoute);
 app.use("/api/v1/role",roleRoute);
+app.use("/api/v1/address",addressRoute);
 
 // Test endpoint for quick testing
 app.post("/test", (req, res) => {

@@ -9,7 +9,7 @@ const AddressSchema = new mongoose.Schema(
     },
     entity_type: {
       type: String,
-      enum: ["user", "merchant", "grocery_seller", "service_provider"],
+      enum: ["user", "merchant", "grocery_seller", "service_provider","student","admin","sub_admin"],
       required: true,
     },
     address_type: {

@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Role = require("../models/roleModel");
+const Address=require("../models/addressModel");
 const { sendOtpEmail } = require("../utils/sendEmail");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
@@ -331,15 +332,38 @@ exports.getUsers = async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default page = 1
     const limit = parseInt(req.query.limit) || 10; // Default limit = 10
     const skip = (page - 1) * limit; // Calculate skip value
+    const { name } = req.query;
 
-    // Fetch users with pagination
-    const users = await User.find().skip(skip).limit(limit).select("-password");
-     
-    // Get total count for pagination metadata
-    const totalUsers = await User.countDocuments();
+    // Apply name filter if provided
+    const nameFilter = name ? { name: { $regex: name, $options: "i" } } : {};
+
+    // Fetch users with filtering, pagination, and populate address & role
+    const users = await User.find(nameFilter)
+      .skip(skip)
+      .limit(limit)
+      .select("-password") // Exclude password field
+      .populate("role") // Populate role from Role model
+      .lean(); // Convert to plain JavaScript object
+
+    // Get user IDs
+    const userIds = users.map((user) => user._id);
+
+    // Fetch addresses for those users
+    const addresses = await Address.find({ user_id: { $in: userIds } }).lean();
+
+    // Map addresses to users
+    const usersWithDetails = users.map((user) => {
+      const userAddress = addresses.find(
+        (addr) => addr.user_id.toString() === user._id.toString()
+      );
+      return { ...user, address: userAddress || {} }; // Return address or empty object
+    });
+
+    // Get total count for pagination metadata (with filter)
+    const totalUsers = await User.countDocuments(nameFilter);
 
     res.status(200).json({
-      users,
+      users: usersWithDetails,
       currentPage: page,
       totalPages: Math.ceil(totalUsers / limit),
       totalUsers,
@@ -349,6 +373,7 @@ exports.getUsers = async (req, res) => {
     res.status(500).json({ message: "Error fetching users", error: error.message });
   }
 };
+
 
 // Get a user by ID
 exports.getUserById = async (req, res) => {

@@ -47,32 +47,45 @@ exports.getAddressById = async (req, res) => {
 // Update address
 exports.updateAddress = async (req, res) => {
   try {
-    const { user_id, entity_type, address_type, address_line_1, address_line_2, city, state, country, pincode } = req.body;
+    const { entity_type, address_type, address_line_1, address_line_2, city, state, country, pincode } = req.body;
+    const userId = req.params.userId; // Extract userId from params
 
-    const address = await Address.findByIdAndUpdate(
-      req.params.id,
-      { user_id, entity_type, address_type, address_line_1, address_line_2, city, state, country, pincode },
+    // Ensure userId exists
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    // Find the address associated with the userId
+    const address = await Address.findOneAndUpdate(
+      { user_id: userId }, // Find by user_id, not _id
+      { entity_type, address_type, address_line_1, address_line_2, city, state, country, pincode },
       { new: true, runValidators: true }
     );
 
     if (!address) {
-      return res.status(404).json({ message: "Address not found" });
+      return res.status(404).json({ message: "Address not found for this user" });
     }
-    res.json({ message: "Address updated successfully", address });
+
+    res.json({success:true,error:false, message: "Address updated successfully", address });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error:true,sucess:false, message: error.message });
   }
 };
+
 
 // Delete address
 exports.deleteAddress = async (req, res) => {
   try {
-    const address = await Address.findByIdAndDelete(req.params.id);
+    const userId = req.params.userId; // Extract userId from params
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+    const address = await Address.findByIdAndDelete(userId);
     if (!address) {
       return res.status(404).json({ message: "Address not found" });
     }
-    res.json({ message: "Address deleted successfully" });
+    res.json({success:true,error:false, message: "Address deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error:true,success:false, message: error.message });
   }
 };
