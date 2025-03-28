@@ -118,12 +118,16 @@ const deleteImage = (req, res) => {
 // 📌 Get a file (Convert images to WebP dynamically)
 const getImage = (req, res) => {
   const { entity_type, company_name, filename } = req.params;
+  const sanitizedEntityType = entity_type.replace(/\s+/g, "_");
+  const sanitizedCompanyName = company_name.replace(/\s+/g, "_");
+  const sanitizedFilename = filename.replace(/\s+/g, "_");
+
   const filePath = path.join(
     __dirname,
     "../uploads",
-    entity_type,
-    company_name,
-    filename
+    sanitizedEntityType,  
+    sanitizedCompanyName,
+    sanitizedFilename
   );
 
   if (!fs.existsSync(filePath)) {
@@ -252,10 +256,12 @@ const deleteCompanyLogo = (req, res) => {
 // 📌 Get Company Logo
 const getCompanyLogo = (req, res) => {
   const { company_name } = req.params;
+  
+  const sanitizedCompanyName = company_name.replace(/\s+/g, "_");
   const logoPath = path.join(
     __dirname,
     "../uploads/merchant/logo/",
-    company_name + "_logo.webp"
+    sanitizedCompanyName + "_logo.webp"
   );
 
   if (!fs.existsSync(logoPath)) {

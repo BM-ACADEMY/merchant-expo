@@ -91,7 +91,7 @@ const UserTable = () => {
     <div className="w-full mx-auto">
       {/* Add User Button */}
       <div className="flex gap-3">
-        <Button className="mb-4" onClick={() => handleOpenModal(null)}>
+        <Button  className=" bg-[#e03733] mb-4  hover:shadow-lg text-white py-2 rounded-md cursor-pointer" onClick={() => handleOpenModal(null)}>
           + Add User
         </Button>
         <Input

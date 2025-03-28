@@ -1,11 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { Authapi } from "../api/Authapi"; // Corrected import
+import { Authapi } from "../api/Authapi";
+import { StudentApi } from "../api/Studentapi";
 
- const store = configureStore({
+const store = configureStore({
   reducer: {
-    [Authapi.reducerPath]: Authapi.reducer, // Corrected reference
+    [Authapi.reducerPath]: Authapi.reducer,
+    [StudentApi.reducerPath]: StudentApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(Authapi.middleware), // Corrected reference
+    getDefaultMiddleware().concat(Authapi.middleware, StudentApi.middleware), 
 });
+
 export default store;

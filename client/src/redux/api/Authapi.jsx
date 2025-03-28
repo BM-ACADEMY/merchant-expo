@@ -96,7 +96,6 @@ export const Authapi = createApi({
       invalidatesTags: ["User"], // ✅ Ensure UI updates after deleting a user
     }),
 
-
     // User Address
     addUserAddress: builder.mutation({
       query: (data) => ({

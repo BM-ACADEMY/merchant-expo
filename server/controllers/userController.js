@@ -373,8 +373,6 @@ exports.getUsers = async (req, res) => {
     res.status(500).json({ message: "Error fetching users", error: error.message });
   }
 };
-
-
 // Get a user by ID
 exports.getUserById = async (req, res) => {
   try {
@@ -395,7 +393,6 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: "Error fetching user", error: error.message });
   }
 };
-
 // Update user details
 exports.updateUser = async (req, res) => {
   try {

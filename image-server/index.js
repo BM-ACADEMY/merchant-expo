@@ -16,6 +16,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const merchantRoutes=require('./routes/merchantRoute');
 const userRoute=require('./routes/userRoute');
 const serviceProviderRoute=require('./routes/serviceProviderRoute');
+const studentRoute=require('./routes/studentRoute');
 
 // Middlewares
 app.use(cors({
@@ -46,7 +47,7 @@ app.use(express.json());
 app.use('/api/v1/merchant-images', merchantRoutes);
 app.use('/api/v1/user-images', userRoute);
 app.use('/api/v1/service-provider-images', serviceProviderRoute);
-
+app.use('/api/v1/student-images', studentRoute);
 
 app.get('/', (req, res) => {
     res.send('Hello from the server!');
