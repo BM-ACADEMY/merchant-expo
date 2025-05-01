@@ -36,6 +36,13 @@ const menuItems = [
                 title: "Common Users",
                 icon: "UsersThree",
                 children: [{ title: "Users List", icon: "List", link: "/admin/common-users" }]
+            },
+            {
+                title: "Admin",
+                icon: "User",
+                children: [{ title: "Sub Admin", icon: "List", link: "/admin/subadmin" },
+                    { title: "Roles", icon: "Crown", link: "/admin/subadmin/roles" }
+                ]
             }
         ]
     },

@@ -16,23 +16,27 @@ const uploadImages = async (req, res) => {
         .json({ message: "Missing entity type or company name" });
     }
 
-    const uploadPath = createEntityFolder(entity_type, company_name);
+    // ✅ Sanitize company name by replacing spaces with underscores
+    const sanitizedCompanyName = company_name.replace(/\s+/g, "_");
+
+    const uploadPath = createEntityFolder(entity_type, sanitizedCompanyName);
     let fileDetails = [];
 
     for (let file of req.files) {
-      const fileName = `${Date.now()}_${file.originalname}`;
-      const outputPath = path.join(uploadPath, fileName); // Correct path
+      const sanitizedOriginalName = file.originalname.replace(/\s+/g, "_");
+      const fileName = `${Date.now()}_${sanitizedOriginalName}`;
+      const outputPath = path.join(uploadPath, fileName);
 
-      // ✅ Pass correct arguments to processFile()
+      // ✅ Use sanitizedCompanyName while processing the file
       const fileUrl = await processFile(
         file.buffer,
         file.mimetype,
         entity_type,
-        company_name,
+        sanitizedCompanyName,
         fileName
       );
 
-      fileDetails.push({ fileUrl }); // ✅ Return URL instead of absolute path
+      fileDetails.push({ fileUrl });
     }
 
     res.status(200).json({
@@ -43,11 +47,14 @@ const uploadImages = async (req, res) => {
     });
   } catch (error) {
     console.error("Upload Error:", error);
-    res
-      .status(500)
-      .json({ error: true, sucess: false, message: error.message });
+    res.status(500).json({
+      error: true,
+      success: false,
+      message: error.message,
+    });
   }
 };
+
 
 // ✅ Update a file (replace existing)
 const updateImage = async (req, res) => {

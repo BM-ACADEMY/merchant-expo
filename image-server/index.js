@@ -1,21 +1,20 @@
-const express=require('express');
-const app= express();
-const dotenv=require('dotenv');
+const express = require('express');
+const app = express();
+const dotenv = require('dotenv');
 const cors = require("cors");
 dotenv.config();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const path = require('path');
+// const uploadRoutes = require("./routes/upload");
 
-const PORT=process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 
-
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-//route paths
-
-const merchantRoutes=require('./routes/merchantRoute');
-const userRoute=require('./routes/userRoute');
-const serviceProviderRoute=require('./routes/serviceProviderRoute');
+// Route paths
+const merchantRoutes = require('./routes/merchantRoute');
+const userRoute = require('./routes/userRoute');
+const serviceProviderRoute = require('./routes/serviceProviderRoute');
+const grocerySellerRoutes = require('./routes/groceryRoutes'); // New route for Grocery Seller
 
 // Middlewares
 app.use(cors({
@@ -23,7 +22,7 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
-}))
+}));
 
 app.use((req, res, next) => {
     const allowedOrigins = [process.env.FRONTEND_URL, process.env.PRODUCTION_URL];
@@ -37,18 +36,26 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
     next();
 });
+
 app.use(morgan("dev")); // Log requests
 app.use(bodyParser.json()); // Parse JSON request bodies
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-//route middlewares
+// Serve static files for uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Route middlewares
+// app.use("/api/v1/upload", uploadRoutes);
 app.use('/api/v1/merchant-images', merchantRoutes);
 app.use('/api/v1/user-images', userRoute);
 app.use('/api/v1/service-provider-images', serviceProviderRoute);
+app.use('/api/v1/grocery-seller-images', grocerySellerRoutes);
 
-
+// Default route
 app.get('/', (req, res) => {
     res.send('Hello from the server!');
 });
+
+// Start the server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -14,6 +14,9 @@ import Disclaimer from "@/staticPages/Disclaimer";
 import ContactUs from "@/staticPages/ContactUs";
 import MerchantList from "../merchants/MerchantList";
 
+
+
+
 const Dashboard = () => {
   const { isSidebarOpen } = useSidebar();
   const { points } = useContext(ActiveUserContext) || {}; // Safeguard against undefined context
@@ -111,6 +114,7 @@ const Dashboard = () => {
         </div> */}
         <div>
         <MerchantList />
+        <Complaint />
         </div>
       </div>
     </div>

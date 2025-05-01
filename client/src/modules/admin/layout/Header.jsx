@@ -18,11 +18,11 @@ const Header = () => {
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 bg-white p-4 flex items-center justify-end ${
-        isSidebarOpen ? "lg:ml-56" : "lg:ml-16"
-      } space-x-4 z-10`}
-    >
+      <header
+        className={`sticky top-0 bg-white p-4 flex items-center justify-end ${
+          isSidebarOpen ? "lg:ml-56" : "lg:ml-16"
+        } space-x-4 z-10`}
+      >
       {/* Search Field */}
       <div className="flex-1 lg:ml-0 sm:ml-56 hidden lg:block">
         <input

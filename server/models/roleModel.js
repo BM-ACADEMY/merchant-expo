@@ -1,4 +1,3 @@
-// models/Role.js
 const mongoose = require("mongoose");
 
 const counterSchema = new mongoose.Schema({
@@ -15,9 +14,11 @@ const roleSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["USER", "MERCHANT", "SERVICE-PROVIDER","SUB-DEALER" ,"GROCERY-SELLER", "STUDENT", "ADMIN", "SUB-ADMIN"],
     required: true,
     unique: true,
+    trim: true, // Remove leading/trailing whitespace
+    uppercase: true, // Automatically convert to uppercase
+    minlength: 1, // Ensure non-empty strings
   },
 });
 
@@ -36,4 +37,3 @@ roleSchema.pre("save", async function (next) {
 
 const Role = mongoose.model("Role", roleSchema);
 module.exports = Role;
-
