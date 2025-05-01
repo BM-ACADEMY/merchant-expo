@@ -108,11 +108,11 @@ const deleteStudentIdCard = (req, res) => {
   try {
     const { collage_name } = req.body;
     if (!collage_name) {
-<<<<<<< HEAD
+
       return res.status(400).json({ message: "College name is required" });
-=======
+
       return res.status(400).json({ message: "Collage name is required" });
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
+
     }
 
     // ✅ Sanitize collage name
@@ -183,8 +183,6 @@ module.exports = {
   updateStudentIdCard,
   deleteStudentIdCard,
   getStudentIdCard,
-<<<<<<< HEAD
+
 };
-=======
-};
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
+

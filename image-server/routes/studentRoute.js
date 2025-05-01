@@ -20,8 +20,8 @@ router.delete("/id-card/delete/:college_name", deleteStudentIdCard);
 // 📌 Get Student ID Card (Pass college name in URL)
 router.get("/id-card/get/:college_name", getStudentIdCard);
 
-<<<<<<< HEAD
+
 module.exports = router;
-=======
+
 module.exports = router;
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
+
