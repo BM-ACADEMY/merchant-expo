@@ -266,11 +266,11 @@ exports.getUsers = async (req, res) => {
     res.status(500).json({ message: "Error fetching users", error: error.message });
   }
 };
-<<<<<<< HEAD
 
-=======
+
+
 // Get a user by ID
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
+
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).populate("role");
@@ -290,11 +290,10 @@ exports.getUserById = async (req, res) => {
     res.status(500).json({ message: "Error fetching user", error: error.message });
   }
 };
-<<<<<<< HEAD
 
-=======
+
 // Update user details
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
+
 exports.updateUser = async (req, res) => {
   try {
     const { name, email, phone, role, password } = req.body;
