@@ -21,7 +21,7 @@ router.put("/update-company-image", upload.array("files", 10), updateImage);
 router.delete("/delete-company-image", deleteImage);
 
 // Get a file (serve file)
-router.get("/get-file/:entity_type/:company_name/:filename", getImage);
+router.get("/get-company-images/:entity_type/:company_name/:filename", getImage);
 
 // company logo
 
@@ -35,6 +35,6 @@ router.put("/update-logo", upload.single("logo"), updateCompanyLogo);
 router.delete("/delete-logo", deleteCompanyLogo);
 
 // 📌 Get company logo
-router.get("/logo/:company_name", getCompanyLogo);
+router.get("/get-company-logo/:company_name", getCompanyLogo);
 
 module.exports = router;

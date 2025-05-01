@@ -10,11 +10,22 @@ const path = require('path');
 
 const PORT = process.env.PORT || 8080;
 
+<<<<<<< HEAD
 // Route paths
 const merchantRoutes = require('./routes/merchantRoute');
 const userRoute = require('./routes/userRoute');
 const serviceProviderRoute = require('./routes/serviceProviderRoute');
 const grocerySellerRoutes = require('./routes/groceryRoutes'); // New route for Grocery Seller
+=======
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+//route paths
+
+const merchantRoutes=require('./routes/merchantRoute');
+const userRoute=require('./routes/userRoute');
+const serviceProviderRoute=require('./routes/serviceProviderRoute');
+const studentRoute=require('./routes/studentRoute');
+>>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
 
 // Middlewares
 app.use(cors({
@@ -50,9 +61,14 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/api/v1/merchant-images', merchantRoutes);
 app.use('/api/v1/user-images', userRoute);
 app.use('/api/v1/service-provider-images', serviceProviderRoute);
+<<<<<<< HEAD
 app.use('/api/v1/grocery-seller-images', grocerySellerRoutes);
 
 // Default route
+=======
+app.use('/api/v1/student-images', studentRoute);
+
+>>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
 app.get('/', (req, res) => {
     res.send('Hello from the server!');
 });

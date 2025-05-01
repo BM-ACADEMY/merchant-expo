@@ -35,16 +35,16 @@ const UserDetails = ({ user, closeModal }) => {
   // Handle update address
   const handleUpdate = async () => {
     try {
-    const response=  await updateUserAddress({
+      const response = await updateUserAddress({
         userId: selectedUser._id,
         updatedAddress: addressForm,
       }).unwrap();
-    //   toast.success("Address updated successfully!");
-    //   setEditModalOpen(false);
+      //   toast.success("Address updated successfully!");
+      //   setEditModalOpen(false);
 
-    if (response.success) {
+      if (response.success) {
         closeModal();
-    }
+      }
     } catch (error) {
       toast.error("Failed to update address");
     }
@@ -57,14 +57,16 @@ const UserDetails = ({ user, closeModal }) => {
   // Handle delete address
   const handleDelete = async () => {
     try {
-        console.log(selectedUser.address);
-        
-     const response= await DeleteUserAddress({ userId: selectedUser?.address?._id }).unwrap();
-     if (response.success) {
+      console.log(selectedUser.address);
+
+      const response = await DeleteUserAddress({
+        userId: selectedUser?.address?._id,
+      }).unwrap();
+      if (response.success) {
         closeModal();
-     }
-    //   toast.success("Address deleted successfully!");
-    //   setDeleteConfirmOpen(false);
+      }
+      //   toast.success("Address deleted successfully!");
+      //   setDeleteConfirmOpen(false);
     } catch (error) {
       toast.error("Failed to delete address");
     }
@@ -152,24 +154,32 @@ const UserDetails = ({ user, closeModal }) => {
                   </>
                 ) : (
                   <>
-                    <p>
-                      <strong>Line 1:</strong> {user.address.address_line_1}
-                    </p>
-                    <p>
-                      <strong>Line 2:</strong> {user.address.address_line_2}
-                    </p>
-                    <p>
-                      <strong>City:</strong> {user.address.city}
-                    </p>
-                    <p>
-                      <strong>State:</strong> {user.address.state}
-                    </p>
-                    <p>
-                      <strong>Country:</strong> {user.address.country}
-                    </p>
-                    <p>
-                      <strong>Pincode:</strong> {user.address.pincode}
-                    </p>
+                    {user.address && Object.keys(user.address).length > 0 ? (
+                      <>
+                        <p>
+                          <strong>Line 1:</strong> {user.address.address_line_1}
+                        </p>
+                        <p>
+                          <strong>Line 2:</strong> {user.address.address_line_2}
+                        </p>
+                        <p>
+                          <strong>City:</strong> {user.address.city}
+                        </p>
+                        <p>
+                          <strong>State:</strong> {user.address.state}
+                        </p>
+                        <p>
+                          <strong>Country:</strong> {user.address.country}
+                        </p>
+                        <p>
+                          <strong>Pincode:</strong> {user.address.pincode}
+                        </p>
+                      </>
+                    ) : (
+                      <p>
+                        <strong>Address Not Found</strong>
+                      </p>
+                    )}
                   </>
                 )}
                 <div className="flex gap-2 mt-3">
@@ -179,6 +189,8 @@ const UserDetails = ({ user, closeModal }) => {
                     </Button>
                   ) : (
                     <>
+                     {user.address && Object.keys(user.address).length > 0 ? (
+                      <>
                       <Button
                         variant="outline"
                         onClick={() => {
@@ -195,6 +207,9 @@ const UserDetails = ({ user, closeModal }) => {
                         <Trash2 className="w-4 h-4 mr-1" /> Delete
                       </Button>
                     </>
+                    ):(null)}</>
+                   
+                    
                   )}
                 </div>
               </div>
