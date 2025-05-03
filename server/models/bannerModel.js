@@ -1,46 +1,44 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
 
-const Banner = sequelize.define('Banner', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    user_id: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    subcription_id: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-    },
-    banner_payment_id: {
-        type: DataTypes.STRING(255),
-        allowNull: false
-    },
-    title: {
-        type: DataTypes.STRING
-    },
-    circle_logo: {
-        type: DataTypes.STRING
-    },
-    banner_image: {
-        type: DataTypes.STRING
-    },
-    rectangle_logo: {
-        type: DataTypes.STRING
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    },
-    updated_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    }
+const mongoose = require('mongoose');
+
+const BannerSchema = new mongoose.Schema({
+  user_id: {
+    type: String,
+    required: true
+  },
+  subcription_id: {
+    type: String,
+    required: true,
+    maxlength: 255
+  },
+  banner_payment_id: {
+    type: String,
+    required: true,
+    maxlength: 255
+  },
+  title: {
+    type: String
+  },
+  circle_logo: {
+    type: String
+  },
+  banner_image: {
+    type: String
+  },
+  rectangle_logo: {
+    type: String
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: Date.now
+  }
 }, {
-    timestamps: false
+timestamps:true
 });
 
-module.exports = Banner;
+module.exports = mongoose.model('Banner', BannerSchema);
+

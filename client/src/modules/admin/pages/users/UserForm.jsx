@@ -9,6 +9,7 @@ import {
 } from "@/redux/api/Authapi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { toast } from 'react-toastify';
 
 const UserForm = ({ user, closeModal }) => {
   const [formData, setFormData] = useState({
@@ -89,12 +90,25 @@ const UserForm = ({ user, closeModal }) => {
     if (!isValid) return;
 
     if (user) {
-     const response= await updateUser({ id: user._id, updatedUser: formData });
+      const response = await updateUser({
+        id: user._id,
+        updatedUser: formData,
+      });
+
+      if (response.success == true) {
+        toast.success(response.message || "User Updated Successfully");
+      } else {
+        toast.error(response.message || "Failed to Update");
+      }
     } else {
-     const response= await addUser(formData);
-     if (response) {
-      setIsOtpShow(true);
-     }
+      const response = await addUser(formData);
+      console.log(response, "user");
+      if (response?.data?.success == true) {
+        setIsOtpShow(true);
+        toast.success(response?.data?.message || "User Added Successfully");
+      } else {
+        toast.error(response?.data?.message || "Falied to Add");
+      }
     }
 
     // closeModal();
@@ -106,10 +120,10 @@ const UserForm = ({ user, closeModal }) => {
         email: formData.email,
         email_otp: formData.otp.join(""),
       }).unwrap();
-        if (response) {
-          setIsOtpShow(true);
-        }
-        closeModal();
+      if (response) {
+        setIsOtpShow(true);
+      }
+      closeModal();
     } catch (error) {
       console.log(error.message || "Otp Verification Failed", "error");
     }
@@ -119,7 +133,6 @@ const UserForm = ({ user, closeModal }) => {
     try {
       const response = await resendOtp({ email: formData.email }).unwrap();
       if (response.success) {
-     
         setFormData({ ...formData, otp: ["", "", "", ""] }); // Clear OTP fields
       }
     } catch (error) {
@@ -145,6 +158,8 @@ const UserForm = ({ user, closeModal }) => {
   };
   return (
     <>
+  
+
       {!isOtpShow ? (
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -181,6 +196,7 @@ const UserForm = ({ user, closeModal }) => {
             type="password"
             placeholder="Enter Password"
             value={formData.password}
+            autocomplete="password"
             onChange={handleChange}
           />
           {touched.password && errors.password && (
@@ -191,6 +207,7 @@ const UserForm = ({ user, closeModal }) => {
             type="password"
             placeholder="Confirm Password"
             value={formData.confirmPassword}
+            autocomplete="confirmPassword"
             onChange={handleChange}
           />
           {touched.confirmPassword && errors.confirmPassword && (
@@ -202,7 +219,7 @@ const UserForm = ({ user, closeModal }) => {
             </Button>
             <Button
               type="submit"
-              disabled={!isValid}
+              // disabled={!isValid}
               className={
                 !isValid ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
               }

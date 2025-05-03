@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 
 const SuperSubCategorySchema = new mongoose.Schema(
   {
+
+    category_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+
     sub_category_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "SubCategory",
@@ -13,7 +20,10 @@ const SuperSubCategorySchema = new mongoose.Schema(
       trim: true,
     },
   },
+
   { timestamps: true } 
+
+
 );
 
 module.exports = mongoose.model("SuperSubCategory", SuperSubCategorySchema);

@@ -5,47 +5,41 @@ const { createEntityFolder, processFile } = require("../utils/FileUpload");
 // 📌 Upload multiple files with compression
 const uploadImages = async (req, res) => {
   try {
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ message: "No files uploaded" });
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
     }
 
     const { entity_type, user_id } = req.body;
+
     if (!entity_type || !user_id) {
       return res
         .status(400)
-        .json({ message: "Missing entity type or company name" });
+        .json({ message: "Missing entity type or user ID" });
     }
 
-    const uploadPath = createEntityFolder(entity_type, user_id);
-    let fileDetails = [];
+    const fileName = `${Date.now()}_${req.file.originalname}`;
+    const fileUrl = await processFile(
+      req.file.buffer,
+      req.file.mimetype,
+      entity_type,
+      user_id,
+      fileName
+    );
 
-    for (let file of req.files) {
-      const fileName = `${Date.now()}_${file.originalname}`;
-      const outputPath = path.join(uploadPath, fileName); // Correct path
-
-      // ✅ Pass correct arguments to processFile()
-      const fileUrl = await processFile(
-        file.buffer,
-        file.mimetype,
-        entity_type,
-        user_id,
-        fileName
-      );
-
-      fileDetails.push({ fileUrl }); // ✅ Return URL instead of absolute path
-    }
 
     res.status(200).json({
       success: true,
       error: false,
-      message: "Files uploaded successfully",
-      files: fileDetails,
+      message: "File uploaded successfully",
+      files: [{ fileUrl }],
     });
   } catch (error) {
     console.error("Upload Error:", error);
-    res
-      .status(500)
-      .json({ error: true, sucess: false, message: error.message });
+    res.status(500).json({
+      error: true,
+      success: false,
+      message: error.message,
+    });
   }
 };
 
@@ -95,13 +89,19 @@ const updateImage = async (req, res) => {
 // ✅ Delete a file
 const deleteImage = (req, res) => {
   try {
-    const { entity_type, user_id, filename } = req.body;
+    const { entity_type, user_id, profile_pic } = req.body;
+    const modifiedFilename=profile_pic.split("/").pop();
+
     const filePath = path.join(
       __dirname,
       "../uploads",
       entity_type,
       user_id,
-      filename
+
+      filename,
+
+      modifiedFilename
+
     );
 
     if (fs.existsSync(filePath)) {

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { motion,AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Star, Play, Pause, Volume2, VolumeX,ChevronDown } from "lucide-react";
-import { Accordion, AccordionItem } from "@/components/ui/accordion";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+
 import {
   Carousel,
   CarouselContent,
@@ -170,7 +171,7 @@ const testimonialsVideo = [
     youtubeId: "kJQP7kiw5Fk",
   },
 ];
-export default function Testimonial() {
+ function Testimonial() {
   const [visible, setVisible] = useState(5);
   const [playingVideo, setPlayingVideo] = useState(null);
   const [openIndex, setOpenIndex] = useState(null);
@@ -279,12 +280,12 @@ export default function Testimonial() {
                     </div>
 
                     {/* User Info */}
-                    <div className="p-4 bg-white">
+                    {/* <div className="p-4 bg-white">
                       <h3 className="font-semibold text-lg">{t.name}</h3>
                       <p className="text-sm text-gray-600">
                         {t.company} - <i>{t.country}</i>
                       </p>
-                    </div>
+                    </div> */}
                   </CardContent>
                 </Card>
               </CarouselItem>
@@ -298,34 +299,21 @@ export default function Testimonial() {
       </div>
       <div className="max-w-2xl mx-auto py-10 mt-10">
       <h2 className="text-center text-3xl font-bold mb-6">Why Client Testimonials Are Important?</h2>
-      <Accordion>
-        {faqs.map((faq, index) => (
-          <AccordionItem key={index} className="border-b">
-            <motion.div
-              className="flex justify-between items-center p-4 cursor-pointer bg-white shadow-sm rounded-lg hover:bg-gray-100 transition"
-              onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              initial={{ backgroundColor: "#fff" }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <span className="font-semibold text-lg">Q{index + 1}. {faq.question}</span>
-              <motion.div animate={{ rotate: openIndex === index ? 180 : 0 }}>
-                <ChevronDown size={20} />
-              </motion.div>
-            </motion.div>
-            {openIndex === index && (
-              <motion.div
-                className="p-4 bg-gray-50 rounded-b-lg"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                transition={{ duration: 0.3 }}
-              >
-                {faq.answer}
-              </motion.div>
-            )}
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <Accordion type="single" collapsible className="w-full">
+      {faqs.map((faq, index) => (
+        <AccordionItem key={index} value={`item-${index}`} className="mb-2 border-b rounded-lg overflow-hidden shadow-sm">
+          <AccordionTrigger className="flex justify-between items-center p-4 bg-white hover:bg-gray-100 text-left font-semibold text-lg">
+            Q{index + 1}. {faq.question}
+          </AccordionTrigger>
+          <AccordionContent className="p-4 bg-gray-50">
+            {faq.answer}
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
     </div>
     </div>
   );
 }
+export default Testimonial
+

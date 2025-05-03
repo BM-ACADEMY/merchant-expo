@@ -1,40 +1,33 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
 
-const BannerPayment = sequelize.define('BannerPayment', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true
-    },
-    days: {
-        type: DataTypes.INTEGER
-    },
-    amount: {
-        type: DataTypes.INTEGER
-    },
-    payment_status: {
-        type: DataTypes.STRING
-    },
-    transaction_id: {
-        type: DataTypes.STRING
-    },
-    status: {
-        type: DataTypes.ENUM('Active', 'Expired', 'Cancelled'),
-        allowNull: false,
-        defaultValue: 'Active'
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    }
+const mongoose = require('mongoose');
+
+const BannerPaymentSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId, // assuming relation to users
+    required: true,
+    unique: true
+  },
+  days: {
+    type: Number
+  },
+  amount: {
+    type: Number
+  },
+  payment_status: {
+    type: String
+  },
+  transaction_id: {
+    type: String
+  },
+  status: {
+    type: String,
+    enum: ['Active', 'Expired', 'Cancelled'],
+    default: 'Active',
+    required: true
+  }
 }, {
-    timestamps: false
+timestamps:true
 });
 
-module.exports = BannerPayment;
+module.exports = mongoose.model('BannerPayment', BannerPaymentSchema);
+

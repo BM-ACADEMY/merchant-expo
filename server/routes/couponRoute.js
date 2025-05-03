@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
+
 const couponNameController = require("../controllers/couponNameController");
+
+const couponNameController = require("../controllers/couponController");
+
 
 router.post("/create-coupons", couponNameController.createCouponName);
 router.get("/fetch-all-coupons", couponNameController.getCouponNames);

@@ -14,7 +14,6 @@ const GrocerySellerSchema = new mongoose.Schema(
         company_logo: { type: String },
         company_images: [{ type: String }],
         verified_status: { type: Boolean, default: false }
- 
     },
     { timestamps: true }
 );

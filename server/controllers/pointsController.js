@@ -3,7 +3,11 @@ const Point = require("../models/pointsModel");
 // Create a new point entry
 exports.createPoint = async (req, res) => {
   try {
+<<<<<<< HEAD
     const { point_name, point_count } = req.body;
+=======
+    const { point_name, point_count,point_amount } = req.body;
+>>>>>>> Charles_bm
 
     if (!point_name) {
       return res.status(400).json({ message: "Point name is required" });
@@ -14,12 +18,21 @@ exports.createPoint = async (req, res) => {
       return res.status(400).json({ message: "Point name already exists" });
     }
 
+<<<<<<< HEAD
     const point = new Point({ point_name, point_count });
     await point.save();
 
     res.status(201).json({ message: "Point entry created successfully", point });
   } catch (error) {
     res.status(500).json({ message: error.message });
+=======
+    const point = new Point({ point_name, point_count,point_amount });
+    await point.save();
+
+    res.status(201).json({success:true, message: "Point entry created successfully", data:point });
+  } catch (error) {
+    res.status(500).json({success:false, message: error.message });
+>>>>>>> Charles_bm
   }
 };
 
@@ -27,9 +40,17 @@ exports.createPoint = async (req, res) => {
 exports.getPoints = async (req, res) => {
   try {
     const points = await Point.find();
+<<<<<<< HEAD
     res.json(points);
   } catch (error) {
     res.status(500).json({ message: error.message });
+=======
+    res.json(
+      {success:true, message: "Fetched Point successfully", data:points }
+    );
+  } catch (error) {
+    res.status(500).json({success:false, message: error.message });
+>>>>>>> Charles_bm
   }
 };
 
@@ -49,7 +70,11 @@ exports.getPointById = async (req, res) => {
 // Update point entry
 exports.updatePoint = async (req, res) => {
   try {
+<<<<<<< HEAD
     const { point_name, point_count } = req.body;
+=======
+    const { point_name, point_count,point_amount } = req.body;
+>>>>>>> Charles_bm
 
     if (!point_name || point_count == null) {
       return res.status(400).json({ message: "Point name and count are required" });
@@ -57,16 +82,26 @@ exports.updatePoint = async (req, res) => {
 
     const point = await Point.findByIdAndUpdate(
       req.params.id,
+<<<<<<< HEAD
       { point_name, point_count },
+=======
+      { point_name, point_count ,point_amount },
+>>>>>>> Charles_bm
       { new: true, runValidators: true }
     );
 
     if (!point) {
       return res.status(404).json({ message: "Point entry not found" });
     }
+<<<<<<< HEAD
     res.json({ message: "Point entry updated successfully", point });
   } catch (error) {
     res.status(500).json({ message: error.message });
+=======
+    res.json({ success:true, message: "Point entry updated successfully",data: point });
+  } catch (error) {
+    res.status(500).json({ success:false, message: error.message });
+>>>>>>> Charles_bm
   }
 };
 
@@ -77,8 +112,14 @@ exports.deletePoint = async (req, res) => {
     if (!point) {
       return res.status(404).json({ message: "Point entry not found" });
     }
+<<<<<<< HEAD
     res.json({ message: "Point entry deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
+=======
+    res.status(200).json({ success:true, message: "Point entry deleted successfully" });
+  } catch (error) {
+    res.status(500).json({success:false, message: error.message });
+>>>>>>> Charles_bm
   }
 };
