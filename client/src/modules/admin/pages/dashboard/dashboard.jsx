@@ -3,16 +3,7 @@ import { useSidebar } from "../../hooks/useSidebar";
 import { ActiveUserContext } from "../../context/ActiveUserProvider";
 import { googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import MerchantLayout from "@/modules/merchant/MerchantLayout";
-import Help from "@/staticPages/help";
-import FeedBack from "@/staticPages/FeedBack";
-import Testimonial from "@/staticPages/Testimonial";
-import PostRequirement from "@/staticPages/PostByRequirement";
-import Complaint from "@/staticPages/Complaint";
-import AboutUs from "@/staticPages/AboutUs";
-import Disclaimer from "@/staticPages/Disclaimer";
-import ContactUs from "@/staticPages/ContactUs";
-import MerchantList from "../merchants/MerchantList";
+import DashboardComponents from "./DashboardComponents";
 
 
 
@@ -75,48 +66,8 @@ const Dashboard = () => {
   return (
     <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
       <h1>Welcome to Dashboard, Points: {points || 0}</h1>
-      {/* <div>
-        <Help />
-        <div className="mt-10">
-          <FeedBack />
-        </div>
-        <div className="mt-10">
-          <Testimonial />
-        </div>
-        <div className="mt-10">
-          <PostRequirement />
-        </div>
-      </div> */}
-
-      <div className="mt-10">
-        {profile ? (
-          <div>
-            {profile.picture && <img src={profile.picture} alt="User Profile" />}
-            <h3>User Logged in</h3>
-            <p>Name: {profile.name}</p>
-            <p>Email Address: {profile.email}</p>
-            <br />
-            <button onClick={logOut}>Log out</button>
-          </div>
-        ) : (
-          <button onClick={() => login()}>Sign in with Google 🚀</button>
-        )}
-
-        {/* <Complaint />
-        <div className="mt-10">
-          <AboutUs />
-        </div>
-        <div className="mt-10">
-          <Disclaimer />
-        </div>
-        <div className="mt-10">
-          <ContactUs />
-        </div> */}
-        <div>
-        <MerchantList />
-        <Complaint />
-        </div>
-      </div>
+      <DashboardComponents />
+  
     </div>
   );
 };

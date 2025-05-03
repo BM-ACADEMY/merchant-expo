@@ -1,107 +1,261 @@
-import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { useGetStudentsQuery, useAddStudentMutation, useUpdateStudentMutation, useDeleteStudentMutation } from "@/redux/api/Studentapi";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import axios from 'axios';
+import Stepper1 from './Stepper1';
+import Stepper2 from './Stepper2';
+import Stepper3 from './Stepper3';
+import Stepper4 from './Stepper4';
 
-export default function AddStudent() {
-  const { data: students, refetch } = useGetStudentsQuery();
-  const [addStudent] = useAddStudentMutation();
-  const [updateStudent] = useUpdateStudentMutation();
-  const [deleteStudent] = useDeleteStudentMutation();
-  
-  const [formData, setFormData] = useState({
-    id: null,
-    id_card_image: "",
-    college_name: "",
-    university_name: "",
-    college_city: "",
-    college_state: "",
-    college_country: "",
-  });
-  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
+function AddStudentModal({ isOpen, onClose, onSubmit, formData, formErrors, onInputChange, onResetForm }) {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [isStep2Valid, setIsStep2Valid] = useState(false);
+  const [isStep3Valid, setIsStep3Valid] = useState(false);
+  const [isStep4Valid, setIsStep4Valid] = useState(false);
+  const totalSteps = 4;
+  const stepLabels = ['User Info', 'ID Details', 'College Info', 'Verification'];
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.id) {
-      await updateStudent(formData);
-    } else {
-      await addStudent(formData);
+  const handleNext = async () => {
+    if (currentStep === 1 && selectedUserId) {
+      onInputChange({ target: { name: 'user_id', value: selectedUserId } });
     }
-    refetch();
-    setIsModalOpen(false);
+
+    if (currentStep === 2 && isStep2Valid) {
+      try {
+        const addressData = {
+          user_id: formData.user_id,
+          entity_type: 'student',
+          address_type: formData.address_type,
+          address_line_1: formData.address_line_1,
+          address_line_2: formData.address_line_2,
+          city: formData.city,
+          state: formData.state,
+          country: formData.country,
+          pincode: formData.pincode,
+        };
+
+        const response = await axios.post('/api/v1/address/create-address', addressData);
+        const addressId = response.data.address._id;
+
+        onInputChange({ target: { name: 'address_id', value: addressId } });
+      } catch (error) {
+        console.error('Error creating address:', error);
+        onInputChange({ target: { name: 'submit', value: 'Error saving address. Please try again.' } });
+        return;
+      }
+    }
+
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    }
   };
 
-  const handleEdit = (student) => {
-    setFormData(student);
-    setIsModalOpen(true);
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+      setSelectedUserId(null);
+      setIsStep2Valid(false);
+      setIsStep3Valid(false);
+      setIsStep4Valid(false);
+    }
   };
 
-  const confirmDelete = (id) => {
-    setDeleteId(id);
-    setIsDeleteConfirmOpen(true);
+  const handleCancel = () => {
+    console.log('Cancel button clicked');
+    if (typeof onResetForm === 'function') {
+      onResetForm();
+    } else {
+      console.warn('onResetForm is not a function');
+    }
+    setCurrentStep(1);
+    setSelectedUserId(null);
+    setIsStep2Valid(false);
+    setIsStep3Valid(false);
+    setIsStep4Valid(false);
+    if (typeof onClose === 'function') {
+      onClose();
+    } else {
+      console.warn('onClose is not a function');
+    }
   };
 
-  const handleDelete = async () => {
-    await deleteStudent(deleteId);
-    refetch();
-    setIsDeleteConfirmOpen(false);
+  const handleUserSelected = (userId) => {
+    setSelectedUserId(userId);
+  };
+
+  const handleValidationChange = (step) => (isValid) => {
+    if (step === 2) {
+      setIsStep2Valid(isValid);
+    } else if (step === 3) {
+      setIsStep3Valid(isValid);
+    } else if (step === 4) {
+      setIsStep4Valid(isValid);
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const studentData = {
+        user_id: formData.user_id,
+        college_email: formData.college_email,
+        id_card: formData.id_card,
+        address_id: formData.address_id,
+        college_name: formData.college_name,
+        university_name: formData.university_name,
+        expiry_date: formData.expiry_date || new Date(new Date().setFullYear(new Date().getFullYear() + 4)).toISOString().split('T')[0], // Default to 4 years from now
+      };
+
+      // Log the data being sent for debugging
+      console.log('Submitting student data:', studentData);
+
+      const response = await axios.post('/api/v1/students/create-students', studentData);
+      console.log('Student created successfully:', response.data);
+
+      // Reset form and close modal on success
+      onResetForm();
+      setCurrentStep(1);
+      setSelectedUserId(null);
+      setIsStep2Valid(false);
+      setIsStep3Valid(false);
+      setIsStep4Valid(false);
+      onClose();
+    } catch (error) {
+      console.error('Error creating student:', error);
+      onInputChange({ target: { name: 'submit', value: 'Error creating student. Please try again.' } });
+    }
+  };
+
+  const renderStepper = () => {
+    switch (currentStep) {
+      case 1:
+        return <Stepper1 onUserSelected={handleUserSelected} formData={formData} onInputChange={onInputChange} />;
+      case 2:
+        return (
+          <Stepper2
+            formData={formData}
+            formErrors={formErrors}
+            onInputChange={onInputChange}
+            onValidationChange={handleValidationChange(2)}
+          />
+        );
+      case 3:
+        return (
+          <Stepper3
+            formData={formData}
+            formErrors={formErrors}
+            onInputChange={onInputChange}
+            onValidationChange={handleValidationChange(3)}
+          />
+        );
+      case 4:
+        return (
+          <Stepper4
+            formData={formData}
+            formErrors={formErrors}
+            onInputChange={onInputChange}
+            onValidationChange={handleValidationChange(4)}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   return (
-    <div className="p-4 max-w-lg mx-auto">
-      <Button onClick={() => setIsModalOpen(true)}>Add Student</Button>
-      <div className="mt-6 space-y-4">
-        {students?.map((student) => (
-          <Card key={student._id}>
-            <CardContent className="p-4 flex justify-between items-center">
-              <div>
-                <p>{student.college_name} ({student.university_name})</p>
-                <p>{student.college_city}, {student.college_state}, {student.college_country}</p>
-              </div>
-              <div className="flex space-x-2">
-                <Button onClick={() => handleEdit(student)}>Edit</Button>
-                <Button variant="destructive" onClick={() => confirmDelete(student._id)}>Delete</Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      
-      {/* Add / Edit Modal */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent>
-          <DialogTitle>{formData.id ? "Edit Student" : "Add Student"}</DialogTitle>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input name="id_card_image" value={formData.id_card_image} onChange={handleChange} placeholder="ID Card Image URL" required />
-            <Input name="college_name" value={formData.college_name} onChange={handleChange} placeholder="College Name" required />
-            <Input name="university_name" value={formData.university_name} onChange={handleChange} placeholder="University Name" required />
-            <Input name="college_city" value={formData.college_city} onChange={handleChange} placeholder="College City" required />
-            <Input name="college_state" value={formData.college_state} onChange={handleChange} placeholder="College State" required />
-            <Input name="college_country" value={formData.college_country} onChange={handleChange} placeholder="College Country" required />
-            <Button type="submit">{formData.id ? "Update" : "Save"}</Button>
-          </form>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Delete Confirmation Modal */}
-      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
-        <DialogContent>
-          <DialogTitle>Are you sure you want to delete?</DialogTitle>
-          <div className="flex justify-end space-x-2">
-            <Button onClick={() => setIsDeleteConfirmOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleDelete}>Delete</Button>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>Add Student - Step {currentStep} of {totalSteps}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-6">
+          <div className="flex justify-between items-center mb-6">
+            {Array.from({ length: totalSteps }, (_, index) => {
+              const stepNumber = index + 1;
+              const isCompleted = stepNumber < currentStep;
+              const isActive = stepNumber === currentStep;
+              const isInactive = stepNumber > currentStep;
+
+              let circleStyle = '';
+              let textStyle = '';
+              let content = stepNumber;
+
+              if (isCompleted) {
+                circleStyle = 'bg-blue-500 text-white border-blue-500';
+                textStyle = 'text-blue-500';
+                content = '✔';
+              } else if (isActive) {
+                circleStyle = 'bg-blue-500 text-white border-blue-500';
+                textStyle = 'text-blue-500';
+              } else {
+                circleStyle = 'bg-transparent text-gray-500 border-gray-300';
+                textStyle = 'text-gray-500';
+              }
+
+              return (
+                <div key={stepNumber} className="flex flex-col items-center">
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${circleStyle} shadow-sm`}
+                  >
+                    {content}
+                  </div>
+                  <span className={`text-xs mt-2 ${textStyle}`}>
+                    {stepLabels[index]}
+                  </span>
+                </div>
+              );
+            })}
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+
+          {renderStepper()}
+
+          {formErrors.submit && <p className="text-red-600 text-sm">{formErrors.submit}</p>}
+        </div>
+        <DialogFooter className="flex justify-between">
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentStep === 1}
+          >
+            Previous
+          </Button>
+          <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+            {currentStep === totalSteps ? (
+              <Button
+                onClick={handleSubmit}
+                disabled={!isStep4Valid}
+              >
+                Add Student
+              </Button>
+            ) : (
+              <Button
+                onClick={handleNext}
+                disabled={
+                  (currentStep === 1 && !selectedUserId) ||
+                  (currentStep === 2 && !isStep2Valid) ||
+                  (currentStep === 3 && !isStep3Valid)
+                }
+              >
+                Next
+              </Button>
+            )}
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
+
+export default AddStudentModal;

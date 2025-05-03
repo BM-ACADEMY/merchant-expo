@@ -1,9 +1,7 @@
 import React from 'react'
 import {useSidebar} from "../../hooks/useSidebar";
 
-import AllStudents from "./AllStudents";
-
-import AddStudent from "./AddStudent";
+import AddStudent from "./AllStudents";
 
 const StudentList = () => {
       const {isSidebarOpen, toggleSidebar} = useSidebar()

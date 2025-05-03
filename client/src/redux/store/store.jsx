@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { Authapi } from "../api/Authapi"; // Your existing auth API
-import { MerchantAuthApi } from "../api/MerchantAuthApi"; // Existing merchant auth API
-import { MerchantImageApi } from "../api/MerchantImageApi"; // New merchant image API
-import { ServiceProviderApi } from "../api/ServiceProviderApi"; // Newly added service provider API
-import { GrocerySellerApi } from "../api/GrocerySellerApi"; // Newly added grocery seller API
-import fetchuserReducer from "@/redux/api/FetchUsers"; // Import the fetchuser slice reducer
+import { Authapi } from "../api/Authapi";
+import { MerchantAuthApi } from "../api/MerchantAuthApi";
+import { MerchantImageApi } from "../api/MerchantImageApi";
+import { ServiceProviderApi } from "../api/ServiceProviderApi";
+import { GrocerySellerApi } from "../api/GrocerySellerApi";
+import { StudentApi } from "../api/StudentApi"; // Add StudentApi import
+import fetchuserReducer from "@/redux/api/FetchUsers";
 
 const store = configureStore({
   reducer: {
@@ -14,7 +15,8 @@ const store = configureStore({
     [MerchantAuthApi.reducerPath]: MerchantAuthApi.reducer,
     [MerchantImageApi.reducerPath]: MerchantImageApi.reducer,
     [ServiceProviderApi.reducerPath]: ServiceProviderApi.reducer,
-    [GrocerySellerApi.reducerPath]: GrocerySellerApi.reducer, // Added GrocerySellerApi reducer
+    [GrocerySellerApi.reducerPath]: GrocerySellerApi.reducer,
+    [StudentApi.reducerPath]: StudentApi.reducer, // Add StudentApi reducer
     // Add the fetchuser slice reducer
     fetchuser: fetchuserReducer,
   },
@@ -24,13 +26,11 @@ const store = configureStore({
       .concat(MerchantAuthApi.middleware)
       .concat(MerchantImageApi.middleware)
       .concat(ServiceProviderApi.middleware)
-      .concat(GrocerySellerApi.middleware), // Added GrocerySellerApi middleware
+      .concat(GrocerySellerApi.middleware)
+      .concat(StudentApi.middleware), // Add StudentApi middleware
 });
 
 // Enable refetching and other RTK Query features
 setupListeners(store.dispatch);
 
 export default store;
-
-
-

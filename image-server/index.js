@@ -6,6 +6,7 @@ dotenv.config();
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const path = require('path');
+const imageRoutes = require('./routes/studentRoute'); // Add image routes
 // const uploadRoutes = require("./routes/upload");
 
 const PORT = process.env.PORT || 8080;
@@ -67,6 +68,7 @@ app.use('/api/v1/grocery-seller-images', grocerySellerRoutes);
 // Default route
 
 app.use('/api/v1/student-images', studentRoute);
+app.use('/api/v1', imageRoutes);
 
 
 app.get('/', (req, res) => {

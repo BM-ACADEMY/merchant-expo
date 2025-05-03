@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const StudentApi = createApi({
   reducerPath: "studentApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_URL, 
+    baseUrl: import.meta.env.VITE_API_URL,
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("token");
       if (token) {
@@ -16,6 +16,10 @@ export const StudentApi = createApi({
   endpoints: (builder) => ({
     getStudents: builder.query({
       query: () => "/students/fetch-students",
+      providesTags: ["Student"],
+    }),
+    getStudentById: builder.query({
+      query: (id) => `/students/fetch-students-by-id/${id}`,
       providesTags: ["Student"],
     }),
     addStudent: builder.mutation({
@@ -44,4 +48,10 @@ export const StudentApi = createApi({
   }),
 });
 
-export const { useGetStudentsQuery, useAddStudentMutation, useUpdateStudentMutation, useDeleteStudentMutation } = StudentApi;
+export const {
+  useGetStudentsQuery,
+  useGetStudentByIdQuery,
+  useAddStudentMutation,
+  useUpdateStudentMutation,
+  useDeleteStudentMutation,
+} = StudentApi;
