@@ -1,0 +1,55 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+
+export const CategoryApi = createApi({
+  reducerPath: "categoryApi",
+  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL, prepareHeaders: (headers) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    return headers;
+  }, }),
+  tagTypes: ["Category"],
+  endpoints: (builder) => ({
+    getCategories: builder.query({
+      query: ({ page = 1, limit = 10, search = "" }) =>
+        `/categories/fetch-all-category?page=${page}&limit=${limit}&search=${search}`,
+      transformResponse: (response) => response,
+      providesTags: ["Category"],
+    }),
+    
+    createCategory: builder.mutation({
+      query: (data) => ({
+        url: "/categories/create-category",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Category"],
+    }),
+    updateCategory: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/categories/update-category/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Category"],
+    }),
+    deleteCategory: builder.mutation({
+      query: (id) => ({
+        url: `/categories/delete-category/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Category"],
+    }),
+
+
+  }),
+});
+
+export const {
+  useGetCategoriesQuery,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+
+} = CategoryApi;

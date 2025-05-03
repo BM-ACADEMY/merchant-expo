@@ -1,32 +1,46 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
-import "./index.css";
-import Dashboard from "./admin/pages/dashboard/dashboard";
-import Header from "./admin/layout/Header";
-import Sidebar from "./admin/layout/Sidebar";
-import Users from "./admin/pages/users/Users";
-import Merchant from "./admin/pages/merchants/Merchant";
-import Serviceprovider from "./admin/pages/service-provider/Service-provider";
-import Student from "./admin/pages/student/Student";
+import { BrowserRouter as Router } from "react-router-dom";
+import AppRoutes from "./AppRoute";
+import { ActiveUserProvider } from "./modules/admin/context/ActiveUserProvider";
+import { AuthProvider } from "./modules/landing/context/AuthContext";
+import { MerchantProvider } from "./modules/admin/context/MerchantContext";
+import { ToastContainer } from "react-toastify";
+import { NotificationProvider } from "./modules/admin/context/NotificationContext";
+import "react-toastify/dist/ReactToastify.css";
+import { SocketProvider } from "./modules/admin/context/SocketContext";
+import { SelectedUserProvider } from "./modules/admin/context/SelectedUserContext";
 
 function App() {
   return (
-    <div className="App">
-      <Router>
-        <Header />
-        <Sidebar />
-        <Routes>
-          <Route path="/" element={<Dashboard/>} />
-          <Route path="/users" element={<Users/>} />
-          <Route path="/merchant" element={<Merchant/>} />
-          <Route path="/service-provider" element={<Serviceprovider/>} />
-          <Route path="/student" element={<Student/>} />
-         
-        </Routes>
-      </Router>
+    <Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light" // or "dark"
+      />
+      <AuthProvider>
+        <SelectedUserProvider>
+        <SocketProvider >
+        <NotificationProvider>
+          <MerchantProvider>
 
-   
-    </div>
+            <ActiveUserProvider>
+              <AppRoutes />
+            </ActiveUserProvider>
+
+          </MerchantProvider>
+        </NotificationProvider>
+        </SocketProvider>
+        </SelectedUserProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 
