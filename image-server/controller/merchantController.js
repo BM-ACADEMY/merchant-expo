@@ -1,53 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-
 const { createEntityFolder, processFile } = require("../utils/FileUpload");
-// 📌 Upload multiple files with compression
-// const uploadImages = async (req, res) => {
-//   try {
-//     if (!req.files || req.files.length === 0) {
-//       return res.status(400).json({ message: "No files uploaded" });
-//     }
-
-//     const { entity_type, company_name } = req.body;
-//     if (!entity_type || !company_name) {
-//       return res
-//         .status(400)
-//         .json({ message: "Missing entity type or company name" });
-//     }
-  
-//     const uploadPath = createEntityFolder(entity_type, company_name);
-//     let fileDetails = [];
-
-//     for (let file of req.files) {
-//       const fileName = `${Date.now()}_${file.originalname}`;
-//       const outputPath = path.join(uploadPath, fileName); // Correct path
-
-//       // ✅ Pass correct arguments to processFile()
-//       const fileUrl = await processFile(
-//         file.buffer,
-//         file.mimetype,
-//         entity_type,
-//         company_name,
-//         fileName
-//       );
-
-//       fileDetails.push({ fileUrl }); // ✅ Return URL instead of absolute path
-//     }
-
-//     res.status(200).json({
-//       success: true,
-//       error: false,
-//       message: "Files uploaded successfully",
-//       files: fileDetails,
-//     });
-//   } catch (error) {
-//     console.error("Upload Error:", error);
-//     res
-//       .status(500)
-//       .json({ error: true, sucess: false, message: error.message });
-//   }
-// };
 
 const uploadImages = async (req, res) => {
   try {
@@ -101,7 +54,6 @@ const uploadImages = async (req, res) => {
       .json({ error: true, success: false, message: error.message });
   }
 };
-
 
 
 // ✅ Update a file (replace existing)

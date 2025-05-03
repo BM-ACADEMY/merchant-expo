@@ -66,13 +66,6 @@ const Header = () => {
     buyers: "Search for buyers..."
   };
 
-// const handleNavigate=(type) => {
-//   if (type === "login") {
-//     navigate("/login");
-//   } else {
-//     navigate("/register");
-//   }
-// };
 
 
   return (

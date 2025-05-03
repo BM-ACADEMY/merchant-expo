@@ -19,6 +19,13 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+
+
+  gender:{
+    type:String,
+
+  },
+
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Role",
@@ -40,6 +47,15 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+
+  profile_pic:{
+    type:String
+  },
+  date_of_birth:{
+    type:Date
+  },
+
   created_at: {
     type: Date,
     default: Date.now,

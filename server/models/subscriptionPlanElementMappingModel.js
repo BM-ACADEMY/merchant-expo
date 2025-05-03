@@ -1,34 +1,25 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
 
-const SubscriptionPlanElementMapping = sequelize.define('SubscriptionPlanElementMapping', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    subscription_plan_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    element_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    value: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    },
-    updated_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    }
+const mongoose = require('mongoose');
+
+const SubscriptionPlanElementMappingSchema = new mongoose.Schema({
+  subscription_plan_id: {
+    type: mongoose.Schema.Types.ObjectId, 
+    required: true,
+    ref: 'SubscriptionPlan' 
+  },
+  element_id: {
+    type: mongoose.Schema.Types.ObjectId, 
+    required: true,
+    ref: 'SubscriptionPlanElement'
+  },
+  value: {
+    type: String,
+    maxlength: 255,
+    default: null
+  },
 }, {
-    timestamps: false
+  timestamps: true 
 });
 
-module.exports = SubscriptionPlanElementMapping;
+module.exports = mongoose.model('SubscriptionPlanElementMapping', SubscriptionPlanElementMappingSchema);
+

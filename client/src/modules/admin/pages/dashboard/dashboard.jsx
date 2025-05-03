@@ -67,9 +67,5 @@ const Dashboard = () => {
     <div className={`${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"}`}>
       <h1>Welcome to Dashboard, Points: {points || 0}</h1>
       <DashboardComponents />
-  
-    </div>
-  );
-};
-
-export default Dashboard;
+  </div>
+)}

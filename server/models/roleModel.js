@@ -1,12 +1,9 @@
 const mongoose = require("mongoose");
-
 const counterSchema = new mongoose.Schema({
   _id: { type: String, required: true },
   seq: { type: Number, default: 0 },
 });
-
 const Counter = mongoose.model("Counter", counterSchema);
-
 const roleSchema = new mongoose.Schema({
   id: {
     type: Number,
@@ -19,9 +16,11 @@ const roleSchema = new mongoose.Schema({
     trim: true, // Remove leading/trailing whitespace
     uppercase: true, // Automatically convert to uppercase
     minlength: 1, // Ensure non-empty strings
+    enum: ["USER", "MERCHANT", "SERVICE-PROVIDER","SUB-DEALER" ,"GROCERY-SELLER", "STUDENT", "ADMIN", "SUB-ADMIN"],
+    required: true,
+    unique: true,
   },
 });
-
 // Auto-increment role ID before saving
 roleSchema.pre("save", async function (next) {
   if (!this.id) {
@@ -34,6 +33,6 @@ roleSchema.pre("save", async function (next) {
   }
   next();
 });
-
 const Role = mongoose.model("Role", roleSchema);
 module.exports = Role;
+

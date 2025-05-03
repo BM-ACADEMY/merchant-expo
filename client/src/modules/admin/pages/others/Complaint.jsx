@@ -1,5 +1,6 @@
 import React from 'react';
 import {useSidebar} from "../../hooks/useSidebar";
+import ComplaintForm from "@/staticPages/Complaint";
 
 const Complaint = () => {
   const {isSidebarOpen, toggleSidebar} = useSidebar()
@@ -7,7 +8,7 @@ const Complaint = () => {
     <>
     
     <div className={`${isSidebarOpen ? 'p-6 lg:ml-56' : 'p-4 lg:ml-16'}`}>
-      welcome to complaint
+      <ComplaintForm />
     </div>
     </>
   )

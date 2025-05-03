@@ -1,35 +1,28 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
 
-const ViewPoints = sequelize.define('ViewPoints', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true
-    },
-    product_id: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
-    view_Points: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    },
-    updated_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    }
+
+const mongoose = require('mongoose');
+
+const ViewPointSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,  
+    required: true,
+    unique: true,
+    ref: 'User'
+  },
+  product_id: {
+    type: mongoose.Schema.Types.ObjectId,  
+    ref: 'Product',
+    default: null
+  },
+  view_points: {
+    type: Number,
+    default: 0
+  }
 }, {
-    timestamps: false
+  timestamps: true
 });
 
-module.exports = ViewPoints;
+const ViewPoint = mongoose.model('ViewPoint', ViewPointSchema);
+
+module.exports = ViewPoint;
+

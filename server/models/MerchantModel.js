@@ -67,8 +67,9 @@ const merchantSchema = new mongoose.Schema(
         message: "Enter a valid year of establishment.",
       },
     },
+
   },
   { timestamps: true }
 );
-
 module.exports = mongoose.model("Merchant", merchantSchema);
+

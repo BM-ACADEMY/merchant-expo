@@ -2,6 +2,17 @@ const mongoose = require("mongoose");
 
 const DeepSubCategorySchema = new mongoose.Schema(
   {
+
+    category_id:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+    sub_category_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubCategory",
+      required: true,
+    },
     super_sub_category_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "SuperSubCategory",

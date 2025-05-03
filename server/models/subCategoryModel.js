@@ -13,10 +13,12 @@ const SubCategorySchema = new mongoose.Schema(
       trim: true,
     },
     sub_category_image: {
+
       type: String, // Cloudinary URL or local path
     },
   },
   { timestamps: true } // Automatically adds createdAt & updatedAt fields
+
 );
 
 module.exports = mongoose.model("SubCategory", SubCategorySchema);

@@ -1,20 +1,15 @@
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-const topics = [
-  "Getting Started",
-  "My Account Dashboard",
-  "Add / Edit Business Profile",
-  "Inquiry Management",
-  "Add / Update Products",
-];
-
-const Sidebar = ({ selectedTopic, setSelectedTopic }) => {
+const Sidebar = ({ topics, selectedTopic, setSelectedTopic }) => {
+  console.log(topics,"topics");
+  
   return (
     <div className="w-64 bg-white p-4 shadow-md">
-      <h2 className="text-lg font-semibold mb-4 flex justify-center underline">SELLER'S HELP CENTER</h2>
+      <h2 className="text-lg font-semibold mb-4 flex justify-center underline">BUYER'S HELP CENTER</h2>
       <div className="flex flex-col gap-2">
-        {topics.map((topic, index) => (
+        {topics?.map((topic, index) => (
           <Button
             key={index}
             variant="ghost"

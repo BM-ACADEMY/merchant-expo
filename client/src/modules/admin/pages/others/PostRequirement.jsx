@@ -1,14 +1,17 @@
 import React from 'react'
 import {useSidebar} from "../../hooks/useSidebar";
-const PostRequirement = () => {
+import {PostRequirement} from '@/staticPages/PostByRequirement';
+
+
+const PostRequirementAdminPanel = () => {
   const {isSidebarOpen, toggleSidebar} = useSidebar()
   return (
     <>
     <div className={`${isSidebarOpen ? 'p-6 lg:ml-56' : 'p-4 lg:ml-16'}`}>
-      post requirement 
+    <PostRequirement />
     </div>
     </>
   )
 }
 
-export default PostRequirement;
+export default PostRequirementAdminPanel;

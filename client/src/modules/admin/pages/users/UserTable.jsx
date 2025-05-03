@@ -29,6 +29,9 @@ import UserForm from "./UserForm";
 import DeleteDialog from "@/model/DeleteModel";
 import AddressForm from "./AddressForm";
 import UserDetails from "./UserDetails";
+import {toast} from"react-toastify";
+import { Badge } from "@/components/ui/badge";
+
 
 const UserTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,7 +80,14 @@ const UserTable = () => {
 
   // Confirm Delete
   const confirmDelete = async () => {
-    await deleteUser(selectedUser._id);
+   const response= await deleteUser(selectedUser._id);
+   console.log(response,"delete");
+   if (response?.data) {
+    toast.success(response?.data?.message || "User Deleted Successfully");
+   }
+   else{
+    toast.error(response?.data?.message || "Failed to Delete");
+   }
     setDeletePopup(false);
   };
 
@@ -88,7 +98,8 @@ const UserTable = () => {
   };
 
   return (
-    <div className="w-full mx-auto">
+    <div className="max-w-4xl mx-auto">
+      
       {/* Add User Button */}
       <div className="flex gap-3">
         <Button  className=" bg-[#e03733] mb-4  hover:shadow-lg text-white py-2 rounded-md cursor-pointer" onClick={() => handleOpenModal(null)}>
@@ -123,15 +134,15 @@ const UserTable = () => {
               <TableCell className="p-3">{user?.phone}</TableCell>
               <TableCell className="p-3">{user?.role?.role}</TableCell>
               <TableCell className="p-3">
-                <span
-                  className={`p-3 ${
+                <Badge
+                  className={` ${
                     user?.email_verified == true
-                      ? "bg-green-500 p-1 rounded-2xl text-white"
+                      ? "bg-green-500  rounded-2xl text-white"
                       : "bg-red-500 p-1 rounded-2xl text-white"
                   } `}
                 >
                   {user?.email_verified == true ? "Verified" : "Not Verified"}
-                </span>
+                </Badge>
               </TableCell>
               <TableCell className="p-3 text-center">
                 <DropdownMenu>

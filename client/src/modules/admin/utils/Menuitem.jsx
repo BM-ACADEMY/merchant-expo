@@ -1,6 +1,6 @@
 const menuItems = [
     { title: "Dashboard", icon: "Gauge", link: "/admin/dashboard" },
-    { title: "Profile", icon: "User", link: "/admin/profile" },
+ 
 
     {
         title: "End Users",
@@ -36,13 +36,6 @@ const menuItems = [
                 title: "Common Users",
                 icon: "UsersThree",
                 children: [{ title: "Users List", icon: "List", link: "/admin/common-users" }]
-            },
-            {
-                title: "Admin",
-                icon: "User",
-                children: [{ title: "Sub Admin", icon: "List", link: "/admin/subadmin" },
-                    { title: "Roles", icon: "Crown", link: "/admin/subadmin/roles" }
-                ]
             }
         ]
     },
@@ -89,7 +82,9 @@ const menuItems = [
             { title: "Complaint", icon: "Warning", link: "/admin/others/complaint" },
             { title: "Testimonial", icon: "ChatText", link: "/admin/others/testimonial" }
         ]
-    }
+    },
+    { title: "Settings", icon: "Gear", link: "/admin/settings" }
+
 ];
 
 export default menuItems;

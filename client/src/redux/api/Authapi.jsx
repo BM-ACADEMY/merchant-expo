@@ -97,6 +97,12 @@ export const Authapi = createApi({
     }),
 
     // User Address
+
+    getUserAddresses: builder.query({
+      query: ({user_id}) => `/address/fetch-address-by-id/${user_id}`,
+      providesTags: (result, error, user_id) => [{ type: 'Address', id: user_id }],
+    }),
+
     addUserAddress: builder.mutation({
       query: (data) => ({
         url: "/address/create-address",
@@ -106,19 +112,21 @@ export const Authapi = createApi({
       invalidatesTags: ["User"], // ✅ Ensure UI updates after adding an address
     }),
     updateUserAddress: builder.mutation({
-      query: ({ userId, updatedAddress }) => ({
-        url: `/address/update-address/${userId}`,
+      query: ({ user_id, selectedAddressId, updatedAddress }) => ({
+        url: `/address/update-address/${user_id}/${selectedAddressId}`,
         method: "PUT",
         body: updatedAddress,
       }),
-      invalidatesTags: ["User"], // ✅ Ensure UI updates after updating an address
+      invalidatesTags: ["User"],
     }),
+    
     DeleteUserAddress: builder.mutation({
-      query: ({ userId }) => ({
-        url: `/address/delete-address/${userId}`,
+      query: ({ user_id ,addressId}) => ({
+        url: `/address/delete-address`,
         method: "DELETE",
+        body:{user_id,addressId}
       }),
-      invalidatesTags: ["User"], // ✅ Ensure UI updates after updating an address
+      invalidatesTags: ["User"], 
     }), 
   }),
 });
@@ -136,6 +144,7 @@ export const {
   useAddUserMutation, 
   useUpdateUserMutation, 
   useDeleteUserMutation, 
+  useGetUserAddressesQuery,
   useAddUserAddressMutation,
   useUpdateUserAddressMutation,
   useDeleteUserAddressMutation,

@@ -12,6 +12,10 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "@types/uuid": "^10.0.0",
+>>>>>>> Charles_bm
     "body-parser": "^1.20.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -23,9 +27,19 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.2",
     "path": "^0.12.7",
+<<<<<<< HEAD
     "sharp": "^0.33.5"
   },
   "devDependencies": {
+=======
+    "sharp": "^0.33.5",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/fluent-ffmpeg": "^2.1.27",
+    "@types/multer": "^1.4.12",
+>>>>>>> Charles_bm
     "nodemon": "^3.1.9"
   }
 }

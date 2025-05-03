@@ -13,6 +13,13 @@ const PointSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+
+    point_amount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+
   },
   { timestamps: true }
 );
