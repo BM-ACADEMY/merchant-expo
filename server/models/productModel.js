@@ -4,20 +4,20 @@ const productSchema = new mongoose.Schema({
     seller_id: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-<<<<<<< HEAD
-        refPath: 'sellerModel'
-=======
+
+        refPath: 'sellerModel',
+
         ref: 'Merchant' // Dynamic reference to different seller models
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
+
     },
     sellerModel: {
         type: String,
         required: true,
-<<<<<<< HEAD
-        enum: [ 'Merchant', 'ServiceProvider'] 
-=======
+
+        enum: [ 'Merchant', 'ServiceProvider'] ,
+
         enum: [ 'Merchant', 'ServiceProvider'] // Possible seller models
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
+
     },
     category_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -58,28 +58,21 @@ const productSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
-<<<<<<< HEAD
+
     product_image: {
         type: String,
-        default: '' 
-=======
+        default: '' },
+
     image: {
         type: String,
         default: '' // URL or file path
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
+
     },
     status: {
         type: String,
         enum: ['Active', 'Inactive'],
         default: 'Active'
     },
-<<<<<<< HEAD
-  
-}, { timestamps: true });
-
-const Product = mongoose.model('Product', productSchema);
-module.exports = Product;
-=======
     created_at: {
         type: Date,
         default: Date.now
@@ -92,4 +85,3 @@ module.exports = Product;
 
 const Product = mongoose.model('Product', productSchema);
 module.exports = Product;
->>>>>>> 6ebfee91356ac536c0f4855f30ffe835026d71ed
