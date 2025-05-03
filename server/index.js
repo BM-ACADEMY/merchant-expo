@@ -223,20 +223,11 @@ require("dotenv").config();
 {
   /* Routes config here*/
 }
-const userRoutes = require("./routes/userRoute");
-const serviceProviderRoute = require("./routes/serviceProviderRoute");
-const imageRoute = require("./routes/ImageRoute");
-const grocerySeller = require("./routes/grocerySellerRoute");
-const studentRoute = require("./routes/studentRoute");
-const merchantRoute = require("./routes/merchantRoute");
-const subdealerRoute = require("./routes/subdealerRoutes");
-const roleRoute = require("./routes/roleRoute");
-const addressRoute = require("./routes/addressRoute");
 
+const studentRoute = require("./routes/studentRoute");
 const connectDB = require("./config/connectDB");
 const http = require("http");
 const socketIo = require("socket.io");
-
 // Routes
 const userRoutes = require("./routes/userRoute");
 const serviceProviderRoute = require("./routes/serviceProviderRoute");
@@ -373,17 +364,7 @@ io.on("connection", (socket) => {
 });
 
 app.set("onlineUsers", onlineUsers);
-// Server listening
-const PORT = process.env.PORT || 5000;
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log("✅ Server is running on port", PORT);
-    });
-  })
-  .catch((err) => {
-    console.error("❌ Database connection failed", err);
-  });
+
 
 app.use(
   cors({
@@ -413,10 +394,13 @@ app.use((req, res, next) => {
   next();
 });
 
-server
-  .listen(PORT, () => {
+app.set('onlineUsers', onlineUsers); 
+// Server listening
+const PORT = process.env.PORT || 5000;
+connectDB().then(() => {
+  server.listen(PORT, () => {
     console.log("✅ Server is running on port", PORT);
-  })
-  .catch((err) => {
-    console.error("❌ Database connection failed", err);
   });
+}).catch(err => {
+  console.error("❌ Database connection failed", err);
+});

@@ -69,5 +69,5 @@ const SubCategory = () => {
     </div>
   );
 };
->>>>>>> Charles_bm
+
 export default SubCategory;

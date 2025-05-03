@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const pointController = require("../controllers/pointController");
+const pointController = require("../controllers/pointsController");
 router.post("/create-points", pointController.createPoint);
 router.get("/fetch-all-points", pointController.getPoints);
 router.get("/fetch-points-by-id/:id", pointController.getPointById);

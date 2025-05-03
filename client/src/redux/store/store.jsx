@@ -33,7 +33,6 @@ import { MerchantAuthApi } from "../api/MerchantAuthApi";
 import { MerchantImageApi } from "../api/MerchantImageApi";
 import { ServiceProviderApi } from "../api/ServiceProviderApi";
 import { GrocerySellerApi } from "../api/GrocerySellerApi";
-import { StudentApi } from "../api/StudentApi"; // Add StudentApi import
 import fetchuserReducer from "@/redux/api/FetchUsers";
 
 const store = configureStore({
@@ -69,13 +68,13 @@ const store = configureStore({
     [MerchantImageApi.reducerPath]: MerchantImageApi.reducer,
     [ServiceProviderApi.reducerPath]: ServiceProviderApi.reducer,
     [GrocerySellerApi.reducerPath]: GrocerySellerApi.reducer,
-    [StudentApi.reducerPath]: StudentApi.reducer,
+   
     fetchuser: fetchuserReducer,
     [MerchantAuthApi.reducerPath]:MerchantAuthApi.reducer,
     [MerchantImageApi.reducerPath]:MerchantImageApi.reducer,
     [ServiceProviderApi.reducerPath]:ServiceProviderApi.reducer,
     [GrocerySellerApi.reducerPath]:GrocerySellerApi.reducer,
-    [StudentApi.reducerPath]:StudentApi.reducer
+  
 
   },
   middleware: (getDefaultMiddleware) =>

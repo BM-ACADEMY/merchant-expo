@@ -14,9 +14,6 @@ const {
 const router = express.Router();
 
 // Create a new subscription plan
-
-router.post("/create-subscriptionplans", protect, admin, createPlan);
-
 router.post("/create-subscriptionplans", createPlan);
 
 
@@ -32,10 +29,10 @@ router.get("/fetch-subscriptionplans-by-id/:id", getPlanById);
 
 // Update a subscription plan
 
-router.put("/update-subscriptionplans-by-id/:id", protect, admin, updatePlan);
+router.put("/update-subscriptionplans-by-id/:id",updatePlan);
 
 // Delete a subscription plan
-router.delete("/delete-subscriptions-plans-by-id/:id", protect, admin, deletePlan);
+router.delete("/delete-subscriptions-plans-by-id/:id", deletePlan);
 
 router.put("/update-subscriptionplans/:id", updatePlan);
 
