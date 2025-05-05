@@ -23,5 +23,5 @@ router.get("/id-card/get/:college_name", getStudentIdCard);
 
 module.exports = router;
 
-module.exports = router;
+
 

@@ -82,5 +82,5 @@ const MainCategory = () => {
     </div>
   );
 };
->>>>>>> Charles_bm
+
 export default MainCategory;

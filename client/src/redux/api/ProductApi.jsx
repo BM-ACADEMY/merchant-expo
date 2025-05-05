@@ -61,9 +61,11 @@ export const ProductApi = createApi({
 
     // ✅ GET Merchant by email or phone
     getMerchantByEmailOrPhone: builder.query({
-      query: (email) => `/users/fetch-user-by-email-or-phone?email=${email}`,
+      query: ({ email, page = 1, limit = 10 }) =>
+        `/merchants/fetch-all-merchant-products?email=${email}&page=${page}&limit=${limit}`,
       providesTags: ["Product"],
     }),
+    
     // category api
     getCategories: builder.query({
       query: () => "/categories/fetch-all-category-for-super-sub-category",

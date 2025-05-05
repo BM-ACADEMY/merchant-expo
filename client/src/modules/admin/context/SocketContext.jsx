@@ -1,5 +1,5 @@
 import { AuthContext } from "@/modules/landing/context/AuthContext";
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect, useRef,useState } from "react";
 import { io } from "socket.io-client";
 import { useSelectedUser } from "@/modules/admin/context/SelectedUserContext";
 
@@ -9,6 +9,9 @@ export const SocketProvider = ({ children }) => {
   const socketRef = useRef(null);
   const { user } = useContext(AuthContext);
   const { selectedUser } = useSelectedUser(); // 💡 Add this
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [lastSeenMap, setLastSeenMap] = useState({});
+
 
   useEffect(() => {
     if (!user?.user?._id) return;
@@ -17,9 +20,18 @@ export const SocketProvider = ({ children }) => {
       socketRef.current = io("http://localhost:5000", {
         transports: ["websocket"],
       });
-
-      socketRef.current.emit("user-online", user.user._id);
+     
       socketRef.current.emit("join", user.user._id);
+      socketRef.current.on("online-users", (users) => {
+        setOnlineUsers(users);
+      });
+      socketRef.current.on("user-disconnected", ({ userId, lastSeen }) => {
+        setLastSeenMap((prev) => ({
+          ...prev,
+          [userId]: lastSeen,
+        }));
+      });
+      
     }
 
     return () => {
@@ -38,10 +50,10 @@ export const SocketProvider = ({ children }) => {
   }, [selectedUser?._id, user?.user?._id]);
 
   return (
-    <SocketContext.Provider value={socketRef}>
+    <SocketContext.Provider value={{socketRef,onlineUsers,lastSeenMap } }>
       {children}
     </SocketContext.Provider>
   );
 };
 
-export const useSocket = () => useContext(SocketContext)?.current;
+export const useSocket = () => useContext(SocketContext)

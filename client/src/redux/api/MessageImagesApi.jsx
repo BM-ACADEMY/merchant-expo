@@ -19,7 +19,7 @@ export const MessageImagesApi = createApi({
         // 📤 Upload chat file(s)
         uploadMessageImages: builder.mutation({
             query: (formData) => ({
-                url: "/upload-chat-images",
+                url: "/chat-message-images/upload-chat-images",
                 method: "POST",
                 body: formData,
             }),
@@ -29,13 +29,13 @@ export const MessageImagesApi = createApi({
         // 📥 Get chat file (image, video, etc.)
         getMessageImages: builder.query({
             query: ({ senderId, receiverId, file_name }) =>
-                `/fetch-all-images/${senderId}/${receiverId}/${file_name}`,
+                `/chat-message-images/fetch-all-images/${senderId}/${receiverId}/${file_name}`,
         }),
 
         // ❌ Delete chat file(s)
         deleteMessageImages: builder.mutation({
             query: (body) => ({
-                url: "/delete-images",
+                url: "/chat-message-images/delete-images",
                 method: "DELETE",
                 body,
             }),
@@ -45,7 +45,7 @@ export const MessageImagesApi = createApi({
         // ♻️ Update/Replace chat file
         updateMessageImages: builder.mutation({
             query: (formData) => ({
-                url: "/update-images",
+                url: "/chat-message-images/update-images",
                 method: "PUT",
                 body: formData,
             }),

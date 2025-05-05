@@ -7,7 +7,7 @@ const CategorySchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      trim: true,s
+      trim: true,
     },
     category_image: {
       type: String, // Store Cloudinary URL or local path

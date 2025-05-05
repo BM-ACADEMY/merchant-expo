@@ -220,20 +220,6 @@ const bodyParser = require("body-parser");
 
 require("dotenv").config();
 
-{
-  /* Routes config here*/
-}
-const userRoutes = require("./routes/userRoute");
-const serviceProviderRoute = require("./routes/serviceProviderRoute");
-const imageRoute = require("./routes/ImageRoute");
-const grocerySeller = require("./routes/grocerySellerRoute");
-const studentRoute = require("./routes/studentRoute");
-const merchantRoute = require("./routes/merchantRoute");
-const subdealerRoute = require("./routes/subdealerRoutes");
-const roleRoute = require("./routes/roleRoute");
-const addressRoute = require("./routes/addressRoute");
-
-const connectDB = require("./config/connectDB");
 const http = require("http");
 const socketIo = require("socket.io");
 
@@ -265,7 +251,8 @@ const PermissionRoute = require("./routes/permissionRoute");
 const PermissionRequestRoute = require("./routes/permissionRequestedRoute");
 const PermissionRequestReadMappingRoute = require("./routes/permissionRequestReadMappingRoute");
 const MessageRoute = require("./routes/messageRoute");
-
+const studentRoute = require("./routes/studentRoute");
+const connectDB = require("./config/connectDB");
 const app = express();
 
 // Create HTTP server to integrate with Socket.io
@@ -294,15 +281,10 @@ app.get("/", (req, res) => {
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/service-providers", serviceProviderRoute);
 app.use("/api/v1/images", imageRoute);
-
-app.use("/api/v1/grocery-sellers", grocerySeller);
+app.use("/api/v1/grocery-sellers", grocerySeller);  
 app.use("/api/v1/students", studentRoute);
-app.use("/api/v1/merchants", merchantRoute);
-app.use("/api/v1/sub-dealer", subdealerRoute);
-app.use("/api/v1/role", roleRoute);
-app.use("/api/v1/address", addressRoute);
 
-app.use("/api/v1/grocery-sellers", grocerySeller);
+
 app.use("/api/v1/merchants", merchantRoute);
 app.use("/api/v1/sub-dealer", subdealerRoute);
 app.use("/api/v1/role", roleRoute);
@@ -339,18 +321,33 @@ app.post("/test", (req, res) => {
   res.json({ message: "Data received successfully", data: req.body });
 });
 
+
+// Socket.io connection handler
+
 // Socket.io connection handler
 const onlineUsers = new Map();
 const activeChats = new Map();
-
+const lastSeenMap = new Map(); 
 io.on("connection", (socket) => {
   console.log("New client connected");
 
   // Handle user joining their personal room
   socket.on("join", (userId) => {
     socket.join(userId);
+    socket.userId = userId; // So we know who disconnected later
     onlineUsers.set(userId, socket.id);
-    console.log(`User ${userId} joined their room`);
+    console.log(`User ${userId} joined`);
+
+    // Notify all clients
+    io.emit("online-users", Array.from(onlineUsers.keys()));
+
+    socket.on("typing", ({ senderId, receiverId }) => {
+      socket.to(receiverId).emit("typing", senderId);
+    });
+  
+    socket.on("stopTyping", ({ senderId, receiverId }) => {
+      socket.to(receiverId).emit("stopTyping", senderId);
+    });
   });
 
   // Handle user joining a chat room
@@ -367,23 +364,24 @@ io.on("connection", (socket) => {
         break;
       }
     }
+    if (socket.userId) {
+      onlineUsers.delete(socket.userId);
+      lastSeenMap.set(socket.userId, new Date().toISOString());
+      io.emit("user-disconnected", {
+        userId:socket.userId,
+        lastSeen: new Date().toISOString(),
+      });
+      io.emit("online-users", Array.from(onlineUsers.keys()));
+      console.log(`User ${socket.userId} disconnected`);
+    }
     activeChats.delete(socket.userId); // Or manage via a map if needed
     console.log("User disconnected");
   });
 });
 
-app.set("onlineUsers", onlineUsers);
-// Server listening
-const PORT = process.env.PORT || 5000;
-connectDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log("✅ Server is running on port", PORT);
-    });
-  })
-  .catch((err) => {
-    console.error("❌ Database connection failed", err);
-  });
+
+app.set('onlineUsers', onlineUsers); 
+
 
 app.use(
   cors({
@@ -413,10 +411,13 @@ app.use((req, res, next) => {
   next();
 });
 
-server
-  .listen(PORT, () => {
+// app.set('onlineUsers', onlineUsers); 
+// Server listening
+const PORT = process.env.PORT || 5000;
+connectDB().then(() => {
+  server.listen(PORT, () => {
     console.log("✅ Server is running on port", PORT);
-  })
-  .catch((err) => {
-    console.error("❌ Database connection failed", err);
   });
+}).catch(err => {
+  console.error("❌ Database connection failed", err);
+});

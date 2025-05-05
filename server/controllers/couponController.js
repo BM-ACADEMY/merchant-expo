@@ -17,15 +17,9 @@ exports.createCouponName = async (req, res) => {
     const coupon = new CouponName({ coupon_name });
     await coupon.save();
 
-<<<<<<< HEAD
-    res.status(201).json({ message: "Coupon name created successfully", coupon });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-=======
     res.status(201).json({success:true, message: "Coupon name created successfully", coupon });
   } catch (error) {
     res.status(500).json({success:false, message: error.message });
->>>>>>> Charles_bm
   }
 };
 
@@ -33,11 +27,6 @@ exports.createCouponName = async (req, res) => {
 exports.getCouponNames = async (req, res) => {
   try {
     const coupons = await CouponName.find();
-<<<<<<< HEAD
-    res.json(coupons);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-=======
     res.json({
       success:true,
       message:"Fetched Coupons Successfully",
@@ -45,7 +34,6 @@ exports.getCouponNames = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({success:false, message: error.message });
->>>>>>> Charles_bm
   }
 };
 
@@ -80,15 +68,9 @@ exports.updateCouponName = async (req, res) => {
     if (!coupon) {
       return res.status(404).json({ message: "Coupon name not found" });
     }
-<<<<<<< HEAD
-    res.json({ message: "Coupon name updated successfully", coupon });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-=======
     res.json({ success:true, message: "Coupon name updated successfully", coupon });
   } catch (error) {
     res.status(500).json({ success:false, message: error.message });
->>>>>>> Charles_bm
   }
 };
 
@@ -99,14 +81,8 @@ exports.deleteCouponName = async (req, res) => {
     if (!coupon) {
       return res.status(404).json({ message: "Coupon name not found" });
     }
-<<<<<<< HEAD
-    res.json({ message: "Coupon name deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-=======
     res.json({ success:true, message: "Coupon name deleted successfully" });
   } catch (error) {
     res.status(500).json({success:false, message: error.message });
->>>>>>> Charles_bm
   }
 };

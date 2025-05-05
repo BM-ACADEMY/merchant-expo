@@ -69,3 +69,4 @@ const Dashboard = () => {
       <DashboardComponents />
   </div>
 )}
+ export default Dashboard;

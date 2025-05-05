@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const couponNameController = require("../controllers/couponNameController");
-
 const couponNameController = require("../controllers/couponController");
 
 

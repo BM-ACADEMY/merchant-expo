@@ -4,11 +4,7 @@ const Category = require("../models/categoryModel");
 // Create a new sub-category
 exports.createSubCategory = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const { category_id, sub_category_name, image } = req.body;
-=======
     const { category_id, sub_category_name, sub_category_image } = req.body;
->>>>>>> Charles_bm
 
     // Check if the referenced category exists
     const categoryExists = await Category.findById(category_id);
@@ -16,12 +12,6 @@ exports.createSubCategory = async (req, res) => {
       return res.status(400).json({ message: "Category not found" });
     }
 
-<<<<<<< HEAD
-    const subCategory = new SubCategory({ category_id, sub_category_name, image });
-    await subCategory.save();
-
-    res.status(201).json({ message: "Sub-category created successfully", subCategory });
-=======
     const subCategory = new SubCategory({ category_id, sub_category_name, sub_category_image });
     await subCategory.save();
 
@@ -68,21 +58,11 @@ exports.getSubCategories = async (req, res) => {
         totalPages: Math.ceil(total / limit),
       },
     });
->>>>>>> Charles_bm
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-<<<<<<< HEAD
-// Get all sub-categories
-exports.getSubCategories = async (req, res) => {
-  try {
-    const subCategories = await SubCategory.find().populate("category_id", "category_name");
-    res.json(subCategories);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-=======
 
 exports.getAllSubCategoriesForSuperSubCategory = async (req, res) => {
   try {
@@ -98,7 +78,6 @@ exports.getAllSubCategoriesForSuperSubCategory = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
->>>>>>> Charles_bm
   }
 };
 
@@ -107,53 +86,31 @@ exports.getSubCategoryById = async (req, res) => {
   try {
     const subCategory = await SubCategory.findById(req.params.id).populate("category_id", "category_name");
     if (!subCategory) {
-<<<<<<< HEAD
-      return res.status(404).json({ message: "Sub-category not found" });
-    }
-    res.json(subCategory);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-=======
       return res.status(404).json({success:true, message: "Sub-category not found" });
     }
     res.json({success:true,message:"Fetch Sub Category Successfully",data:subCategory});
   } catch (error) {
     res.status(500).json({ success:false,message: error.message });
->>>>>>> Charles_bm
   }
 };
 
 // Update sub-category
 exports.updateSubCategory = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const { category_id, sub_category_name, image } = req.body;
-
-    const subCategory = await SubCategory.findByIdAndUpdate(
-      req.params.id,
-      { category_id, sub_category_name, image },
-=======
     const { category_id, sub_category_name, sub_category_image } = req.body;
 
     const subCategory = await SubCategory.findByIdAndUpdate(
       req.params.id,
       { category_id, sub_category_name, sub_category_image },
->>>>>>> Charles_bm
       { new: true, runValidators: true }
     );
 
     if (!subCategory) {
       return res.status(404).json({ message: "Sub-category not found" });
     }
-<<<<<<< HEAD
-    res.json({ message: "Sub-category updated successfully", subCategory });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-=======
     res.json({ success:true,message: "Sub-category updated successfully", subCategory });
   } catch (error) {
     res.status(500).json({success:false, message: error.message });
->>>>>>> Charles_bm
   }
 };
 
@@ -164,14 +121,8 @@ exports.deleteSubCategory = async (req, res) => {
     if (!subCategory) {
       return res.status(404).json({ message: "Sub-category not found" });
     }
-<<<<<<< HEAD
-    res.json({ message: "Sub-category deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-=======
     res.json({success:true, message: "Sub-category deleted successfully" });
   } catch (error) {
     res.status(500).json({ success:false,message: error.message });
->>>>>>> Charles_bm
   }
 };

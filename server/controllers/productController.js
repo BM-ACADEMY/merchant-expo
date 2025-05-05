@@ -1,6 +1,6 @@
 const Product = require("../models/productModel");
-<<<<<<< HEAD
-
+const ProductAttribute=require("../models/productAttributeModel");
+const mongoose=require("mongoose")
 // Create Product
 exports.createProduct = async (req, res) => {
   try {
@@ -19,9 +19,8 @@ exports.getProducts = async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
-=======
-const ProductAttribute=require("../models/productAttributeModel");
-const mongoose=require("mongoose")
+
+  }}
 // Create Product
 exports.createProduct = async (req, res) => {
   try {
@@ -144,7 +143,7 @@ exports.getProducts = async (req, res) => {
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
->>>>>>> Charles_bm
+
   }
 };
 
@@ -162,16 +161,16 @@ exports.getProductById = async (req, res) => {
 // Update Product
 exports.updateProduct = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!product) return res.status(404).json({ message: "Product not found" });
-    res.status(200).json({ message: "Product updated successfully", product });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
-=======
+//     const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+//     if (!product) return res.status(404).json({ message: "Product not found" });
+//     res.status(200).json({ message: "Product updated successfully", product });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+
     const { product_image, ...rest } = req.body;
 
     const updatedFields = {
@@ -206,20 +205,16 @@ exports.updateProduct = async (req, res) => {
 };
 
 
->>>>>>> Charles_bm
+
 // Delete Product
 exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
-<<<<<<< HEAD
-    res.status(200).json({ message: "Product deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-=======
+
     res.status(200).json({success:true, message: "Product deleted successfully" });
   } catch (error) {
     res.status(500).json({success:false, error: error.message });
->>>>>>> Charles_bm
+
   }
-};
+}

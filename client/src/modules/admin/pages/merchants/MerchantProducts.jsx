@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import MerchantProductListing from "./pages/MerchantProductList";
-
+import { toast } from "react-toastify";
 
 
 const MerchantProducts = () => {
@@ -20,11 +20,12 @@ const MerchantProducts = () => {
   const [showForm, setShowForm] = useState(false);
   const [fetchMerchant, { isLoading }] =
     useLazyGetMerchantByEmailOrPhoneQuery();
-
+  const [merchantProducts, setMerchantProducts] = useState([]);
+  const [selectedUser,setSelectedUser]=useState({});
+  const [tablePagination,setTablePagination]=useState({});
   const { selectedMerchant, setSelectedMerchant } = useMerchant();
   const [editingProduct, setEditingProduct] = useState(null);
   const [error, setError] = useState(null);
-
   const handleSearch = async () => {
     setError(null);
 
@@ -37,22 +38,32 @@ const MerchantProducts = () => {
     }
 
     try {
-      const res = await fetchMerchant(email).unwrap();
-      if (res.users && res.users.length > 0) {
-        setSelectedMerchant(res.users[0]);
+      const res = await fetchMerchant({email}).unwrap();
+
+      // Check if success is true and merchant exists
+      if (res.success && res.merchant) {
+        setSelectedMerchant(res?.merchant);
+        setMerchantProducts(res?.products || []);
+        setTablePagination(res?.pagination);
+        setSelectedUser(res?.user)
         setShowForm(true);
         setEmail("");
+        toast.success("Fetched merchant successfully");
       } else {
+        // If backend returns message without success
         setSelectedMerchant(null);
         setShowForm(false);
-        setError("Merchant not found");
+        setError(res.message || "Merchant not found");
+        toast.error(res.message || "Merchant not found");
       }
     } catch (err) {
       setSelectedMerchant(null);
       setShowForm(false);
-      setError("Error fetching merchant");
+      setError(err?.data?.message || "Error fetching merchant");
+      toast.error(err?.data?.message || "Error fetching merchant");
     }
   };
+
 
   const handleEdit = (product) => {
     setEditingProduct(product);
@@ -63,86 +74,80 @@ const MerchantProducts = () => {
   };
 
   return (
-    <div
-      className={`${
-        isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"
-      } flex flex-col justify-center items-center w-full`}
-    >
-      <div className="flex justify-center items-center mb-4">
-        <h2 className="text-xl font-bold">Add Merchant Product</h2>
-      </div>
-      <div className="flex  gap-4">
-        <div>
-          {/* Search Input */}
-          <div className="flex flex-col lg:flex-row justify-center items-center gap-6 mb-4">
-            {/* Left-side Note */}
-            <div className="max-w-sm text-gray-700 text-sm bg-yellow-50 border border-yellow-200 p-4 rounded-md shadow-sm">
-              <p className="font-medium text-yellow-800 mb-1">Note:</p>
-              <p>
-                Do you want to add a merchant product?
-                <br />
-                First, select the merchant by entering their email.
-              </p>
-            </div>
+<div
+  className={`min-h-screen ${isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"
+    }`}
+>
+  <div className="max-w-7xl mx-auto">
+    <h2 className="text-xl font-bold text-center mb-4">Add Merchant Product</h2>
 
-            {/* Right-side Input + Button */}
-            <div className="flex gap-2 items-center justify-center w-full max-w-md">
-              <Input
-                type="text"
-                placeholder="Enter merchant email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="border px-4 py-2 rounded-md w-full"
-              />
-              <Button onClick={handleSearch}>
-                {isLoading ? "Searching..." : "Search"}
-              </Button>
-            </div>
+    <div className="flex flex-col lg:flex-row gap-6">
+      {/* Left Panel */}
+      <div className="w-full lg:w-1/2 flex flex-col">
+        {/* Search Section */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 mb-4">
+          <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-md shadow-sm text-sm text-gray-700">
+            <p className="font-medium text-yellow-800 mb-1">Note:</p>
+            <p>
+              Do you want to add a merchant product?
+              <br />
+              First, select the merchant by entering their email.
+            </p>
           </div>
 
-          {/* Error */}
-          {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-
-          {/* Merchant Card */}
-          {showForm && selectedMerchant && (
-            <div className="max-w-md  mb-6">
-              <Card>
-                <CardContent className="p-4">
-                  <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground font-medium">
-                      Selected Merchant Info
-                    </p>
-                    <div className="text-lg font-semibold">
-                      {selectedMerchant.name}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {selectedMerchant.email}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {selectedMerchant.phone}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-
-          {/* Product Form */}
-          {showForm && <MerchantProductForm editingProduct={editingProduct} />}
-        </div>
-        <div className="w-1 rounded-r-sm bg-[#1C1B1F]"></div>
-        {showForm && (
-          <div>
-            <MerchantProductListing
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+          <div className="w-full max-w-md flex gap-2">
+            <Input
+              type="text"
+              placeholder="Enter merchant email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              className="w-full"
             />
+            <Button onClick={handleSearch}>
+              {isLoading ? "Searching..." : "Search"}
+            </Button>
           </div>
+        </div>
+
+        {/* Merchant Info */}
+        {showForm && selectedMerchant && (
+          <Card className="mb-6">
+            <CardContent className="p-4">
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground font-medium">
+                  Selected Merchant Info
+                </p>
+                <div className="text-lg font-semibold">{selectedUser.name}</div>
+                <div className="text-sm text-gray-600">{selectedUser.email}</div>
+                <div className="text-sm text-gray-600">{selectedUser.phone}</div>
+              </div>
+            </CardContent>
+          </Card>
         )}
+
+        {/* Product Form */}
+        {showForm && <MerchantProductForm editingProduct={editingProduct} />}
       </div>
-     
+
+      {/* Divider for desktop only */}
+      <div className="hidden lg:block w-px bg-gray-300"></div>
+
+      {/* Right Panel */}
+      {showForm && (
+        <div className="w-full lg:w-1/2">
+          <MerchantProductListing
+            products={merchantProducts}
+            pagination={tablePagination}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+          />
+        </div>
+      )}
     </div>
+  </div>
+</div>
+
   );
 };
 

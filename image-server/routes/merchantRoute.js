@@ -18,13 +18,7 @@ router.delete("/delete-company-image", deleteImage);
 // Get a file (serve file)
 router.get("/get-file/:entity_type/:company_name/:filename", getImage);
 
-<<<<<<< HEAD
-=======
 
-
-
->>>>>>> Charles_bm
-// company logo
 
 // 📌 Upload a single company logo
 router.post("/upload-logo", upload.single("logo"), uploadCompanyLogo);

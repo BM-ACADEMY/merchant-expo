@@ -3,24 +3,13 @@ import AdminLayout from "./AdminLayout";
 import Dashboard from "./pages/dashboard/dashboard";
 import Profile from "./pages/profile/Profile";
 import Users from "./pages/users/Users";
-<<<<<<< HEAD
 import Merchant from "./pages/merchants/Merchant";
 import MerchantProducts from "./pages/merchants/MerchantProducts";
 import ServiceProviderList from "./pages/service-provider/ServiceProvider";
 import Vehicles from "./pages/service-provider/ServiceProviderVehicle";
 import StudentList from "./pages/student/StudentList";
 import PaidSubcriptions from "./pages/payments/PaidSubscriptions/PaidSubcriptions";
-=======
-import MerchantList from "./pages/merchants/MerchantList";
-import MerchantProducts from "./pages/merchants/MerchantProducts";
-import ServiceProviderList from "./pages/service-provider/ServiceProviderList";
-import Vehicles from "./pages/service-provider/ServiceProviderVehicle";
-import StudentList from "./pages/student/StudentList";
-import PaidSubcriptions from "./pages/payments/PaidSubcriptionsList";
->>>>>>> Charles_bm
-import PaidBanner from "./pages/payments/PaidBanner";
 import PaidRedeem from "./pages/payments/PaidRedeemCoupons";
-import PaidEbook from "./pages/payments/PaidEbooks";
 import PlansBanner from "./pages/plans/Banners";
 import PlansEbook from "./pages/plans/EBook";
 import PlanSubcriptions from "./pages/plans/Subcriptions";
@@ -29,7 +18,6 @@ import SubCategories from "./pages/categories/SubCategory";
 import SuperSubCategories from "./pages/categories/SuperSubCategory";
 import DeepSubCategories from "./pages/categories/DeepSubCategory";
 import Products from "./pages/categories/Products";
-<<<<<<< HEAD
 import GrocerySellerList from "./pages/grocery/GrocerySeller";
 import PostRequirement from "./pages/others/PostRequirement";
 import FAQ from "./pages/others/FAQ";
@@ -37,17 +25,14 @@ import Complaint from "./pages/others/Complaint";
 import Testimonial from "./pages/others/Testimonial";
 import SubAdminLists from "./pages/subadmin/subadminLists";
 import Roles from "./pages/subadmin/roles";
-
-=======
-import GrocerySellerList from "./pages/grocery/GrocerySellerList";
 import PostRequirementAdminPanel from "./pages/others/PostRequirement";
-import FAQ from "./pages/others/FAQ";
-import Complaint from "./pages/others/Complaint";
-import Testimonial from "./pages/others/Testimonial";
 import Settings from "./pages/settings/Settings";
 import Permission from "./pages/settings/pages/permissions/Permission";
 import PermissionRequest from "./pages/settings/pages/permissions/PermissionRequest";
 import ChatPage from "./pages/chat/pages/ChatPage";
+import MerchantList from "./pages/merchants/MerchantList";
+import PaidEbooks from "./pages/payments/PaidEbooks";
+import PaidBanner from "./pages/payments/PaidBanner";
 
 
 const AdminRoutes = (
@@ -87,7 +72,7 @@ const AdminRoutes = (
     
     {/* Payment Routes */}
     <Route path="payments/subscriptions" element={<PaidSubcriptions />} />
-    <Route path="payments/ebooks" element={<PaidEbook />} />
+    <Route path="payments/ebooks" element={<PaidEbooks />} />
     <Route path="payments/banners" element={<PaidBanner />} />
     <Route path="payments/coupons" element={<PaidRedeem />} />
     

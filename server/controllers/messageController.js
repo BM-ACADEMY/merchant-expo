@@ -12,26 +12,25 @@ exports.sendMessage = async (req, res) => {
     }
 
     const io = req.app.get("io");
-    const activeChats = req.app.get("activeChats") || new Map(); // userId => chatWithId
+    const activeChats = req.app.get("activeChats") || new Map();
 
-    // Check if receiver is actively chatting with sender
     const isReceiverInChatWithSender = activeChats.get(receiver?.toString()) === sender?.toString();
 
     const newMessage = new Message({
       sender,
       receiver,
       content,
-      read: isReceiverInChatWithSender // ✅ auto-mark as read if chatting
+      read: isReceiverInChatWithSender
     });
+
     await newMessage.save();
 
-    // Emit to receiver
+    // Emit to both users
     io.to(receiver).emit("receiveMessage", {
       ...newMessage.toObject(),
       fromMe: false,
     });
 
-    // Emit to sender
     io.to(sender).emit("receiveMessage", {
       ...newMessage.toObject(),
       fromMe: true,
@@ -46,24 +45,72 @@ exports.sendMessage = async (req, res) => {
 
 
 // Get all messages between two users
+// Get all messages between two users
 exports.getMessages = async (req, res) => {
   const { userId, chatPartnerId } = req.params;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 15;
+
+  // Validate input parameters
+  if (isNaN(page) || isNaN(pageSize)) {
+    return res.status(400).json({ error: 'Invalid pagination parameters' });
+  }
 
   try {
-    // Fetch messages between the two users from the database
-    const messages = await Message.find({
+    const query = {
       $or: [
         { sender: userId, receiver: chatPartnerId },
         { sender: chatPartnerId, receiver: userId },
-      ]
-    }).sort({ createdAt: 1 });
+      ],
+    
+    };
 
-    res.status(200).json(messages);
+    const totalMessages = await Message.countDocuments(query);
+    const skip = (page - 1) * pageSize;
+    const hasMore = totalMessages > (page * pageSize);
+
+    const messages = await Message.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize)
+      .lean();
+
+    const orderedMessages = messages.reverse();
+
+    res.status(200).json({
+      data: orderedMessages,
+      hasMore,
+      totalMessages,
+      currentPage: page
+    });
   } catch (error) {
     console.error('Error fetching messages:', error);
     res.status(500).json({ error: 'Failed to fetch messages' });
   }
 };
+// GET /chat/last-message?userId=xxx&contactId=yyy
+exports.getLastMessage = async (req, res) => {
+  const { userId, contactId } = req.query;
+
+  try {
+    const lastMessage = await Message.findOne({
+      $or: [
+        { sender: userId, receiver: contactId },
+        { sender: contactId, receiver: userId },
+      ],
+    })
+    .sort({ createdAt: -1 }); // Get the latest one
+
+    res.status(200).json({
+      lastMessage: lastMessage?.content || "", // assuming you store text as message
+      timestamp: lastMessage?.createdAt || null,
+    });
+  } catch (error) {
+    console.error("Error fetching last message:", error);
+    res.status(500).json({ error: "Failed to fetch last message" });
+  }
+};
+
 
 exports.markAsRead = async (req, res) => {
   const { userId, selectedUserId } = req.body;  // Receive both userId and selectedUserId
@@ -123,13 +170,22 @@ exports.updateMessage = async (req, res) => {
   }
 };
 
-// Delete a message
+// Delete a message// Delete (Soft delete) a message
 exports.deleteMessage = async (req, res) => {
   const { messageId } = req.params;
 
   try {
-    // Delete the message from the database
-    await Message.findByIdAndDelete(messageId);
+    // Soft delete the message by setting deleted to true
+    const message = await Message.findByIdAndUpdate(
+      messageId,
+      { deleted: true },
+      { new: true }
+    );
+
+    if (!message) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
     res.status(200).json({ message: 'Message deleted successfully' });
   } catch (error) {
     console.error('Error deleting message:', error);

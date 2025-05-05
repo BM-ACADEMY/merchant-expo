@@ -1,157 +1,3 @@
-<<<<<<< HEAD
-const SubscriptionPlanElementMapping = require('../models/subscriptionPlanElementMappingModel');
-
-// Create a new mapping
-exports.createMapping = async (req, res) => {
-    try {
-        const { subscription_plan_id, element_id, value } = req.body;
-        const mapping = await SubscriptionPlanElementMapping.create({ subscription_plan_id, element_id, value });
-        res.status(201).json(mapping);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// Get all mappings
-exports.getAllMappings = async (req, res) => {
-    try {
-        const mappings = await SubscriptionPlanElementMapping.findAll();
-        res.json(mappings);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// Get a specific mapping by ID
-=======
-// const SubscriptionPlanElementMapping = require('../models/subscriptionPlanElementMappingModel');
-
-// // Create a new mapping
-// exports.createMapping = async (req, res) => {
-//     try {
-//         const { subscription_plan_id, element_id, value } = req.body;
-//         const mapping = await SubscriptionPlanElementMapping.create({ subscription_plan_id, element_id, value });
-//         res.status(201).json({
-//             success:true,
-//             message:"Subscription Mapping Created Successfully",
-//             data:mapping
-//         });
-//     } catch (error) {
-//         res.status(500).json({ success:false, error: error.message });
-//     }
-// };
-
-// // Get all mappings
-// exports.getAllMappings = async (req, res) => {
-//   try {
-//     const mappings = await SubscriptionPlanElementMapping.aggregate([
-//       {
-//         $lookup: {
-//           from: "subscriptionplanelements", // collection name for SubscriptionPlanElement
-//           localField: "element_id",
-//           foreignField: "_id",
-//           as: "element"
-//         }
-//       },
-//       {
-//         $unwind: "$element"
-//       },
-//       {
-//         $group: {
-//           _id: "$subscription_plan_id",
-//           values: { $push: "$value" },
-//           element_names: { $push: "$element.element_name" }
-//         }
-//       },
-//       {
-//         $lookup: {
-//           from: "subscriptionplans", // collection name for SubscriptionPlan
-//           localField: "_id",
-//           foreignField: "_id",
-//           as: "subscription_plan"
-//         }
-//       },
-//       {
-//         $unwind: "$subscription_plan"
-//       },
-//       {
-//         $project: {
-//           _id: 0,
-//           subscription_plan_id: {
-//             _id: "$subscription_plan._id",
-//             plan_name: "$subscription_plan.plan_name",
-//             price: "$subscription_plan.price",
-//             status: "$subscription_plan.status"
-//           },
-//           values: 1,
-//           element_names: 1
-//         }
-//       }
-//     ]);
-
-//     res.json({
-//       success: true,
-//       message: "Fetched grouped mappings with elements successfully",
-//       data: mappings
-//     });
-//   } catch (error) {
-//     res.status(500).json({ success: false, error: error.message });
-//   }
-// };
-
-  
-  
-// // Get a specific mapping by ID
-// exports.getMappingById = async (req, res) => {
-//     try {
-//         const mapping = await SubscriptionPlanElementMapping.findByPk(req.params.id);
-//         if (!mapping) return res.status(404).json({ message: "Mapping not found" });
-//         res.json(mapping);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
-
-// // Update a mapping
-// exports.updateMapping = async (req, res) => {
-//     try {
-//       const { subscription_plan_id, element_id, value } = req.body;
-  
-//       const mapping = await SubscriptionPlanElementMapping.findByIdAndUpdate(
-//         req.params.id,
-//         { subscription_plan_id, element_id, value },
-//         { new: true } // return the updated document
-//       );
-  
-//       if (!mapping) {
-//         return res.status(404).json({ success: false, message: "Mapping not found" });
-//       }
-  
-//       res.json({
-//         success: true,
-//         message: "Subscription Mapping Updated Successfully",
-//         data: mapping,
-//       });
-//     } catch (error) {
-//       res.status(500).json({ success: false, error: error.message });
-//     }
-//   };
-  
-// // Delete a mapping
-// exports.deleteMapping = async (req, res) => {
-//     try {
-//       const mapping = await SubscriptionPlanElementMapping.findByIdAndDelete(req.params.id);
-  
-//       if (!mapping) {
-//         return res.status(404).json({ success: false, message: "Mapping not found" });
-//       }
-  
-//       res.json({ success: true, message: "Mapping deleted successfully" });
-//     } catch (error) {
-//       res.status(500).json({ success: false, error: error.message });
-//     }
-//   };
-  
 
 const SubscriptionPlanElementMapping = require('../models/subscriptionPlanElementMappingModel');
 // Create new mapping for multiple elements
@@ -235,7 +81,6 @@ exports.updateMapping = async (req, res) => {
 };
 
 
->>>>>>> Charles_bm
 exports.getMappingById = async (req, res) => {
     try {
         const mapping = await SubscriptionPlanElementMapping.findByPk(req.params.id);
@@ -246,34 +91,6 @@ exports.getMappingById = async (req, res) => {
     }
 };
 
-<<<<<<< HEAD
-// Update a mapping
-exports.updateMapping = async (req, res) => {
-    try {
-        const { subscription_plan_id, element_id, value } = req.body;
-        const mapping = await SubscriptionPlanElementMapping.findByPk(req.params.id);
-        if (!mapping) return res.status(404).json({ message: "Mapping not found" });
-
-        await mapping.update({ subscription_plan_id, element_id, value });
-        res.json(mapping);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-
-// Delete a mapping
-exports.deleteMapping = async (req, res) => {
-    try {
-        const mapping = await SubscriptionPlanElementMapping.findByPk(req.params.id);
-        if (!mapping) return res.status(404).json({ message: "Mapping not found" });
-
-        await mapping.destroy();
-        res.json({ message: "Mapping deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};
-=======
 // Get all mappings grouped by subscription_plan_id
 exports.getAllMappings = async (req, res) => {
   try {
@@ -382,4 +199,3 @@ exports.deleteMapping = async (req, res) => {
   }
 };
 
->>>>>>> Charles_bm
