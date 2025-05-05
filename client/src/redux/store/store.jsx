@@ -106,7 +106,8 @@ const store = configureStore({
       PermissionApi.middleware,
       PermissionRequestApi.middleware,
       MessageApi.middleware,
-      MessageImagesApi.middleware
+      MessageImagesApi.middleware,
+      ServiceProviderApi.middleware
     ),
 });
 

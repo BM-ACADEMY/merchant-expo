@@ -17,7 +17,7 @@ const Stepper4 = ({ formData, setFormData, error, setError, handleNext, handleBa
   console.log("Loaded Stepper4.jsx (Merchant) - 2025-04-18-fix-v7");
 
   // Use environment variable for base URL
-  const IMAGE_SERVER_URL = import.meta.env.VITE_IMAGE_SERVER_URL;
+  const IMAGE_SERVER_URL = import.meta.env.VITE_API_IMAGE_URL;
 
   // Log props and env
   console.log("Stepper4 props:", { formData, entityType: formData.entity_type, companyName: formData.company_name });

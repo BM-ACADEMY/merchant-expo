@@ -46,9 +46,9 @@ const Stepper3 = ({ formData, formErrors, onInputChange, onValidationChange }) =
     formDataToSend.append('collage_name', formData.college_name);
 
     try {
-      console.log('Uploading to:', `${import.meta.env.VITE_IMAGE_SERVER_URL}/id-card/upload`);
+      console.log('Uploading to:', `${import.meta.env.VITE_API_IMAGE_URL}/id-card/upload`);
       const response = await axios.post(
-        `${import.meta.env.VITE_IMAGE_SERVER_URL}/id-card/upload`,
+        `${import.meta.env.VITE_API_IMAGE_URL}/id-card/upload`,
         formDataToSend,
         {
           headers: {

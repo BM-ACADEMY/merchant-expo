@@ -23,6 +23,24 @@ router.delete('/delete-users-by-id/:id', authMiddleware, deleteUser);
 router.post("/verify-otp", verifyEmailOtp);
 router.post("/resend-otp", resendOtp);
 
+router.get('/count', authMiddleware, async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    res.status(200).json({
+      success: true,
+      totalUsers,
+    });
+  } catch (error) {
+    console.error("Error fetching user count:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching user count",
+      error: error.message,
+    });
+  }
+});
+
+
 router.get('/lookup', async (req, res) => {
   try {
     console.log("Lookup route hit with query:", req.query);
