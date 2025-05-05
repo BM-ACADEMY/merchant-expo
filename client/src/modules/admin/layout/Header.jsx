@@ -88,7 +88,7 @@ const Header = () => {
           {/* Notification Bell */}
           <NotificationBell />
           <Link to="/admin/chat" className="relative group">
-            <MessageSquare className="w-4 h-4 text-gray-600 group-hover:text-blue-600 transition-colors" />
+            <MessageSquare className="relative p-1 rounded-full hover:bg-gray-100 transition-colors duration-200 focus:outline-none" />
             <span className="sr-only">Messages</span>
           </Link>
           {/* User Profile */}
@@ -98,10 +98,13 @@ const Header = () => {
               src={userPhoto}
               alt="User profile"
             />
-            <span className="font-medium text-sm hidden sm:inline group-hover:text-blue-600 transition-colors">
+         <Link to="/admin/settings">
+         <span className="font-medium text-sm hidden sm:inline group-hover:text-blue-600 transition-colors">
               Harry Scofield
             </span>
-            <ChevronDown size={16} className="text-gray-400 group-hover:text-blue-600 transition-colors" />
+         </Link>
+         <Link to="/admin/settings">
+         <ChevronDown size={16}  className="text-gray-400 group-hover:text-blue-600 transition-colors" /></Link>
           </div>
         </div>
       </div>

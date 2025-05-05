@@ -62,6 +62,9 @@ export const MessageApi = createApi({
         query: ({ page = 1, limit = 10 }) => `/users/fetch-all-users?page=${page}&limit=${limit}`,
         providesTags: ['Messages'],
       }),
+      getLastMessageBetweenUsers: builder.query({
+        query: ({ userId, contactId }) => `/chat/last-message?userId=${userId}&contactId=${contactId}`,
+      }),
   }),
 });
 
@@ -69,6 +72,7 @@ export const {
   useSendMessageMutation,
   useGetMessagesQuery,
   useGetAllUsersQuery,
+  useGetLastMessageBetweenUsersQuery,
   useMarkAsReadMutation,
   useUpdateMessageMutation,
   useDeleteMessageMutation,

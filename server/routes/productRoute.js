@@ -2,6 +2,7 @@ const express = require("express");
 const { createProduct, getProducts, getProductById, updateProduct, deleteProduct } = require("../controllers/productController");
 const router = express.Router();
 
+
 router.post("/create-products", createProduct);
 router.get("/fetch-all-products", getProducts);
 router.get("/fetch-products-by-id/:id", getProductById);

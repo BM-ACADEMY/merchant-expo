@@ -14,6 +14,7 @@ const {
 const router = express.Router();
 
 // Create a new subscription plan
+
 router.post("/create-subscriptionplans", createPlan);
 
 
@@ -32,7 +33,10 @@ router.get("/fetch-subscriptionplans-by-id/:id", getPlanById);
 router.put("/update-subscriptionplans-by-id/:id",updatePlan);
 
 // Delete a subscription plan
+
 router.delete("/delete-subscriptions-plans-by-id/:id", deletePlan);
+
+
 
 router.put("/update-subscriptionplans/:id", updatePlan);
 

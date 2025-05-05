@@ -3,11 +3,8 @@ const router = express.Router();
 const { upload } = require("../utils/FileUpload");
 
 const { uploadImages, updateImage, deleteImage, getImage } = require("../controller/userController");
-// Upload a new file
+// Upload a new fi
 router.post("/upload-profile-image", upload.array("profile_pic"), uploadImages);
-
-router.post("/upload-profile-image", upload.single("profile_pic"), uploadImages);
-
 
 // Update (replace) an existing file
 router.put("/update-profile-image", upload.single("profile_pic"), updateImage);

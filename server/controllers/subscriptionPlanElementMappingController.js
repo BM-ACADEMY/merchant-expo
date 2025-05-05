@@ -1,3 +1,4 @@
+
 const SubscriptionPlanElementMapping = require('../models/subscriptionPlanElementMappingModel');
 // Create new mapping for multiple elements
 exports.createMapping = async (req, res) => {
@@ -196,4 +197,6 @@ exports.deleteMapping = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
+
 };
+

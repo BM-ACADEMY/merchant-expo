@@ -2,7 +2,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import { Authapi } from "../api/Authapi";
-import { StudentApi } from "../api/Studentapi";
+
 import { MerchantProductApi } from "../api/MerchantProductApi";
 import { MerchantProductImageApi } from "../api/MerchantProductImageApi";
 import { CategoryApi } from "../api/CategoryApi";
@@ -33,6 +33,8 @@ import { MerchantAuthApi } from "../api/MerchantAuthApi";
 import { MerchantImageApi } from "../api/MerchantImageApi";
 import { ServiceProviderApi } from "../api/ServiceProviderApi";
 import { GrocerySellerApi } from "../api/GrocerySellerApi";
+import { StudentApi } from "../api/Studentapi"; // Add StudentApi import
+
 import fetchuserReducer from "@/redux/api/FetchUsers";
 
 const store = configureStore({
@@ -74,7 +76,7 @@ const store = configureStore({
     [MerchantImageApi.reducerPath]:MerchantImageApi.reducer,
     [ServiceProviderApi.reducerPath]:ServiceProviderApi.reducer,
     [GrocerySellerApi.reducerPath]:GrocerySellerApi.reducer,
-  
+    [StudentApi.reducerPath]:StudentApi.reducer,
 
   },
   middleware: (getDefaultMiddleware) =>

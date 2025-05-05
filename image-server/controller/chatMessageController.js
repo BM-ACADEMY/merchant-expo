@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const { processFile } = require("../utils/FileUpload");
+const { processFile ,compressAudio} = require("../utils/FileUpload");
 const { v4: uuidv4 } = require("uuid");
 
 // 🔼 Upload Chat File (any type)
@@ -86,8 +86,6 @@ const updateChatFile = async (req, res) => {
     }
   };
   
-
-
 // ❌ Delete Chat File (by name)
 const deleteChatFile = (req, res) => {
   const { senderId,receiverId, fileName } = req.body;

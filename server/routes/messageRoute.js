@@ -8,6 +8,9 @@ router.post("/send-message", messageController.sendMessage);
 // Get all messages between two users
 router.get("/recieve-message/:userId/:chatPartnerId", messageController.getMessages);
 
+router.get("/last-message", messageController.getLastMessage);
+
+
 // Mark a message as read
 router.patch("/mark-as-read", messageController.markAsRead);
 
