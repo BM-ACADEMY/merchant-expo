@@ -224,10 +224,10 @@ require("dotenv").config();
   /* Routes config here*/
 }
 
-const studentRoute = require("./routes/studentRoute");
 const connectDB = require("./config/connectDB");
 const http = require("http");
 const socketIo = require("socket.io");
+const studentRoute = require("./routes/studentRoute")
 // Routes
 const userRoutes = require("./routes/userRoute");
 const serviceProviderRoute = require("./routes/serviceProviderRoute");

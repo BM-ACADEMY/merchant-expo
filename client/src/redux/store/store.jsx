@@ -31,8 +31,8 @@ import { MessageApi } from "../api/MessageApi";
 import { MessageImagesApi } from "../api/MessageImagesApi";
 import { MerchantAuthApi } from "../api/MerchantAuthApi";
 import { MerchantImageApi } from "../api/MerchantImageApi";
-import { ServiceProviderApi } from "../api/ServiceProviderApi";
-import { GrocerySellerApi } from "../api/GrocerySellerApi";
+import { ServiceProviderApi } from "@/redux/api/ServiceProviderApi";
+import { GrocerySellerApi } from "@/redux/api/GrocerySellerApi";
 import fetchuserReducer from "@/redux/api/FetchUsers";
 
 const store = configureStore({
@@ -106,7 +106,8 @@ const store = configureStore({
       PermissionApi.middleware,
       PermissionRequestApi.middleware,
       MessageApi.middleware,
-      MessageImagesApi.middleware
+      MessageImagesApi.middleware,
+      ServiceProviderApi.middleware
     ),
 });
 
