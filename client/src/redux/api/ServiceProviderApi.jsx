@@ -53,12 +53,20 @@ export const ServiceProviderApi = createApi({
       }),
       invalidatesTags: ["ServiceProvider"],
     }),
+    getServiceByEmailOrPhone: builder.query({
+      query: ({ email, page = 1, limit = 10 }) =>
+        `/service-providers/fetch-all-service-provider-products?email=${email}&page=${page}&limit=${limit}`,
+      providesTags: ["Product"],
+    }),
+    
   }),
 });
 
 export const {
   useGetServiceProvidersQuery,
   useGetServiceProviderByIdQuery,
+  useLazyGetServiceByEmailOrPhoneQuery,
+  useGetServiceByEmailOrPhoneQuery,
   useAddServiceProviderMutation,
   useUpdateServiceProviderMutation,
   useDeleteServiceProviderMutation,

@@ -1,9 +1,8 @@
-
 const Merchant = require("../models/merchantModel");
 const User = require("../models/userModel");
 const Address = require("../models/addressModel");
-const Product=require("../models/productModel")
-const ProductAttribute=require("../models/productAttributeModel")
+const Product = require("../models/productModel");
+const ProductAttribute = require("../models/productAttributeModel");
 exports.createMerchant = async (req, res) => {
   try {
     console.log("Received payload:", req.body); // Debug log
@@ -40,7 +39,8 @@ exports.createMerchant = async (req, res) => {
 
     if (existingMerchant) {
       return res.status(400).json({
-        error: "A merchant already exists with the provided aadhar, MSME, GST, PAN, or user_id",
+        error:
+          "A merchant already exists with the provided aadhar, MSME, GST, PAN, or user_id",
       });
     }
 
@@ -63,7 +63,10 @@ exports.getAllMerchants = async (req, res) => {
   try {
     const merchants = await Merchant.find()
       .populate({ path: "user_id", select: "name email phone_number" })
-      .populate({ path: "address_id", select: "street city state country postal_code" });
+      .populate({
+        path: "address_id",
+        select: "street city state country postal_code",
+      });
     res.status(200).json(merchants);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -74,7 +77,9 @@ exports.getMerchantByEmailOrPhone = async (req, res) => {
 
   try {
     if (!email) {
-      return res.status(400).json({ message: "Email query parameter is required." });
+      return res
+        .status(400)
+        .json({ message: "Email query parameter is required." });
     }
 
     // Step 1: Find merchant
@@ -87,15 +92,19 @@ exports.getMerchantByEmailOrPhone = async (req, res) => {
     }
 
     // Step 2: Fetch user
-    const user = await User.findById(merchant.user_id).select('-password');
+    const user = await User.findById(merchant.user_id).select("-password");
 
     // Step 3: Product pagination
     const skip = (parseInt(page) - 1) * parseInt(limit);
-    const totalProducts = await Product.countDocuments({ seller_id: merchant._id });
+    const totalProducts = await Product.countDocuments({
+      seller_id: merchant._id,
+    });
 
     // Step 4: Fetch paginated products with populated categories
     const products = await Product.find({ seller_id: merchant._id })
-      .populate('category_id sub_category_id super_sub_category_id deep_sub_category_id')
+      .populate(
+        "category_id sub_category_id super_sub_category_id deep_sub_category_id"
+      )
       .skip(skip)
       .limit(parseInt(limit))
       .sort({ createdAt: -1 });
@@ -103,15 +112,20 @@ exports.getMerchantByEmailOrPhone = async (req, res) => {
     // Step 5: Fetch attributes for each product
     const productsWithAttributes = await Promise.all(
       products.map(async (product) => {
-        const attributes = await ProductAttribute.find({ product_id: product._id });
+        const attributes = await ProductAttribute.find({
+          product_id: product._id,
+        });
         console.log(`Product ID: ${product._id}, Attributes:`, attributes);
         return {
           ...product.toObject(),
-          attributes: attributes.map(attr => ({ attribute_key: attr.attribute_key, attribute_value: attr.attribute_value })),
+          attributes: attributes.map((attr) => ({
+            attribute_key: attr.attribute_key,
+            attribute_value: attr.attribute_value,
+          })),
           category_name: product.category_id?.name || null,
           sub_category_name: product.sub_category_id?.name || null,
           super_sub_category_name: product.super_sub_category_id?.name || null,
-          deep_sub_category_name: product.deep_sub_category_id?.name || null
+          deep_sub_category_name: product.deep_sub_category_id?.name || null,
         };
       })
     );
@@ -128,7 +142,6 @@ exports.getMerchantByEmailOrPhone = async (req, res) => {
         pageSize: parseInt(limit),
       },
     });
-
   } catch (error) {
     console.error("Error fetching merchant or user:", error);
     return res.status(500).json({
@@ -138,13 +151,16 @@ exports.getMerchantByEmailOrPhone = async (req, res) => {
   }
 };
 
-
 exports.getMerchantById = async (req, res) => {
   try {
     const merchant = await Merchant.findById(req.params.id)
       .populate({ path: "user_id", select: "name email phone_number" })
-      .populate({ path: "address_id", select: "street city state country postal_code" });
-    if (!merchant) return res.status(404).json({ message: "Merchant not found" });
+      .populate({
+        path: "address_id",
+        select: "street city state country postal_code",
+      });
+    if (!merchant)
+      return res.status(404).json({ message: "Merchant not found" });
     res.status(200).json(merchant);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -157,7 +173,8 @@ exports.updateMerchant = async (req, res) => {
       new: true,
       runValidators: true,
     });
-    if (!merchant) return res.status(404).json({ message: "Merchant not found" });
+    if (!merchant)
+      return res.status(404).json({ message: "Merchant not found" });
     res.status(200).json(merchant);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -167,14 +184,10 @@ exports.updateMerchant = async (req, res) => {
 exports.deleteMerchant = async (req, res) => {
   try {
     const merchant = await Merchant.findByIdAndDelete(req.params.id);
-    if (!merchant) return res.status(404).json({ message: "Merchant not found" });
+    if (!merchant)
+      return res.status(404).json({ message: "Merchant not found" });
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
-
-
-
-
-

@@ -30,7 +30,7 @@ import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import {toast} from "react-toastify";
 
-const ServiceProviderList = ({ onEdit, onDelete }) => {
+const ServiceProviderList = ({ products,pagination, onEdit, onDelete }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState("");
@@ -42,11 +42,11 @@ const ServiceProviderList = ({ onEdit, onDelete }) => {
 
   const [DeleteProductImage] = useDeleteProductImageMutation();
   // Fetch product data with pagination, search, and filter
-  const { data, isLoading, isError } = useGetProductsQuery({
-    page,
-    filter,
-    search,
-  });
+  // const { data, isLoading, isError } = useGetProductsQuery({
+  //   page,
+  //   filter,
+  //   search,
+  // });
 
   const handlePaginationChange = (newPage) => {
     setPage(newPage);
@@ -73,10 +73,10 @@ const ServiceProviderList = ({ onEdit, onDelete }) => {
     setActiveImage(imgUrl);
   };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Failed to load products.</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (isError) return <p>Failed to load products.</p>;
 
-  const products = data?.products || [];
+  // const products = products || [];
 
   const handleEdit = (product) => {
     onEdit(product);
@@ -91,7 +91,7 @@ const ServiceProviderList = ({ onEdit, onDelete }) => {
     if (!deleteId) return;
   
     // Find the product to delete by ID
-    const selectedProduct = data?.products?.find((item) => item._id === deleteId);
+    const selectedProduct = products?.find((item) => item._id === deleteId);
     console.log("Deleting product:", selectedProduct);
   
     try {
@@ -219,7 +219,7 @@ const ServiceProviderList = ({ onEdit, onDelete }) => {
       <div className="flex flex-wrap justify-between items-center mt-6">
         {/* Total Records on the Left */}
         <div className="text-sm text-gray-600">
-          Total Records: {data?.pagination?.totalProducts || 0}
+          Total Records: {pagination?.totalProducts || 0}
         </div>
 
         {/* Pagination Controls Centered on Small Screens, Right on Larger */}
@@ -232,10 +232,10 @@ const ServiceProviderList = ({ onEdit, onDelete }) => {
             Previous
           </Button>
           <span className="font-semibold text-gray-700">
-            Page {page} of {data?.pagination?.totalPages || 1}
+            Page {page} of {pagination?.totalPages || 1}
           </span>
           <Button
-            disabled={page === data?.pagination?.totalPages}
+            disabled={page === pagination?.totalPages}
             onClick={() => setPage((prev) => prev + 1)}
             variant="outline"
           >

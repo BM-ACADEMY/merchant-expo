@@ -236,6 +236,7 @@ const ServiceProviderProductForm = ({ editingProduct }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+console.log(selectedMerchant,"serv");
 
     if (!selectedMerchant?._id) {
       console.error("Merchant not selected");

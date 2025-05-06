@@ -2,24 +2,25 @@ import React, { useState } from "react";
 import { useSidebar } from "../../hooks/useSidebar";
 import ServiceProviderProductForm from "./forms/ServiceProviderProductForm";
 import {
-  useLazyGetMerchantByEmailOrPhoneQuery,
+  useLazyGetServiceByEmailOrPhoneQuery,
 
-} from "@/redux/api/ProductApi";
+} from "@/redux/api/ServiceProviderApi";
 import { useMerchant } from "@/modules/admin/context/MerchantContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ServiceProviderProductList from "./pages/ServiceProviderProductList";
-
+import {toast} from "react-toastify";
 
 
 const ServiceProviderVehicle = () => {
   const { isSidebarOpen } = useSidebar();
   const [email, setEmail] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [fetchMerchant, { isLoading }] =
-    useLazyGetMerchantByEmailOrPhoneQuery();
-
+  const [fetchServiceProvider, { isLoading }] = useLazyGetServiceByEmailOrPhoneQuery();
+  const [selectedUser,setSelectedUser]=useState({});
+  const [selectedProduct,setSelectedProduct]=useState([]);
+  const [pagination,setPagination]=useState({});
   const { selectedMerchant, setSelectedMerchant } = useMerchant();
   const [editingProduct, setEditingProduct] = useState(null);
   const [error, setError] = useState(null);
@@ -36,14 +37,19 @@ const ServiceProviderVehicle = () => {
     }
 
     try {
-      const res = await fetchMerchant(email).unwrap();
-      if (res.users && res.users.length > 0) {
-        setSelectedMerchant(res.users[0]);
+      const res = await fetchServiceProvider({email}).unwrap();
+      if (res.serviceProvider && res?.serviceProvider) {
+        setSelectedMerchant(res?.serviceProvider);
+        setSelectedUser(res?.user);
+        setSelectedProduct(res?.products);
+        setPagination(res?.pagination);
         setShowForm(true);
         setEmail("");
+        toast.success("Fetch Service Provider Successfully");
       } else {
         setSelectedMerchant(null);
         setShowForm(false);
+        toast.error("Service Provider not found");
         setError("Merchant not found");
       }
     } catch (err) {
@@ -65,13 +71,15 @@ const ServiceProviderVehicle = () => {
     <div
       className={`${
         isSidebarOpen ? "p-6 lg:ml-56" : "p-4 lg:ml-16"
-      } flex flex-col justify-center items-center w-full`}
+      } flex flex-col justify-center items-center  overflow-x-hidden`}
     >
       <div className="flex justify-center items-center mb-4">
         <h2 className="text-xl font-bold">Add Service Provider Product</h2>
       </div>
-      <div className="flex  gap-4">
-        <div>
+  
+      <div className="flex flex-col lg:flex-row gap-4 w-full max-w-full">
+        {/* Left Section: Search + Form */}
+        <div className="w-full lg:w-1/2">
           {/* Search Input */}
           <div className="flex flex-col lg:flex-row justify-center items-center gap-6 mb-4">
             {/* Left-side Note */}
@@ -83,7 +91,7 @@ const ServiceProviderVehicle = () => {
                 First, select the service provider by entering their email.
               </p>
             </div>
-
+  
             {/* Right-side Input + Button */}
             <div className="flex gap-2 items-center justify-center w-full max-w-md">
               <Input
@@ -99,13 +107,13 @@ const ServiceProviderVehicle = () => {
               </Button>
             </div>
           </div>
-
+  
           {/* Error */}
           {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-
+  
           {/* Merchant Card */}
           {showForm && selectedMerchant && (
-            <div className="max-w-md  mb-6">
+            <div className="max-w-md mb-6">
               <Card>
                 <CardContent className="p-4">
                   <div className="space-y-2">
@@ -113,36 +121,42 @@ const ServiceProviderVehicle = () => {
                       Selected Service Provider Info
                     </p>
                     <div className="text-lg font-semibold">
-                      {selectedMerchant.name}
+                      {selectedUser.name}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {selectedMerchant.email}
+                      {selectedUser.email}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {selectedMerchant.phone}
+                      {selectedUser.phone}
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
           )}
-
+  
           {/* Product Form */}
           {showForm && <ServiceProviderProductForm editingProduct={editingProduct} />}
         </div>
-        <div className="w-1 rounded-r-sm bg-[#1C1B1F]"></div>
+  
+        {/* Divider */}
+        <div className="hidden lg:block w-[1px] bg-[#1C1B1F]" />
+  
+        {/* Right Section: Product List */}
         {showForm && (
-          <div>
+          <div className="w-full lg:w-1/2 overflow-x-auto">
             <ServiceProviderProductList
+              products={selectedProduct}
+              pagination={pagination}
               onEdit={handleEdit}
               onDelete={handleDelete}
             />
           </div>
         )}
       </div>
-     
     </div>
   );
+  
 };
 
 export default ServiceProviderVehicle;
