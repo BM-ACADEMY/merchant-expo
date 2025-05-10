@@ -126,6 +126,9 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+}
 
 
 
@@ -183,4 +186,15 @@
 .patient-profile {
   -ms-overflow-style: none; /* For Internet Explorer and Edge */
 }
-/* 
+
+:root {
+  --primary: #ffffff;
+  --secondary: #808080;
+  --tertiary: #f6d32f;
+  --accent: #ffff;
+  --neutral: #e03733;
+}
+
+.circular-mask {
+  clip-path: circle(50% at 50% 50%);
+}
