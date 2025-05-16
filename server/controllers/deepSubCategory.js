@@ -11,7 +11,14 @@ exports.createDeepSubCategory = async (req, res) => {
       deep_sub_category_name,
       deep_sub_category_image,
     } = req.body;
-
+      const modifiedName=  deep_sub_category_name
+  .toLowerCase()
+  .replace(/,/g, '') // Remove commas
+  .replace(/&/g, 'and') // Replace ampersands
+  .replace(/\s+/g, '-') // Replace spaces with hyphens
+  .replace(/[^\w\-]+/g, '') // Remove special characters
+  .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single one
+  .trim();
     // Check if the referenced super sub-category exists
     const superSubCategoryExists = await SuperSubCategory.findById(
       super_sub_category_id
@@ -24,7 +31,7 @@ exports.createDeepSubCategory = async (req, res) => {
       category_id,
       sub_category_id,
       super_sub_category_id,
-      deep_sub_category_name,
+      deep_sub_category_name:modifiedName,
       deep_sub_category_image,
     });
     await deepSubCategory.save();
@@ -120,14 +127,21 @@ exports.updateDeepSubCategory = async (req, res) => {
       deep_sub_category_name,
       deep_sub_category_image,
     } = req.body;
-
+  const modifiedName=  deep_sub_category_name
+  .toLowerCase()
+  .replace(/,/g, '') // Remove commas
+  .replace(/&/g, 'and') // Replace ampersands
+  .replace(/\s+/g, '-') // Replace spaces with hyphens
+  .replace(/[^\w\-]+/g, '') // Remove special characters
+  .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single one
+  .trim();
     const deepSubCategory = await DeepSubCategory.findByIdAndUpdate(
       req.params.id,
       {
         category_id,
         sub_category_id,
         super_sub_category_id,
-        deep_sub_category_name,
+        deep_sub_category_name:modifiedName,
         deep_sub_category_image,
       },
       { new: true, runValidators: true }

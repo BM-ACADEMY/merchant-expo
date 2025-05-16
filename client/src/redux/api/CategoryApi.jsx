@@ -2,13 +2,15 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const CategoryApi = createApi({
   reducerPath: "categoryApi",
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL, prepareHeaders: (headers) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      headers.set("Authorization", `Bearer ${token}`);
-    }
-    return headers;
-  }, }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: import.meta.env.VITE_API_URL, prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
+  }),
   tagTypes: ["Category"],
   endpoints: (builder) => ({
     getCategories: builder.query({
@@ -17,7 +19,7 @@ export const CategoryApi = createApi({
       transformResponse: (response) => response,
       providesTags: ["Category"],
     }),
-    
+
     createCategory: builder.mutation({
       query: (data) => ({
         url: "/categories/create-category",
@@ -41,13 +43,47 @@ export const CategoryApi = createApi({
       }),
       invalidatesTags: ["Category"],
     }),
-
+    getTopCategories: builder.query({
+      query: () =>
+        `/categories/fetch-top-categories`,
+      transformResponse: (response) => response,
+      providesTags: ["Category"],
+    }),
+    getTopSubCategories: builder.query({
+      query: () =>
+        `/categories/fetch-top-sub-categories`,
+      transformResponse: (response) => response,
+      providesTags: ["Category"],
+    }),
+    getTopProducts: builder.query({
+      query: () =>
+        `/categories/fetch-top-products`,
+      transformResponse: (response) => response,
+      providesTags: ["Category"],
+    }),
+    getCategoryByName: builder.query({
+      query: ({ category_name, page = 1 }) =>
+        `/categories/fetch-categories-by-name/${category_name}?page=${page}`,
+      transformResponse: (response) => response,
+      providesTags: ["Category"],
+    }),
+    getSubCategoryByName: builder.query({
+      query: ({ sub_category_name, page = 1 }) =>
+        `/categories/fetch-sub-categories-by-name/${sub_category_name}?page=${page}`,
+      transformResponse: (response) => response,
+      providesTags: ["Category"],
+    }),
 
   }),
 });
 
 export const {
   useGetCategoriesQuery,
+  useGetTopCategoriesQuery,
+  useGetSubCategoryByNameQuery,
+  useGetCategoryByNameQuery,
+  useGetTopProductsQuery,
+  useGetTopSubCategoriesQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,

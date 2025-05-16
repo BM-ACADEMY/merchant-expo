@@ -58,7 +58,7 @@ const MainCategory = () => {
       <div className="max-w-6xl w-full mx-auto mt-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">Manage Categories</h2>
-          <Button onClick={() => setModalOpen(true)}>+ Add Category</Button>
+          <Button variant="default" onClick={() => setModalOpen(true)}>+ Add Category</Button>
         </div>
 
         <CategoryList

@@ -54,7 +54,7 @@
     "framer-motion": "^12.10.0",
     "fullpage.js": "^4.0.34",
     "generate-react-cli": "^8.4.9",
-    "gsap": "^3.12.7",
+    "gsap": "^3.13.0",
     "jquery": "^3.7.1",
     "jwt-decode": "^4.0.0",
     "libphonenumber-js": "^1.12.6",

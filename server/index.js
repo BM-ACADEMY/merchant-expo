@@ -252,6 +252,7 @@ const PermissionRequestRoute = require("./routes/permissionRequestedRoute");
 const PermissionRequestReadMappingRoute = require("./routes/permissionRequestReadMappingRoute");
 const MessageRoute = require("./routes/messageRoute");
 const studentRoute = require("./routes/studentRoute");
+const trendingPointsRoute = require("./routes/trendingPointsRoute");
 const connectDB = require("./config/connectDB");
 const app = express();
 
@@ -314,6 +315,7 @@ app.use(
   PermissionRequestReadMappingRoute
 );
 app.use("/api/v1/chat", MessageRoute);
+app.use("/api/v1/trending-point", trendingPointsRoute);
 
 // Test endpoint for quick testing
 app.post("/test", (req, res) => {

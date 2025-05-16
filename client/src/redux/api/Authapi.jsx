@@ -63,6 +63,7 @@ export const Authapi = createApi({
     // 🔹 User CRUD Operations
     getUserById: builder.query({
       query: (userId) => `/users/fetch-users-by-id/${userId}`,
+           providesTags: ["User"],
     }),
     getUsers: builder.query({
       query: (searchName) => {

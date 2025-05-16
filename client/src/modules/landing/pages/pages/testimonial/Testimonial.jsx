@@ -85,16 +85,16 @@ export default function App() {
           .swiper-pagination-bullet {
             width: 12px;
             height: 12px;
-            background: white;
+            background: gray !important;
             opacity: 1;
-            border: 2px solid #f6d32f;
+            // border: 2px solid #e03733;
             border-radius: 50%;
             margin: 0 6px;
             transition: all 0.3s ease;
           }
           .swiper-pagination-bullet-active {
-            background: #e03733;
-            border-color:#f6d32f;
+            background: #e03733 !important;
+            border-color:#e03733;
             transform: scale(1.2);
           }
         `}

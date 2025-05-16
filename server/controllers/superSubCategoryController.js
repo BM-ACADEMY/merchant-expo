@@ -6,6 +6,14 @@ const Category = require("../models/categoryModel");
 exports.createSuperSubCategory = async (req, res) => {
   try {
     const { category_id,sub_category_id, super_sub_category_name } = req.body;
+      const modifiedName=  super_sub_category_name
+  .toLowerCase()
+  .replace(/,/g, '') // Remove commas
+  .replace(/&/g, 'and') // Replace ampersands
+  .replace(/\s+/g, '-') // Replace spaces with hyphens
+  .replace(/[^\w\-]+/g, '') // Remove special characters
+  .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single one
+  .trim();
     // Check if the referenced category exists
    const categoryExists = await Category.findById(category_id);
    if (!categoryExists) {
@@ -17,7 +25,7 @@ exports.createSuperSubCategory = async (req, res) => {
       return res.status(400).json({ message: "Sub-category not found" });
     }
 
-    const superSubCategory = new SuperSubCategory({category_id, sub_category_id, super_sub_category_name });
+    const superSubCategory = new SuperSubCategory({category_id, sub_category_id, super_sub_category_name:modifiedName });
     await superSubCategory.save();
 
     res.status(201).json({ success:true, message: "Super sub-category created successfully", superSubCategory });
@@ -94,10 +102,18 @@ exports.getSuperSubCategoryById = async (req, res) => {
 exports.updateSuperSubCategory = async (req, res) => {
   try {
     const {category_id, sub_category_id, super_sub_category_name } = req.body;
+      const modifiedName=  super_sub_category_name
+  .toLowerCase()
+  .replace(/,/g, '') // Remove commas
+  .replace(/&/g, 'and') // Replace ampersands
+  .replace(/\s+/g, '-') // Replace spaces with hyphens
+  .replace(/[^\w\-]+/g, '') // Remove special characters
+  .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single one
+  .trim();
 
     const superSubCategory = await SuperSubCategory.findByIdAndUpdate(
       req.params.id,
-      { category_id,sub_category_id, super_sub_category_name },
+      { category_id,sub_category_id, super_sub_category_name:modifiedName },
       { new: true, runValidators: true }
     );
 

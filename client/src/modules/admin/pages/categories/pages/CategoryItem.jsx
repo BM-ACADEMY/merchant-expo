@@ -9,10 +9,10 @@ export default function CategoryItem({ category, onEdit, onDelete, viewMode }) {
       }`}
     >
       <div>
-        <h4 className="font-semibold">{category.category_name}</h4>
-        {category.category_image && (
+        <h4 className="font-semibold">{category.categoryName}</h4>
+        {category.categoryImage && (
           <img
-            src={encodeURI(category.category_image)}
+            src={encodeURI(category.categoryImage)}
             width="100"
             height="100"
             alt="category-image"

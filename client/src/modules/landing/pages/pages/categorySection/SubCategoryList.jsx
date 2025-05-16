@@ -1,160 +1,424 @@
 import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import {useGetCategoryByNameQuery} from "@/redux/api/CategoryApi";
 
-// Category data with super categories and subcategories
-const categories = [
-    {
-      id: 1,
-      label: "Home Supplies",
-      icon: "Boxes",
-      // path: "/categories/home-supplies",
-      subcategories: [
-        {
-          superCategory: "Metal Furniture",
-          items: [
-            { label: "Steel Furniture", path: "/categories/home-supplies/metal-furniture/steel-furniture" },
-            { label: "Recliner Chair", path: "/categories/home-supplies/metal-furniture/recliner-chair" },
-            { label: "Steel Table", path: "/categories/home-supplies/metal-furniture/steel-table" },
-            { label: "Steel Almirah", path: "/categories/home-supplies/metal-furniture/steel-almirah" },
-          ],
-        },
-        {
-          superCategory: "Furniture Hardware & Fittings",
-          items: [
-            { label: "Table Top", path: "/categories/home-supplies/furniture-hardware-fittings/table-top" },
-            { label: "Backrest", path: "/categories/home-supplies/furniture-hardware-fittings/backrest" },
-            { label: "Bed Frames", path: "/categories/home-supplies/furniture-hardware-fittings/bed-frames" },
-            { label: "Furniture Hardware", path: "/categories/home-supplies/furniture-hardware-fittings/furniture-hardware" },
-          ],
-        },
-      ],
-    },
-    {
-      id: 2,
-      label: "Agriculture",
-      icon: "Tractor",
-      // path: "/categories/agriculture",
-      subcategories: [
-        {
-          superCategory: "Farming Tools",
-          items: [
-            { label: "Shovels", path: "/categories/agriculture/farming-tools/shovels" },
-            { label: "Hoes", path: "/categories/agriculture/farming-tools/hoes" },
-            { label: "Tractors", path: "/categories/agriculture/farming-tools/tractors" },
-          ],
-        },
-      ],
-    },
-    {
-      id: 3,
-      label: "Food Products & Beverage",
-      icon: "Utensils",
-      // path: "/categories/food-products-beverage",
-      subcategories: [],
-    },
-    {
-      id: 4,
-      label: "Apparel & Fashion",
-      icon: "Shirt",
-      // path: "/categories/apparel-fashion",
-      subcategories: [],
-    },
-    {
-      id: 5,
-      label: "Chemicals",
-      icon: "FlaskConical",
-      // path: "/categories/chemicals",
-      subcategories: [],
-    },
-    {
-      id: 6,
-      label: "Industrial Supplies",
-      icon: "Factory",
-      // path: "/categories/industrial-supplies",
-      subcategories: [],
-    },
-    {
-      id: 7,
-      label: "Construction & Real Estate",
-      icon: "Building2",
-      // path: "/categories/construction-real-estate",
-      subcategories: [],
-    },
-    {
-      id: 8,
-      label: "Furniture",
-      icon: "Wrench",
-      // path: "/categories/furniture",
-      subcategories: [
-        {
-          superCategory: "Living Room & Plastic Furniture",
-          items: [
-            { label: "Sofa Set", path: "/categories/furniture/living-room-plastic-furniture/sofa-set" },
-            { label: "Cupboard", path: "/categories/furniture/living-room-plastic-furniture/cupboard" },
-            { label: "TV Unit", path: "/categories/furniture/living-room-plastic-furniture/tv-unit" },
-            { label: "Chairs", path: "/categories/furniture/living-room-plastic-furniture/chairs" },
-          ],
-        },
-        {
-          superCategory: "Bedroom, Bathroom & Kids Furniture",
-          items: [
-            { label: "Almirah", path: "/categories/furniture/bedroom-bathroom-kids-furniture/almirah" },
-            { label: "Double Bed", path: "/categories/furniture/bedroom-bathroom-kids-furniture/double-bed" },
-            { label: "Folding Bed", path: "/categories/furniture/bedroom-bathroom-kids-furniture/folding-bed" },
-            { label: "Bunk Bed", path: "/categories/furniture/bedroom-bathroom-kids-furniture/bunk-bed" },
-            { label: "Foldable Wardrobe", path: "/categories/furniture/bedroom-bathroom-kids-furniture/foldable-wardrobe" },
-          ],
-        },
-      ],
-    },
-    {
-      id: 9,
-      label: "Health & Beauty",
-      icon: "Heart",
-      // path: "/categories/health-beauty",
-      subcategories: [],
-    },
-    {
-      id: 10,
-      label: "All Categories",
-      icon: "Grid",
-      // path: "/all-categories",
-      subcategories: [],
-    },
-  ];
-  
+// export const categories = [
+//   {
+//     id: 1,
+//     label: "Home Supplies",
+//     icon: "Boxes",
+//     subcategories: [
+//       {
+//         sub_category_name: "Metal Furniture",
+//         sub_category_image: "https://img.freepik.com/free-photo/modern-metal-furniture-living-room_53876-126702.jpg",
+//         super_sub_categories: [
+//           { label: "Steel Almirah" },
+//           { label: "Recliner Chair" },
+//           { label: "Steel Table" },
+//           { label: "Metal Bed" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Furniture Hardware",
+//         sub_category_image: "https://img.freepik.com/free-photo/tools-construction-set-black-background_93675-128110.jpg",
+//         super_sub_categories: [
+//           { label: "Table Top" },
+//           { label: "Backrest" },
+//           { label: "Furniture Screws" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     label: "Agriculture",
+//     icon: "Tractor",
+//     subcategories: [
+//       {
+//         sub_category_name: "Farming Tools",
+//         sub_category_image: "https://img.freepik.com/free-photo/agriculture-tools_1122-852.jpg",
+//         super_sub_categories: [
+//           { label: "Shovels" },
+//           { label: "Hoes" },
+//           { label: "Tractors" },
+//           { label: "Seed Drills" },
+//           { label: "Seed Drills" },
+//           { label: "Seed Drills" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Irrigation Systems",
+//         sub_category_image: "https://img.freepik.com/free-photo/irrigation-system-watering-green-grass_1150-11170.jpg",
+//         super_sub_categories: [
+//           { label: "Drip Irrigation" },
+//           { label: "Sprinkler Systems" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 3,
+//     label: "Apparel & Fashion",
+//     icon: "Shirt",
+//     subcategories: [
+//       {
+//         sub_category_name: "Men's Clothing",
+//         sub_category_image: "https://img.freepik.com/free-photo/men-s-casual-outfit_23-2148864984.jpg",
+//         super_sub_categories: [
+//           { label: "Shirts" },
+//           { label: "T-Shirts" },
+//           { label: "Jeans" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Women's Clothing",
+//         sub_category_image: "https://img.freepik.com/free-photo/young-beautiful-woman-dressed-blue-dress_144627-56707.jpg",
+//         super_sub_categories: [
+//           { label: "Kurtis" },
+//           { label: "Sarees" },
+//           { label: "Leggings" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 4,
+//     label: "Food Products & Beverage",
+//     icon: "Utensils",
+//     subcategories: [
+//       {
+//         sub_category_name: "Packaged Food",
+//         sub_category_image: "https://img.freepik.com/free-photo/top-view-collection-different-snacks-black-background_23-2148419203.jpg",
+//         super_sub_categories: [
+//           { label: "Biscuits" },
+//           { label: "Snacks" },
+//           { label: "Canned Food" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Beverages",
+//         sub_category_image: "https://img.freepik.com/free-photo/refreshing-drinks-arrangement_23-2148738080.jpg",
+//         super_sub_categories: [
+//           { label: "Soft Drinks" },
+//           { label: "Juices" },
+//           { label: "Energy Drinks" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 5,
+//     label: "Chemicals",
+//     icon: "FlaskConical",
+//     subcategories: [
+//       {
+//         sub_category_name: "Industrial Chemicals",
+//         sub_category_image: "https://img.freepik.com/free-photo/laboratory-glassware-arrangement_23-2149234787.jpg",
+//         super_sub_categories: [
+//           { label: "Acids" },
+//           { label: "Solvents" },
+//           { label: "Dyes" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Cleaning Chemicals",
+//         sub_category_image: "https://img.freepik.com/free-photo/cleaning-products-set_23-2148185478.jpg",
+//         super_sub_categories: [
+//           { label: "Detergents" },
+//           { label: "Sanitizers" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 6,
+//     label: "Industrial Supplies",
+//     icon: "Factory",
+//     subcategories: [
+//       {
+//         sub_category_name: "Pipes & Fittings",
+//         sub_category_image: "https://img.freepik.com/free-photo/plastic-pipes-arranged-stack_1232-2624.jpg",
+//         super_sub_categories: [
+//           { label: "PVC Pipes" },
+//           { label: "Metal Fittings" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Fasteners",
+//         sub_category_image: "https://img.freepik.com/free-photo/assortment-metal-nuts_93675-133759.jpg",
+//         super_sub_categories: [
+//           { label: "Bolts" },
+//           { label: "Nuts" },
+//           { label: "Washers" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 7,
+//     label: "Construction & Real Estate",
+//     icon: "Building2",
+//     subcategories: [
+//       {
+//         sub_category_name: "Building Materials",
+//         sub_category_image: "https://img.freepik.com/free-photo/construction-materials-concept_23-2149233904.jpg",
+//         super_sub_categories: [
+//           { label: "Cement" },
+//           { label: "Bricks" },
+//           { label: "Concrete Blocks" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Real Estate Services",
+//         sub_category_image: "https://img.freepik.com/free-photo/hands-holding-house-model_23-2147771838.jpg",
+//         super_sub_categories: [
+//           { label: "Property Dealers" },
+//           { label: "Rental Services" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 8,
+//     label: "Furniture",
+//     icon: "Wrench",
+//     subcategories: [
+//       {
+//         sub_category_name: "Living Room Furniture",
+//         sub_category_image: "https://img.freepik.com/free-photo/living-room-interior-with-couch_23-2148894625.jpg",
+//         super_sub_categories: [
+//           { label: "Sofa Sets" },
+//           { label: "TV Units" },
+//           { label: "Coffee Tables" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Bedroom Furniture",
+//         sub_category_image: "https://img.freepik.com/free-photo/modern-bedroom-interior_23-2148888122.jpg",
+//         super_sub_categories: [
+//           { label: "Beds" },
+//           { label: "Wardrobes" },
+//           { label: "Dressers" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 9,
+//     label: "Health & Beauty",
+//     icon: "Heart",
+//     subcategories: [
+//       {
+//         sub_category_name: "Personal Care",
+//         sub_category_image: "https://img.freepik.com/free-photo/cosmetic-products-still-life_23-2148899506.jpg",
+//         super_sub_categories: [
+//           { label: "Shampoo" },
+//           { label: "Face Wash" },
+//           { label: "Moisturizers" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Health Devices",
+//         sub_category_image: "https://img.freepik.com/free-photo/blood-pressure-monitor-table_23-2148524923.jpg",
+//         super_sub_categories: [
+//           { label: "BP Monitor" },
+//           { label: "Thermometer" },
+//           { label: "Glucometer" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     id: 10,
+//     label: "Electronics",
+//     icon: "Monitor",
+//     subcategories: [
+//       {
+//         sub_category_name: "Mobile Phones",
+//         sub_category_image: "https://img.freepik.com/free-photo/modern-smartphone-digital-device_53876-96803.jpg",
+//         super_sub_categories: [
+//           { label: "Smartphones" },
+//           { label: "Feature Phones" },
+//           { label: "Refurbished Phones" },
+//         ],
+//       },
+//       {
+//         sub_category_name: "Home Appliances",
+//         sub_category_image: "https://img.freepik.com/free-photo/modern-home-appliances_93675-133930.jpg",
+//         super_sub_categories: [
+//           { label: "Refrigerators" },
+//           { label: "Washing Machines" },
+//           { label: "Microwaves" },
+//         ],
+//       },
+//     ],
+//   },
+// ];
 
 const SubCategoryList = () => {
-  const { category, subCategory } = useParams();
+  const { category } = useParams();
   const decodedCategory = decodeURIComponent(category || "");
-  const decodedSubCategory = decodeURIComponent(subCategory || "");
+  console.log("Decoded Category:", decodedCategory);
 
-  const selectedCategory = categories.find(cat => cat.label.toLowerCase().replace(/\s+/g, "-") === decodedCategory);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [expandedSubcategories, setExpandedSubcategories] = useState({}); // Track which subcategories are expanded
 
-  if (!selectedCategory) return <div className="p-4">Category not found.</div>;
+  const { data: responseData, isLoading, isError } = useGetCategoryByNameQuery({
+    category_name: decodedCategory,
+    page: currentPage,
+  });
 
-  const subcategoriesToShow = selectedCategory.subcategories;
+  const selectedCategory = responseData?.data?.[0];
+  const pagination = responseData?.pagination;
+
+  if (isLoading) return <div className="p-4">Loading...</div>;
+
+  if (isError || !selectedCategory)
+    return <div className="p-4 text-red-500">Category not found.</div>;
+
+  const subcategories = selectedCategory.subcategories || [];
+
+  // Pagination handlers
+  const handlePrevPage = () => {
+    if (pagination && currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (pagination && currentPage < pagination.totalPages) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePageClick = (pageNum) => {
+    if (pageNum !== currentPage) setCurrentPage(pageNum);
+  };
+
+  // Toggle expanded state for a subcategory
+  const toggleExpand = (subcategoryName) => {
+    setExpandedSubcategories((prev) => ({
+      ...prev,
+      [subcategoryName]: !prev[subcategoryName],
+    }));
+  };
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-semibold mb-4">{selectedCategory.label}</h2>
-      {subcategoriesToShow.length > 0 ? (
-        subcategoriesToShow.map((sub, index) => (
-          <div key={index} className="mb-4">
-            <h3 className="font-semibold text-sm">{sub.superCategory}</h3>
-            <ul className="list-disc list-inside text-gray-700 ml-4">
-              {sub.items.map((item, idx) => (
-                <li key={idx}>
-                  <Link to={item.path} className="text-blue-500 hover:underline">
-                    {item.label}
+      {/* Category Header */}
+      <h2 className="text-2xl font-semibold mb-6">{selectedCategory.categoryName}</h2>
+
+      {/* Layout with Image on Left and List on Right */}
+      <div className="flex flex-col md:flex-row border-1 border-gray-300 bg-gray-50 rounded-sm p-4 gap-4 w-fit ">
+        {/* Left Side: Image */}
+        <div className="border-1 border-gray-300 rounded-lg p-4 ">
+          <img
+            src={selectedCategory.categoryImage || "https://via.placeholder.com/150"}
+            alt={selectedCategory.categoryName}
+            className="w-30 h-30 rounded-lg shadow-md"
+          />
+        </div>
+
+        {/* Right Side: Subcategory List */}
+        <div className="">
+          <ul className="list-disc pl-5 space-y-4 ">
+            {subcategories.map((subcategory, idx) => {
+              const isExpanded = expandedSubcategories[subcategory.subCategoryName];
+              const superSubcategories = subcategory.superSubcategories || [];
+              const visibleSuperSubcategories = isExpanded
+                ? superSubcategories
+                : superSubcategories.slice(0, 5);
+
+              return (
+                <li key={idx} className="text-lg list-none">
+                  <Link
+                    to={`/subcategory-detail/${subcategory.subCategoryName
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
+                    className="text-[#e03733] hover:underline font-bold"
+                  >
+                    {subcategory.subCategoryName}
                   </Link>
+                  {/* Super Subcategories */}
+                  {superSubcategories.length > 0 && (
+                    <ul className="list-disc pl-8 mt-2 space-y-1">
+                      {visibleSuperSubcategories.map((ssc, sscIdx) => (
+                        <li key={sscIdx} className="text-sm text-gray-700">
+                          <Link
+                            to={`/products/${subcategory.subCategoryName
+                              .toLowerCase()
+                              .replace(/\s+/g, "-")}/${ssc.superSubCategoryName
+                              .toLowerCase()
+                              .replace(/\s+/g, "-")}`}
+                            className="hover:underline"
+                          >
+                            {ssc.superSubCategoryName}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {/* Explore More Button */}
+                  {superSubcategories.length > 5 && !isExpanded && (
+                    <button
+                      onClick={() => toggleExpand(subcategory.subCategoryName)}
+                      className="mt-2 text-blue-600 hover:underline text-sm"
+                    >
+                      + Explore More
+                    </button>
+                  )}
+                  {superSubcategories.length > 5 && isExpanded && (
+                    <button
+                      onClick={() => toggleExpand(subcategory.subCategoryName)}
+                      className="mt-2 text-blue-600 hover:underline text-sm"
+                    >
+                      - Show Less
+                    </button>
+                  )}
                 </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      ) : (
-        <p className="text-gray-500">No subcategories found.</p>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+
+      {/* Pagination Controls */}
+   {pagination && pagination.totalPages > 1 && (
+    <div className="flex justify-center items-center gap-4 mt-8 flex-wrap">
+      <button
+        onClick={handlePrevPage}
+        disabled={currentPage === 1}
+        className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
+      >
+        Prev
+      </button>
+
+      {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+        (pageNum) => (
+          <button
+            key={pageNum}
+            onClick={() => handlePageClick(pageNum)}
+            className={`px-4 py-2 rounded ${
+              pageNum === currentPage
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200"
+            }`}
+          >
+            {pageNum}
+          </button>
+        )
       )}
+
+      <button
+        onClick={handleNextPage}
+        disabled={currentPage === pagination.totalPages}
+        className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
+  )}
     </div>
   );
 };

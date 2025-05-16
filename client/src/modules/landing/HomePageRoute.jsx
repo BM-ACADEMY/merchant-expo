@@ -7,9 +7,10 @@ import SellerFAQ from "../../staticPages/SellerFAQ";
 import BuyerFAQ from "../../staticPages/BuyerFAQ";
 import AllCountriesPage from "./pages/pages/categorySection/AllCountriesPage";
 import AllCategoriesPage from "./pages/pages/categorySection/AllCategoriesPage";
-import CategoryList from "./pages/pages/categorySection/CategoryList";
 import SubCategoryList from "./pages/pages/categorySection/SubCategoryList";
 import ProductList from "./pages/pages/categorySection/ProductList";
+import SubCategoryDetail from "./pages/pages/categorySection/SubCategoryDetailsPage";
+import ProductListPage from "./pages/pages/categorySection/ProductsPages/ProductListPage";
 
 const HomePageRoute = (
   <Route path="/*" element={<HomeLayout />}>
@@ -25,9 +26,8 @@ const HomePageRoute = (
     <Route path="all-categories" element={<AllCategoriesPage />} />
     <Route path="all-categories/:category" element={<SubCategoryList />} />
     <Route path="all-categories/:category/:subCategory" element={<SubCategoryList />} />
-    <Route path="all-categories/:category/:subCategory/:deepSubCategory" element={<ProductList />} />
-
-
+    <Route path="subcategory-detail/:subcategoryName" element={<SubCategoryDetail />} />
+    <Route path="products/:deepSubCategory" element={<ProductListPage />} />
   </Route>
 );
 

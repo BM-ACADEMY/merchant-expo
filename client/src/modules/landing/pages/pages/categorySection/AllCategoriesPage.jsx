@@ -91,7 +91,7 @@
 //       ]
 //     }
 //   ];
-  
+
 // const AllCategoriesPage=()=> {
 //     return (
 //         <div className="bg-white p-4 w-[250px] border border-gray-200 h-auto">
@@ -129,162 +129,82 @@
 
 
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ShoppingBasket, ArrowBigRight, Minimize2 } from "lucide-react";
+import { useGetCategoriesQuery } from "@/redux/api/CategoryApi";
 import { Link } from "react-router-dom";
 
-// Category data with super categories and subcategories
-const categoriesData = [
-  {
-    id: 1,
-    label: "Home Supplies",
-    icon: "Boxes",
-    category_image: "https://img.freepik.com/free-photo/modern-living-room-interior_1150-14171.jpg",
-    subcategories: [
-      {
-        superCategory: "Metal Furniture",
-        sub_category_image: "https://img.freepik.com/free-photo/modern-living-room-interior_1150-14171.jpg",
-        items: [
-          { label: "Steel Furniture", path: "/categories/home-supplies/metal-furniture/steel-furniture" },
-          { label: "Recliner Chair", path: "/categories/home-supplies/metal-furniture/recliner-chair" },
-          { label: "Steel Table", path: "/categories/home-supplies/metal-furniture/steel-table" },
-          { label: "Steel Almirah", path: "/categories/home-supplies/metal-furniture/steel-almirah" },
-        ],
-      },
-      {
-        superCategory: "Furniture Hardware & Fittings",
-        sub_category_image: "https://img.freepik.com/free-photo/modern-living-room-interior_1150-14171.jpg",
-        items: [
-          { label: "Table Top", path: "/categories/home-supplies/furniture-hardware-fittings/table-top" },
-          { label: "Backrest", path: "/categories/home-supplies/furniture-hardware-fittings/backrest" },
-          { label: "Bed Frames", path: "/categories/home-supplies/furniture-hardware-fittings/bed-frames" },
-          { label: "Furniture Hardware", path: "/categories/home-supplies/furniture-hardware-fittings/furniture-hardware" },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    label: "Agriculture",
-    icon: "Tractor",
-    category_image: "https://img.freepik.com/free-photo/agricultural-field-farm_1150-14083.jpg",
-    subcategories: [
-      {
-        superCategory: "Farming Tools",
-        items: [
-          { label: "Shovels", path: "/categories/agriculture/farming-tools/shovels" },
-          { label: "Hoes", path: "/categories/agriculture/farming-tools/hoes" },
-          { label: "Tractors", path: "/categories/agriculture/farming-tools/tractors" },
-        ],
-      },
-    ],
-  },
-  {
-    id: 3,
-    label: "Food Products & Beverage",
-    icon: "Utensils",
-    category_image: "https://img.freepik.com/free-photo/variety-vegetables-healthy-food_23-2148744702.jpg",
-    subcategories: [],
-  },
-  {
-    id: 4,
-    label: "Apparel & Fashion",
-    icon: "Shirt",
-    category_image: "https://img.freepik.com/free-photo/wardrobe-modern-clothing-hangers-fashion_23-2148721025.jpg",
-    subcategories: [],
-  },
-  {
-    id: 5,
-    label: "Chemicals",
-    icon: "FlaskConical",
-    category_image: "https://img.freepik.com/free-photo/laboratory-glassware-chemicals_23-2148734820.jpg",
-    subcategories: [],
-  },
-  {
-    id: 6,
-    label: "Industrial Supplies",
-    icon: "Factory",
-    category_image: "https://img.freepik.com/free-photo/industrial-factory-complex-with-smoke-stacks_23-2148891198.jpg",
-    subcategories: [],
-  },
-  {
-    id: 7,
-    label: "Construction & Real Estate",
-    icon: "Building2",
-    category_image: "https://img.freepik.com/free-photo/construction-site-sunset_1150-16821.jpg",
-    subcategories: [],
-  },
-  {
-    id: 8,
-    label: "Furniture",
-    icon: "Wrench",
-    category_image: "https://img.freepik.com/free-photo/furniture-modern-interior_1150-13870.jpg",
-    subcategories: [
-      {
-        superCategory: "Living Room & Plastic Furniture",
-        items: [
-          { label: "Sofa Set", path: "/categories/furniture/living-room-plastic-furniture/sofa-set" },
-          { label: "Cupboard", path: "/categories/furniture/living-room-plastic-furniture/cupboard" },
-          { label: "TV Unit", path: "/categories/furniture/living-room-plastic-furniture/tv-unit" },
-          { label: "Chairs", path: "/categories/furniture/living-room-plastic-furniture/chairs" },
-        ],
-      },
-      {
-        superCategory: "Bedroom, Bathroom & Kids Furniture",
-        items: [
-          { label: "Almirah", path: "/categories/furniture/bedroom-bathroom-kids-furniture/almirah" },
-          { label: "Double Bed", path: "/categories/furniture/bedroom-bathroom-kids-furniture/double-bed" },
-          { label: "Folding Bed", path: "/categories/furniture/bedroom-bathroom-kids-furniture/folding-bed" },
-          { label: "Bunk Bed", path: "/categories/furniture/bedroom-bathroom-kids-furniture/bunk-bed" },
-          { label: "Foldable Wardrobe", path: "/categories/furniture/bedroom-bathroom-kids-furniture/foldable-wardrobe" },
-        ],
-      },
-    ],
-  },
-  {
-    id: 9,
-    label: "Health & Beauty",
-    icon: "Heart",
-    category_image: "https://img.freepik.com/free-photo/beauty-products-composition_23-2148557218.jpg",
-    subcategories: [],
-  },
-  {
-    id: 10,
-    label: "All Categories",
-    icon: "Grid",
-    category_image: "https://img.freepik.com/free-photo/variety-products-shopping-concept_23-2148793882.jpg",
-    subcategories: [],
-  },
-];
-
-  
 const AllCategoriesPage = () => {
+  const { data: enhancedCategories, isLoading } = useGetCategoriesQuery({ page: 1, limit: 10 });
+  const categories = enhancedCategories?.data || [];
+
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">All Categories</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {categoriesData
-          .filter((cat) => cat.label !== "All Categories")
-          .flatMap((category) =>
-            category.subcategories.map((sub, index) => (
-              <Card key={`${category.id}-${index}`} className="overflow-hidden relative">
-                <div className="relative h-48">
+      <div className="border-1 border-gray-200 p-4 mb-6">
+        <h2 className="text-2xl font-bold mb-2 text-[#e03733] hover:text-[#1C1B1F]">Market for Products</h2>
+        <p className="text-gray-500 mb-3 text-[14px]">
+          Welcome to this section of the product catalog from India's largest B2B trade junction. The wide variety of product categories are covered on this page. With a single click, you can now search for the things you want. You can send online inquiries and find products in certain categories with ease here.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {categories
+          .filter((cat) => cat.categoryName !== "All Categories" && cat.subcategories?.length > 0)
+          .map((category) => (
+            <Card key={category.categoryId} className="overflow-hidden rounded-none flex flex-col h-60 p-0">
+              {/* Label Section */}
+              <div className="bg-black bg-opacity-60 cursor-pointer text-white flex justify-between text-sm px-3 py-2">
+                <span className="truncate">{category.categoryName}</span>
+                <Badge variant="secondary" className="text-white">
+                  <ShoppingBasket className="mr-1 w-4 h-4" />
+                  {category.productCount} Items
+                </Badge>
+                <Minimize2 className="w-4 h-4 inline-block cursor-pointer" />
+              </div>
+
+              {/* Content */}
+              <div className="flex flex-row h-full">
+                {/* Left: Category Image */}
+                <div className="w-1/2 h-full p-2">
                   <img
-                    src={sub.sub_category_image}
-                    alt={sub.superCategory}
-                    className="w-full h-full object-cover"
+                    src={category.categoryImage}
+                    alt={category.categoryName}
+                    className="w-full h-full object-cover border-2 hover:border-[#e03733] rounded-none p-1"
                   />
-                  <div className="absolute bottom-5 left-5 bg-black bg-opacity-50 text-white text-lg font-semibold px-3 py-1 rounded">
-                    {sub.superCategory}
-                  </div>
                 </div>
-              </Card>
-            ))
-          )}
+
+                {/* Right: Subcategories */}
+                <CardContent className="w-1/2 p-2 flex flex-col justify-between">
+                  <ul className="space-y-2 text-sm text-gray-700">
+                    {category.subcategories.slice(0, 5).map((sub, idx) => (
+                      <li
+                        key={idx}
+                        className="relative group overflow-hidden cursor-pointer flex items-center gap-3"
+                      >
+                        <ArrowBigRight className="w-5 h-5 shrink-0 text-[#e03733] group-hover:text-blue-800 transition-colors duration-300" />
+                        <span className="relative z-10 hover:text-white truncate">{sub.subCategoryName}</span>
+                        <span className="absolute bottom-0 left-0 h-full w-0 bg-[#ed807e] group-hover:w-full transition-all duration-300 ease-out brightness-110 z-0"></span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {category.subcategories.length > 5 && (
+                    <Link
+                      to={`/categories/${category.categoryName.toLowerCase().replace(/\s+/g, "-")}`}
+                      className="mt-3 text-blue-600 hover:underline text-sm font-medium"
+                    >
+                      Explore More
+                    </Link>
+                  )}
+                </CardContent>
+              </div>
+            </Card>
+          ))}
       </div>
     </div>
   );
 };
 
 export default AllCategoriesPage;
-
 
 

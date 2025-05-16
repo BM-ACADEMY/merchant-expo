@@ -5,14 +5,21 @@ const Category = require("../models/categoryModel");
 exports.createSubCategory = async (req, res) => {
   try {
     const { category_id, sub_category_name, sub_category_image } = req.body;
-
+      const modifiedName=  sub_category_name
+  .toLowerCase()
+  .replace(/,/g, '') // Remove commas
+  .replace(/&/g, 'and') // Replace ampersands
+  .replace(/\s+/g, '-') // Replace spaces with hyphens
+  .replace(/[^\w\-]+/g, '') // Remove special characters
+  .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single one
+  .trim();
     // Check if the referenced category exists
     const categoryExists = await Category.findById(category_id);
     if (!categoryExists) {
       return res.status(400).json({ message: "Category not found" });
     }
 
-    const subCategory = new SubCategory({ category_id, sub_category_name, sub_category_image });
+    const subCategory = new SubCategory({ category_id, sub_category_name:modifiedName, sub_category_image });
     await subCategory.save();
 
     res.status(201).json({success:true, message: "Sub-category created successfully", data:subCategory });
@@ -98,10 +105,18 @@ exports.getSubCategoryById = async (req, res) => {
 exports.updateSubCategory = async (req, res) => {
   try {
     const { category_id, sub_category_name, sub_category_image } = req.body;
+      const modifiedName=  sub_category_name
+  .toLowerCase()
+  .replace(/,/g, '') // Remove commas
+  .replace(/&/g, 'and') // Replace ampersands
+  .replace(/\s+/g, '-') // Replace spaces with hyphens
+  .replace(/[^\w\-]+/g, '') // Remove special characters
+  .replace(/\-\-+/g, '-') // Replace multiple hyphens with a single one
+  .trim();
 
     const subCategory = await SubCategory.findByIdAndUpdate(
       req.params.id,
-      { category_id, sub_category_name, sub_category_image },
+      { category_id, sub_category_name:modifiedName, sub_category_image },
       { new: true, runValidators: true }
     );
 

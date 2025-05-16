@@ -1,5 +1,5 @@
-import { Link ,useNavigate} from "react-router-dom";
-import { useState,useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,8 +30,8 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("products");
   const { user, logout } = useContext(AuthContext);
-  console.log(user?.user?.role?.role,'login page user');
-  
+  console.log(user?.user?.role?.role, 'login page user');
+
   const navigate = useNavigate();
 
   const handleNavigate = (type) => {
@@ -76,30 +76,37 @@ const Header = () => {
           {user ? (
             <div className="relative group">
               <div className="flex items-center gap-2 cursor-pointer">
-                <Avatar>
+                <Avatar className="text-[#e03733]">
                   <AvatarImage src={user.avatar || "https://via.placeholder.com/40"} alt="User" />
                   <AvatarFallback>
                     <UserCircle className="w-8 h-8" />
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm">Welcome, {user.name}</span>
+                <span className="text-sm text-black">Welcome, {user?.user?.name}</span>
                 <ChevronDown className="w-4 h-4" />
               </div>
 
               {/* Dropdown Menu */}
-              <div className="absolute left-0 mt-2 bg-white text-black shadow-md w-48 opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-200">
-                {getDashboardLink() && (
-                  <DropdownItem to={getDashboardLink()} label="Dashboard" />
-                )}
-                <DropdownItem to="/profile" label="Profile" />
-                <DropdownItem to="/settings" label="Settings" />
-                <button
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
+              <div className="relative group">
+                {/* Triangle icon */}
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-white z-10 opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-200" />
+
+                {/* Dropdown Menu */}
+                <div className="absolute left-0 mt-2 bg-white text-black shadow-md w-48 opacity-0 group-hover:opacity-100 group-hover:visible invisible transition-all duration-200">
+                  {getDashboardLink() && (
+                    <DropdownItem to={getDashboardLink()} label="Dashboard" />
+                  )}
+                  <DropdownItem to="/profile" label="Profile" />
+                  <DropdownItem to="/settings" label="Settings" />
+                  <button
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
+
             </div>
           ) : (
             <>
@@ -143,7 +150,7 @@ const Header = () => {
           />
           <Dropdown
             title="Help"
-    
+
             options={[
               "Contact Us",
               "Report an Issue",
@@ -154,7 +161,7 @@ const Header = () => {
           />
         </div>
       </div>
-  
+
       <div
         className="flex items-center justify-between p-4 bg-[#1C1B1F] shadow-md"
         initial={{ opacity: 0, y: -20 }}
@@ -164,7 +171,7 @@ const Header = () => {
         {/* 🔹 Logo Section */}
         <div className="flex items-center space-x-2">
           <img src={logo} alt="Logo" className="h-20" />
-         
+
         </div>
 
         {/* 🔹 Search Box */}
@@ -172,33 +179,33 @@ const Header = () => {
           className="flex items-center border rounded-full border-[#1C1B1F] overflow-hidden w-1/2 bg-white"
           whileHover={{ scale: 1.02 }}
         >
-              <Select onValueChange={(value) => setSelectedCategory(value)}>
-        <SelectTrigger className="px-3 py-2 bg-white border-r text-gray-700">
-          <SelectValue placeholder="Products / Services" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="products">Products / Services</SelectItem>
-          <SelectItem value="suppliers">Suppliers</SelectItem>
-          <SelectItem value="buyers">Buyers</SelectItem>
-        </SelectContent>
-      </Select>
+          <Select onValueChange={(value) => setSelectedCategory(value)}>
+            <SelectTrigger className="px-3 py-2 bg-white border-r text-gray-700">
+              <SelectValue placeholder="Products / Services" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="products">Products / Services</SelectItem>
+              <SelectItem value="suppliers">Suppliers</SelectItem>
+              <SelectItem value="buyers">Buyers</SelectItem>
+            </SelectContent>
+          </Select>
 
-      {/* Search Input */}
-      <Input
-        type="text"
-        placeholder={placeholderText[selectedCategory]} // Dynamically set placeholder
-        className="flex-grow px-3 py-2 outline-none border-none focus:ring-0 focus:border-transparent border-white"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+          {/* Search Input */}
+          <Input
+            type="text"
+            placeholder={placeholderText[selectedCategory]} // Dynamically set placeholder
+            className="flex-grow px-3 py-2 outline-none border-none focus:ring-0 focus:border-transparent border-white"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
 
-      {/* Mic Icon */}
-      <Mic className="text-gray-500 mx-3 cursor-pointer" />
+          {/* Mic Icon */}
+          <Mic className="text-gray-500 mx-3 cursor-pointer" />
 
-      {/* Search Button */}
-      <Button className="px-5 py-2 bg-yellow-500 text-white font-semibold cursor-pointer">
-        Search
-      </Button>
+          {/* Search Button */}
+          <Button className="px-5 py-2 bg-yellow-500 text-white font-semibold cursor-pointer">
+            Search
+          </Button>
 
         </motion.div>
 

@@ -1,35 +1,31 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const mongoose = require('mongoose');
 
-const TrendingPoints = sequelize.define('TrendingPoints', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        unique: true
-    },
-    product_id: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true
-    },
-    trending_Points: {
-        type: DataTypes.INTEGER,
-        allowNull: true
-    },
-    created_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    },
-    updated_at: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-    }
+const TrendingPointsSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User' // Assuming reference to a User collection
+  },
+  product_id: {
+    type: mongoose.Schema.Types.ObjectId, // Assuming reference to a Product collection
+    ref: 'Product',
+    required: true
+  },
+  date: {
+    type: String, // Format: "YYYY-MM-DD"
+    required: true
+  },
+  trending_Points: {
+    type: Number,
+    default: 1
+  }
 }, {
-    timestamps: false
+  timestamps: true // Adds createdAt and updatedAt automatically
 });
+
+// 📌 Ensure one entry per user per product per day
+TrendingPointsSchema.index({ user_id: 1, product_id: 1, date: 1 }, { unique: true });
+
+const TrendingPoints = mongoose.model('TrendingPoints', TrendingPointsSchema);
 
 module.exports = TrendingPoints;
