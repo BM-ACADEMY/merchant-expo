@@ -132,12 +132,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBasket, ArrowBigRight, Minimize2 } from "lucide-react";
 import { useGetCategoriesQuery } from "@/redux/api/CategoryApi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AllCategoriesPage = () => {
   const { data: enhancedCategories, isLoading } = useGetCategoriesQuery({ page: 1, limit: 10 });
   const categories = enhancedCategories?.data || [];
-
+  const navigate = useNavigate()
+  const handleCategory = (categoryName) => {
+    navigate(`/all-categories/${categoryName}`);
+  }
   return (
     <div className="p-6">
       <div className="border-1 border-gray-200 p-4 mb-6">
@@ -154,7 +157,7 @@ const AllCategoriesPage = () => {
             <Card key={category.categoryId} className="overflow-hidden rounded-none flex flex-col h-60 p-0">
               {/* Label Section */}
               <div className="bg-black bg-opacity-60 cursor-pointer text-white flex justify-between text-sm px-3 py-2">
-                <span className="truncate">{category.categoryName}</span>
+                <span className="truncate cursor-pointer" onClick={() => handleCategory(category.categoryName.toLowerCase().replace(/\s+/g, '-'))}>{category.categoryName}</span>
                 <Badge variant="secondary" className="text-white">
                   <ShoppingBasket className="mr-1 w-4 h-4" />
                   {category.productCount} Items
@@ -182,7 +185,7 @@ const AllCategoriesPage = () => {
                         className="relative group overflow-hidden cursor-pointer flex items-center gap-3"
                       >
                         <ArrowBigRight className="w-5 h-5 shrink-0 text-[#e03733] group-hover:text-blue-800 transition-colors duration-300" />
-                        <span className="relative z-10 hover:text-white truncate">{sub.subCategoryName}</span>
+                        <span className="relative z-10 hover:text-white truncate" >{sub.subCategoryName}</span>
                         <span className="absolute bottom-0 left-0 h-full w-0 bg-[#ed807e] group-hover:w-full transition-all duration-300 ease-out brightness-110 z-0"></span>
                       </li>
                     ))}

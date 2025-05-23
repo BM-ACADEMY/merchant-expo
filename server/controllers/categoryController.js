@@ -3,7 +3,7 @@ const TrendingPoints = require("../models/trendingPointsModel");
 const Product = require("../models/productModel");
 const SubCategory = require("../models/subCategoryModel");
 const SuperSubCategory = require("../models/superSubCategoryModel");
-
+const DeepSubCategory = require("../models/deepSubCategoryModel");
 // Create a new category
 exports.createCategory = async (req, res) => {
   try {
@@ -480,6 +480,265 @@ exports.getSubCategoriesByName = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching subcategories:', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.getProductsByCategoryName = async (req, res) => {
+  try {
+    let { modelName, categoryName } = req.params;
+    const { city, lat, lng, searchLocation, page = 1 } = req.query;
+
+    if (!modelName || !categoryName || typeof categoryName !== 'string') {
+      return res.status(400).json({ success: false, message: 'Invalid or missing modelName or categoryName' });
+    }
+
+    const pageNumber = parseInt(page) || 1;
+    const pageSize = 5;
+    const skip = (pageNumber - 1) * pageSize;
+
+    categoryName = categoryName.trim().toLowerCase();
+    let deepSubCategoryIds = [];
+
+    // Prepare category detail variables
+    let deepSubCategoryDetail = [];
+    let superSubCategoryDetail = null;
+    let allDeepSubCategories = [];
+
+    if (modelName === 'deep-sub-category') {
+      const deepSubCategory = await DeepSubCategory.findOne({
+        deep_sub_category_name: { $regex: new RegExp(`^${categoryName}$`, 'i') }
+      });
+
+      if (!deepSubCategory) {
+        return res.status(404).json({ success: false, message: 'DeepSubCategory not found' });
+      }
+
+      deepSubCategoryIds.push(deepSubCategory._id);
+      deepSubCategoryDetail = [deepSubCategory]; // Ensure it's an array
+      superSubCategoryDetail = await SuperSubCategory.findById(deepSubCategory.super_sub_category_id);
+
+    } else if (modelName === 'super-sub-category') {
+      const superSubCategory = await SuperSubCategory.findOne({
+        super_sub_category_name: { $regex: new RegExp(`^${categoryName}$`, 'i') }
+      });
+
+      if (!superSubCategory) {
+        return res.status(404).json({ success: false, message: 'SuperSubCategory not found' });
+      }
+
+      superSubCategoryDetail = superSubCategory;
+
+      const deepSubCategories = await DeepSubCategory.find({
+        super_sub_category_id: superSubCategory._id
+      });
+
+      if (!deepSubCategories.length) {
+        return res.status(404).json({ success: false, message: 'No DeepSubCategories found under this SuperSubCategory' });
+      }
+
+      deepSubCategoryIds = deepSubCategories.map(ds => ds._id);
+      allDeepSubCategories = deepSubCategories;
+
+    } else {
+      return res.status(400).json({ success: false, message: 'Invalid modelName. Use "deep-sub-category" or "super-sub-category"' });
+    }
+
+    const basePipeline = [
+      {
+        $match: {
+          deep_sub_category_id: { $in: deepSubCategoryIds }
+        }
+      },
+      {
+        $lookup: {
+          from: 'deepsubcategories',
+          localField: 'deep_sub_category_id',
+          foreignField: '_id',
+          as: 'deepSubCategory'
+        }
+      },
+      { $unwind: '$deepSubCategory' },
+
+      ...(modelName === 'super-sub-category'
+        ? [
+            {
+              $lookup: {
+                from: 'supersubcategories',
+                localField: 'deepSubCategory.super_sub_category_id',
+                foreignField: '_id',
+                as: 'superSubCategory'
+              }
+            },
+            {
+              $unwind: {
+                path: '$superSubCategory',
+                preserveNullAndEmptyArrays: true
+              }
+            }
+          ]
+        : []),
+
+      {
+        $lookup: {
+          from: 'merchants',
+          localField: 'seller_id',
+          foreignField: '_id',
+          as: 'merchant'
+        }
+      },
+      {
+        $lookup: {
+          from: 'serviceproviders',
+          localField: 'seller_id',
+          foreignField: '_id',
+          as: 'serviceProvider'
+        }
+      },
+      {
+        $addFields: {
+          sellerUserId: {
+            $cond: [
+              { $eq: ['$sellerModel', 'Merchant'] },
+              { $arrayElemAt: ['$merchant.user_id', 0] },
+              { $arrayElemAt: ['$serviceProvider.user_id', 0] }
+            ]
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'sellerUserId',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      { $unwind: '$user' },
+      {
+        $lookup: {
+          from: 'addresses',
+          localField: 'sellerUserId',
+          foreignField: 'user_id',
+          as: 'addresses'
+        }
+      },
+      {
+        $addFields: {
+          primaryAddress: { $arrayElemAt: ['$addresses', 0] }
+        }
+      },
+      {
+        $lookup: {
+          from: 'productattributes',
+          localField: '_id',
+          foreignField: 'product_id',
+          as: 'attributes'
+        }
+      }
+    ];
+
+    const locationFilters = [];
+
+    if (city) {
+      locationFilters.push({ 'primaryAddress.city': { $regex: city, $options: 'i' } });
+    }
+
+    if (searchLocation) {
+      locationFilters.push({ 'primaryAddress.city': { $regex: searchLocation, $options: 'i' } });
+    }
+
+    if (lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
+      locationFilters.push({
+        'primaryAddress.location': {
+          $near: {
+            $geometry: {
+              type: 'Point',
+              coordinates: [parseFloat(lng), parseFloat(lat)]
+            },
+            $maxDistance: 10000
+          }
+        }
+      });
+    }
+
+    if (locationFilters.length > 0) {
+      basePipeline.push({ $match: { $and: locationFilters } });
+    }
+
+    const finalProjection = {
+      _id: 1,
+      product_name: 1,
+      price: 1,
+      stock_quantity: 1,
+      product_image: 1,
+      image: 1,
+      seller_id: 1,
+      sellerModel: 1,
+      attributes: 1,
+      deepSubCategory: {
+        _id: '$deepSubCategory._id',
+        name: '$deepSubCategory.deep_sub_category_name',
+        deep_sub_category_image: '$deepSubCategory.deep_sub_category_image'
+      },
+      user: {
+        _id: '$user._id',
+        name: '$user.name',
+        email: '$user.email',
+        mobile: '$user.mobile'
+      },
+      primaryAddress: 1
+    };
+
+    if (modelName === 'super-sub-category') {
+      finalProjection.superSubCategory = {
+        _id: '$superSubCategory._id',
+        name: '$superSubCategory.super_sub_category_name'
+      };
+    }
+
+    const paginatedPipeline = [
+      ...basePipeline,
+      {
+        $facet: {
+          totalCount: [{ $count: 'count' }],
+          paginatedResults: [
+            { $skip: skip },
+            { $limit: pageSize },
+            { $project: finalProjection }
+          ]
+        }
+      },
+      {
+        $unwind: {
+          path: '$totalCount',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $addFields: {
+          totalCount: '$totalCount.count'
+        }
+      }
+    ];
+
+    const result = await Product.aggregate(paginatedPipeline);
+    const response = result[0] || { totalCount: 0, paginatedResults: [] };
+
+    return res.json({
+      success: true,
+      message: 'Fetched products successfully',
+      data: response.paginatedResults,
+      totalCount: response.totalCount,
+      currentPage: pageNumber,
+      totalPages: Math.ceil((response.totalCount || 0) / pageSize),
+      deepSubCategoryDetail: deepSubCategoryDetail || undefined,
+      superSubCategoryDetail: superSubCategoryDetail || undefined,
+      deepSubCategoryList: modelName === 'super-sub-category' ? allDeepSubCategories : undefined
+    });
+
+  } catch (error) {
+    console.error('Error fetching products:', error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };

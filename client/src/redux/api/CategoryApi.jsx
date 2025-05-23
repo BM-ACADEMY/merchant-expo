@@ -73,6 +73,37 @@ export const CategoryApi = createApi({
       transformResponse: (response) => response,
       providesTags: ["Category"],
     }),
+    // getDeepSubProductsByName: builder.query({
+    //   query: ({ modelName = "deep-sub-category", sub_category_name, page = 1 }) =>
+    //     `/categories/fetch-deep-sub-category-products/${modelName}/${sub_category_name}?page=${page}`,
+    //   transformResponse: (response) => response,
+    //   providesTags: ["Category"],
+    // }),
+    getDeepSubProductsByName: builder.query({
+      query: ({
+        modelName = "deep-sub-category",
+        sub_category_name,
+        city,
+        lat,
+        lng,
+        searchLocation,
+        page = 1,
+      }) => {
+        const params = new URLSearchParams();
+        if (city) params.append("city", city);
+        if (lat && lng) {
+          params.append("lat", lat);
+          params.append("lng", lng);
+        }
+        if (searchLocation) params.append("searchLocation", searchLocation);
+        params.append("page", page);
+
+        return `/categories/fetch-deep-sub-category-products/${modelName}/${sub_category_name}?${params.toString()}`;
+      },
+      transformResponse: (response) => response,
+      providesTags: ["Category"],
+    })
+
 
   }),
 });
@@ -81,6 +112,7 @@ export const {
   useGetCategoriesQuery,
   useGetTopCategoriesQuery,
   useGetSubCategoryByNameQuery,
+  useGetDeepSubProductsByNameQuery,
   useGetCategoryByNameQuery,
   useGetTopProductsQuery,
   useGetTopSubCategoriesQuery,

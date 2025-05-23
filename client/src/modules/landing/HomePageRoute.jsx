@@ -11,6 +11,7 @@ import SubCategoryList from "./pages/pages/categorySection/SubCategoryList";
 import ProductList from "./pages/pages/categorySection/ProductList";
 import SubCategoryDetail from "./pages/pages/categorySection/SubCategoryDetailsPage";
 import ProductListPage from "./pages/pages/categorySection/ProductsPages/ProductListPage";
+import ProductDetailsPage from "./pages/pages/categorySection/ProductsPages/ProductDetailsPage";
 
 const HomePageRoute = (
   <Route path="/*" element={<HomeLayout />}>
@@ -27,7 +28,9 @@ const HomePageRoute = (
     <Route path="all-categories/:category" element={<SubCategoryList />} />
     <Route path="all-categories/:category/:subCategory" element={<SubCategoryList />} />
     <Route path="subcategory-detail/:subcategoryName" element={<SubCategoryDetail />} />
-    <Route path="products/:deepSubCategory" element={<ProductListPage />} />
+    <Route path="products/:type/:deepSubCategory" element={<ProductListPage />} />
+    <Route path="product/:product_name" element={<ProductDetailsPage />} />
+
   </Route>
 );
 

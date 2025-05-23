@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import {useGetCategoryByNameQuery} from "@/redux/api/CategoryApi";
+import { useGetCategoryByNameQuery } from "@/redux/api/CategoryApi";
 
 // export const categories = [
 //   {
@@ -307,119 +307,114 @@ const SubCategoryList = () => {
   return (
     <div className="p-4">
       {/* Category Header */}
-      <h2 className="text-2xl font-semibold mb-6">{selectedCategory.categoryName}</h2>
+      <h2 className="text-2xl font-semibold mb-6 capitalize">
+        {selectedCategory.categoryName.replace(/-/g, ' ')}
+      </h2>
 
-      {/* Layout with Image on Left and List on Right */}
-      <div className="flex flex-col md:flex-row border-1 border-gray-300 bg-gray-50 rounded-sm p-4 gap-4 w-fit ">
-        {/* Left Side: Image */}
-        <div className="border-1 border-gray-300 rounded-lg p-4 ">
-          <img
-            src={selectedCategory.categoryImage || "https://via.placeholder.com/150"}
-            alt={selectedCategory.categoryName}
-            className="w-30 h-30 rounded-lg shadow-md"
-          />
-        </div>
+      {/* Subcategory Cards */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {subcategories.map((subcategory, idx) => {
+          const isExpanded = expandedSubcategories[subcategory.subCategoryName];
+          const superSubcategories = subcategory.superSubcategories || [];
+          const visibleSuperSubcategories = isExpanded
+            ? superSubcategories
+            : superSubcategories.slice(0, 5);
 
-        {/* Right Side: Subcategory List */}
-        <div className="">
-          <ul className="list-disc pl-5 space-y-4 ">
-            {subcategories.map((subcategory, idx) => {
-              const isExpanded = expandedSubcategories[subcategory.subCategoryName];
-              const superSubcategories = subcategory.superSubcategories || [];
-              const visibleSuperSubcategories = isExpanded
-                ? superSubcategories
-                : superSubcategories.slice(0, 5);
+          return (
+            <div
+              key={idx}
+              className="border border-gray-300 flex justify-between rounded-lg shadow-md p-4 bg-white"
+            >
+              <div>
+                {/* Subcategory Image */}
+                <img
+                  src={subcategory.subCategoryImage || 'https://via.placeholder.com/150'}
+                  alt={subcategory.subCategoryName}
+                  className="w-full h-40 object-cover rounded-md mb-4"
+                />
+              </div>
 
-              return (
-                <li key={idx} className="text-lg list-none">
+              {/* Subcategory Title */}
+              <div>
+                <h3 className="text-lg font-bold text-[#e03733] mb-2 capitalize">
                   <Link
-                    to={`/subcategory-detail/${subcategory.subCategoryName
-                      .toLowerCase()
-                      .replace(/\s+/g, "-")}`}
-                    className="text-[#e03733] hover:underline font-bold"
+                    to={`/subcategory-detail/${subcategory.subCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
+                    className="hover:underline block w-full overflow-hidden whitespace-nowrap cursor-pointer text-ellipsis"
                   >
-                    {subcategory.subCategoryName}
+                    {subcategory.subCategoryName.split(" ").slice(0, 3).join(" ") +
+                      (subcategory.subCategoryName.split(" ").length > 3 ? "..." : "")}
                   </Link>
-                  {/* Super Subcategories */}
-                  {superSubcategories.length > 0 && (
-                    <ul className="list-disc pl-8 mt-2 space-y-1">
-                      {visibleSuperSubcategories.map((ssc, sscIdx) => (
-                        <li key={sscIdx} className="text-sm text-gray-700">
-                          <Link
-                            to={`/products/${subcategory.subCategoryName
-                              .toLowerCase()
-                              .replace(/\s+/g, "-")}/${ssc.superSubCategoryName
-                              .toLowerCase()
-                              .replace(/\s+/g, "-")}`}
-                            className="hover:underline"
-                          >
-                            {ssc.superSubCategoryName}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  {/* Explore More Button */}
-                  {superSubcategories.length > 5 && !isExpanded && (
-                    <button
-                      onClick={() => toggleExpand(subcategory.subCategoryName)}
-                      className="mt-2 text-blue-600 hover:underline text-sm"
-                    >
-                      + Explore More
-                    </button>
-                  )}
-                  {superSubcategories.length > 5 && isExpanded && (
-                    <button
-                      onClick={() => toggleExpand(subcategory.subCategoryName)}
-                      className="mt-2 text-blue-600 hover:underline text-sm"
-                    >
-                      - Show Less
-                    </button>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
+
+                </h3>
+
+                {/* Super Subcategories */}
+                {superSubcategories.length > 0 && (
+                  <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    {visibleSuperSubcategories.map((ssc, sscIdx) => (
+                      <li key={sscIdx}>
+                        <Link
+                          to={`/products/${subcategory.subCategoryName.toLowerCase().replace(/\s+/g, '-')}/${ssc.superSubCategoryName.toLowerCase().replace(/\s+/g, '-')}`}
+                          className="hover:underline"
+                        >
+                          {ssc.superSubCategoryName.replace(/-/g, ' ')}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* Toggle Explore More / Show Less */}
+                {superSubcategories.length > 5 && (
+                  <button
+                    onClick={() => toggleExpand(subcategory.subCategoryName)}
+                    className="mt-2 text-blue-600 hover:underline text-sm"
+                  >
+                    {isExpanded ? '- Show Less' : '+ Explore More'}
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Pagination Controls */}
-   {pagination && pagination.totalPages > 1 && (
-    <div className="flex justify-center items-center gap-4 mt-8 flex-wrap">
-      <button
-        onClick={handlePrevPage}
-        disabled={currentPage === 1}
-        className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
-      >
-        Prev
-      </button>
-
-      {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
-        (pageNum) => (
+      {pagination && pagination.totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-8 flex-wrap">
           <button
-            key={pageNum}
-            onClick={() => handlePageClick(pageNum)}
-            className={`px-4 py-2 rounded ${
-              pageNum === currentPage
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200"
-            }`}
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
           >
-            {pageNum}
+            Prev
           </button>
-        )
-      )}
 
-      <button
-        onClick={handleNextPage}
-        disabled={currentPage === pagination.totalPages}
-        className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
-      >
-        Next
-      </button>
+          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+            (pageNum) => (
+              <button
+                key={pageNum}
+                onClick={() => handlePageClick(pageNum)}
+                className={`px-4 py-2 rounded ${pageNum === currentPage
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200'
+                  }`}
+              >
+                {pageNum}
+              </button>
+            )
+          )}
+
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === pagination.totalPages}
+            className="px-4 py-2 rounded bg-gray-300 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
-  )}
-    </div>
+
   );
 };
 

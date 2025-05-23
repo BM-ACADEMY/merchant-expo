@@ -71,5 +71,8 @@ const merchantSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-module.exports = mongoose.model("Merchant", merchantSchema);
+const Merchant = mongoose.models.Merchant || mongoose.model('Merchant', merchantSchema);
+
+module.exports = Merchant;
+
 

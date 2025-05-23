@@ -70,7 +70,7 @@ const TrendingCategory = () => {
       opacity: 0,
       y: 50, // Slide up from 50px below
       duration: 0.8,
-      stagger: 0.2, // Stagger the animation by 0.2s for each card
+      stagger: 0.7, // Stagger the animation by 0.2s for each card
       ease: "power3.out",
     });
   }, []);

@@ -94,13 +94,33 @@ export const ProductApi = createApi({
 
       providesTags: ["Product"],
     }),
+       // deep sub category
+    getProductByName: builder.query({
+      query: ({product_name}) =>
+        `/products/fetch-product-by-name/${product_name}`,
+
+      providesTags: ["Product"],
+    }),
+
+    //post product quote
+        // POST Create Product
+    createProductQuote: builder.mutation({
+      query: (quoteData) => ({
+        url: "/products/create-products",
+        method: "POST",
+        body: quoteData,
+      }),
+      invalidatesTags: ["Product"],
+    }),
   }),
 });
 
 export const {
   useGetProductsQuery,
   useCreateProductMutation,
+  useGetProductByNameQuery,
   useUpdateProductMutation,
+  useCreateProductQuoteMutation,
   useDeleteProductMutation,
   useGetMerchantByEmailOrPhoneQuery,
   useLazyGetMerchantByEmailOrPhoneQuery,

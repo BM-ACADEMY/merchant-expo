@@ -20,5 +20,6 @@ router.get("/fetch-top-sub-categories", categoryController.getTopTrendingSubCate
 router.get("/fetch-top-products", categoryController.getTopTrendingProducts);
 router.get("/fetch-categories-by-name/:category_name", categoryController.getCategoriesByName);
 router.get("/fetch-sub-categories-by-name/:sub_category_name", categoryController.getSubCategoriesByName);
+router.get("/fetch-deep-sub-category-products/:modelName/:categoryName", categoryController.getProductsByCategoryName);
 
 module.exports = router;

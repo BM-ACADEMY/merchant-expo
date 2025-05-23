@@ -35,6 +35,7 @@ import { ServiceProviderApi } from "../api/ServiceProviderApi";
 import { GrocerySellerApi } from "../api/GrocerySellerApi";
 import { StudentApi } from "../api/Studentapi"; // Add StudentApi import
 import fetchuserReducer from "@/redux/api/FetchUsers";
+import { ProductQuoteApi } from "../api/ProductQuoteApi";
 
 const store = configureStore({
   reducer: {
@@ -76,6 +77,7 @@ const store = configureStore({
     [ServiceProviderApi.reducerPath]:ServiceProviderApi.reducer,
     [GrocerySellerApi.reducerPath]:GrocerySellerApi.reducer,
     [StudentApi.reducerPath]:StudentApi.reducer,
+    [ProductQuoteApi.reducerPath]:ProductQuoteApi.reducer
 
   },
   middleware: (getDefaultMiddleware) =>
@@ -108,7 +110,8 @@ const store = configureStore({
       PermissionRequestApi.middleware,
       MessageApi.middleware,
       MessageImagesApi.middleware,
-      ServiceProviderApi.middleware
+      ServiceProviderApi.middleware,
+      ProductQuoteApi.middleware
     ),
 });
 

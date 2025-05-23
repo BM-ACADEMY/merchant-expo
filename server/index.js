@@ -253,6 +253,7 @@ const PermissionRequestReadMappingRoute = require("./routes/permissionRequestRea
 const MessageRoute = require("./routes/messageRoute");
 const studentRoute = require("./routes/studentRoute");
 const trendingPointsRoute = require("./routes/trendingPointsRoute");
+const ProdutQuoteRoute=require("./routes/productQuoteRoute");
 const connectDB = require("./config/connectDB");
 const app = express();
 
@@ -316,6 +317,7 @@ app.use(
 );
 app.use("/api/v1/chat", MessageRoute);
 app.use("/api/v1/trending-point", trendingPointsRoute);
+app.use("/api/v1/product-quotes",ProdutQuoteRoute);
 
 // Test endpoint for quick testing
 app.post("/test", (req, res) => {

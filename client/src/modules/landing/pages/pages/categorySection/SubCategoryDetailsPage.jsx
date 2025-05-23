@@ -1,7 +1,7 @@
 // src/pages/SubCategoryDetail.jsx
 
-import { useParams ,useNavigate} from "react-router-dom";
-import {useGetSubCategoryByNameQuery} from "@/redux/api/CategoryApi"
+import { useParams, useNavigate } from "react-router-dom";
+import { useGetSubCategoryByNameQuery } from "@/redux/api/CategoryApi"
 import { useState } from "react";
 
 
@@ -33,13 +33,23 @@ const SubCategoryDetail = () => {
     }));
   };
 
-  // Navigate to product page based on deep subcategory
-  const handleNavigateProduct = (subCategoryName, superSubCategoryName, deepSubCategoryName) => {
+  const handleNavigateProduct = ({
+    type,
+    subCategoryName,
+    superSubCategoryName,
+    deepSubCategoryName,
+  }) => {
     const formattedSubCategory = subCategoryName.toLowerCase().replace(/\s+/g, "-");
     const formattedSuperSubCategory = superSubCategoryName.toLowerCase().replace(/\s+/g, "-");
-    const formattedDeepSubCategory = deepSubCategoryName.toLowerCase().replace(/\s+/g, "-");
-    navigate(`/products/${deepSubCategoryName}`);
+    const formattedDeepSubCategory = deepSubCategoryName?.toLowerCase().replace(/\s+/g, "-");
+
+    if (type === "super") {
+      navigate(`/products/${type}/${formattedSuperSubCategory}`);
+    } else if (type === "deep") {
+      navigate(`/products/${type}/${formattedDeepSubCategory}`);
+    }
   };
+
 
   return (
     <div className="p-6">
@@ -73,9 +83,19 @@ const SubCategoryDetail = () => {
             >
               <div className="p-4 space-y-3">
                 {/* Super Subcategory Name */}
-                <h3 className="text-xl font-semibold border-b-2 border-red-400 text-gray-800">
+                <h3
+                  className="text-xl font-semibold border-b-2 cursor-pointer border-red-400 text-gray-800"
+                  onClick={() =>
+                    handleNavigateProduct({
+                      type: "super",
+                      subCategoryName: selectedSub.subCategoryName,
+                      superSubCategoryName: ssc.superSubCategoryName,
+                    })
+                  }
+                >
                   {ssc.superSubCategoryName.replace(/-/g, " ")}
                 </h3>
+
 
                 {/* Deep Subcategories */}
                 <ul className="space-y-1 text-sm flex gap-10" >
@@ -84,13 +104,15 @@ const SubCategoryDetail = () => {
                       <div
                         className="flex flex-col items-center gap-2 hover:shadow-lg transition-shadow duration-300 cursor-pointer"
                         onClick={() =>
-                          handleNavigateProduct(
-                            selectedSub.subCategoryName,
-                            ssc.superSubCategoryName,
-                            item.deepSubCategoryName
-                          )
+                          handleNavigateProduct({
+                            type: "deep",
+                            subCategoryName: selectedSub.subCategoryName,
+                            superSubCategoryName: ssc.superSubCategoryName,
+                            deepSubCategoryName: item.deepSubCategoryName,
+                          })
                         }
                       >
+
                         <img
                           src={item.deepSubCategoryImage || "https://via.placeholder.com/120"}
                           alt={item.deepSubCategoryName}
@@ -122,9 +144,8 @@ const SubCategoryDetail = () => {
                       <button
                         key={i}
                         onClick={() => handlePageChange(sscIndex, i + 1)}
-                        className={`text-xs px-2 py-1 rounded ${
-                          currentPage === i + 1 ? "bg-gray-800 text-white" : "bg-gray-200"
-                        }`}
+                        className={`text-xs px-2 py-1 rounded ${currentPage === i + 1 ? "bg-gray-800 text-white" : "bg-gray-200"
+                          }`}
                       >
                         {i + 1}
                       </button>
